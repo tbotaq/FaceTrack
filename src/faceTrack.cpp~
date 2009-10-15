@@ -1,4 +1,3 @@
-ls
 //libraries for image proccess
 #include "opencv/cv.h"
 #include "opencv/cxcore.h"
@@ -25,7 +24,7 @@ using namespace point;
 
 cameraImages *ci;
 faceDetector *fd;
-panTiltUnitlibsigc++-2.0.17.tar.bz2 *ptu;
+panTiltUnit *ptu;
 templateMatching *tmch;
 pthread_mutex_t mutex;
 
@@ -171,7 +170,5 @@ int main(void)
   delete fd;
   delete ptu;
   delete tmch;
- 
   return 0;
 }
-

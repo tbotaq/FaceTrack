@@ -1,4 +1,3 @@
-test
 //libraries for image proccess
 #include "opencv/cv.h"
 #include "opencv/cxcore.h"
@@ -149,9 +148,9 @@ int main(void)
       // create threads	->initialize();
       ci->acquire();
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
-      pthread_create(&thread_m, NULL, thread_move, (void *)&arg);    
+      //pthread_create(&thread_m, NULL, thread_move, (void *)&arg);    
       //say goodbye to created threads	
-      pthread_join(thread_m, NULL);
+      //pthread_join(thread_m, NULL);
       pthread_join(thread_f,NULL);
       t2 = getrusageSec(); 
       totalTime += t2-t1;
