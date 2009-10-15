@@ -1,3 +1,4 @@
+test
 //libraries for image proccess
 #include "opencv/cv.h"
 #include "opencv/cxcore.h"
