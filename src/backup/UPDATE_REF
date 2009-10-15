@@ -1,0 +1,23 @@
+--faceTrack1.0
+ = faceTrack1.0.cpp + panTiltUnit1.0.cpp
+
+--faceTrack1.5
+ = faceTrack1.0.cpp + panTiltUnit2.0.cpp
+
+--faceTrack2.0
+ = faceTrack2.0.cpp + panTiltUnit2.O.cpp
+
+
+<panTiltUnit1.0.cpp>
+Only adopt Individual Move of each axis.
+
+<panTiltUnit2.0.cpp>
+Newly adopt Multiple Move of axises.
+
+<faceTrack1.0.cpp>
+Adopt grid-separetated regional control.
+(not PID control)
+
+<faceTrack2.0.cpp>
+Adopt propotional control like PID.
+Adopt multi thread processing.

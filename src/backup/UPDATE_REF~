@@ -1,0 +1,15 @@
+--faceTrack ver 1.0
+	non-multithread processed program
+	non-PID control
+	-- control which to move by regional-clasify
+
+--faceTrack ver 2.0
+	adopt multi thread processing
+	adopt Propotional control(for diff = K *(center - destination))
+
+
+In ver1.0,coudn't move as fast as we require for rhe system-took too much time for switching  movenent method and image processing method to follow the detected face correctly)
+
+So,in ver 2.0,we adopt multi thread processing libraly "pthread" and succeed in improve the processing speed.
+
+And more,we adopt Propotional control,and realized smoooth following.

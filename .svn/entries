@@ -1,0 +1,49 @@
+8
+
+dir
+117
+http://svn.xp-dev.com/svn/cou929_repo/master/sr4000/trunk
+http://svn.xp-dev.com/svn/cou929_repo
+
+
+
+2009-06-30T13:01:54.682776Z
+117
+cou929
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+4d10b146-cdf3-4a6a-a409-75ecb177b519
+
+include
+dir
+
+src
+dir
+
+bin
+dir
+
+README
+file
+
+
+
+
+2009-06-30T13:03:15.000000Z
+c6566f64461986ffe46c913e76644b70
+2008-12-06T04:50:15.424850Z
+60
+cou929
+

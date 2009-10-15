@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/cou929_repo/!svn/ver/116/master/sr4000/trunk/include
+END
+coordinateShifter.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/cou929_repo/!svn/ver/73/master/sr4000/trunk/include/coordinateShifter.h
+END
+sharedMemory.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/cou929_repo/!svn/ver/116/master/sr4000/trunk/include/sharedMemory.h
+END
+pointProjector.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/cou929_repo/!svn/ver/116/master/sr4000/trunk/include/pointProjector.h
+END
+pointing.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/cou929_repo/!svn/ver/116/master/sr4000/trunk/include/pointing.h
+END
+projector.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/cou929_repo/!svn/ver/116/master/sr4000/trunk/include/projector.h
+END
