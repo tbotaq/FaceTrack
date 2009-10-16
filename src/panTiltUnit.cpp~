@@ -64,9 +64,8 @@ int panTiltUnit::homing(void)
   return 0;
 }
 
-int panTiltUnit::move(int pan, int tilt)
+int panTiltUnit::move(double pan, double tilt)
 {
-  PMDint32 captureValue;
   biclops->SetDebugLevel(0);
   if (!hasBeenInitialized)
     {
@@ -84,7 +83,7 @@ int panTiltUnit::move(int pan, int tilt)
   coutDbg << "Phase:Move > Start\n";
 
   //Start the move
-  printf("Pan(%d)[degrees], Tilt(%d)[degrees]\n",pan,tilt);
+  printf("Pan(%f)[degrees], Tilt(%f)[degrees]\n",pan,tilt);
   biclops->Move(axisMask);
 
   cout << "Moved"<<endl;

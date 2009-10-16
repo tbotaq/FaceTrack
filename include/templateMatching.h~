@@ -16,13 +16,18 @@ using namespace point;
 class templateMatching
 {
  private:
+  //char windowNameTemplate[] = "Template";
+  //char windowNameDestination[] = "Destination";
+  IplImage *sourceImage;
   IplImage *templateImage;
+  IplImage *sourceGrayImage;
   IplImage *templateGrayImage;
   IplImage *sourceBinaryImage;
   IplImage *templateBinaryImage;
   IplImage *differenceMapImage;
   CvPoint minLocation;
   CvScalar scalar;
+  
   int key;
  public:
   templateMatching(CvSize srcSize);
