@@ -19,20 +19,15 @@
 #define K 0.4 //const used for PID
 //library for templateMatching
 #include<templateMatching.h>
-
 using namespace std;
 using namespace point;
 
-//declaration of interfaces for each class
 cameraImages *ci;
 faceDetector *fd;
 panTiltUnit *ptu;
 templateMatching *tmch;
-
-//for mutex lock
 pthread_mutex_t mutex;
 
-//function to measure time
 double getrusageSec(){
   struct rusage t;
   struct timeval s;
@@ -41,30 +36,26 @@ double getrusageSec(){
   return s.tv_sec + (double)s.tv_usec*1e-6;
 }
 
-//fuction to calculate the distance between face and destination
 double dist(int center, int dst)
 {
   double ret = K * (center - dst);
   return ret;
 }
 
-//structure for thread control
 struct thread_arg
 {
   double pan;
   double tilt;
-  CvPoint center;
-  int radius;
+  CvPoint center_t,center_f;
+  int radius_t,radius_f;
   double dX;
-  double dY; //distance between center.x/y and dst_x/y
-  int Lx;    //width of window
-  int Ly;    //height of window
-  int dst_x; //destination point
-  int dst_y; //destination point
+  double dY;//distance between center.x/y and dst_x/y
+  int Lx;//width of window
+  int Ly;//height of window
+  int dst_x;//destination point
+  int dst_y;//destination point
 };
 
-
-//the thread for move method
 void *thread_move(void *_arg_m)//thread for move control
 {
   pthread_mutex_lock(&mutex);
@@ -74,33 +65,39 @@ void *thread_move(void *_arg_m)//thread for move control
   pthread_mutex_unlock(&mutex); 
 }
 
-//the thread for face detection method
+
 void *thread_facedetect(void *_arg_f)//thread for image proccessing
 { 
+  int faces = 0;
   pthread_mutex_lock(&mutex);
   struct thread_arg * arg_f;
   arg_f=(struct thread_arg *)_arg_f;
-
-  //setting center of window as destination
   arg_f -> dst_x = arg_f -> Lx /2;
   arg_f -> dst_y = arg_f -> Ly /2;
 
   //acquire current image 
   ci->acquire();
  
-  //calculate the center location and radius of matched face
-  tmch -> calcMatchResult(ci -> getIntensityImg(),&arg_f->center,&arg_f->radius);
+  //returns the center location and radius of detected face
+  faces = fd -> faceDetect(ci -> getIntensityImg(), &arg_f->center_f, &arg_f->radius_f);
+  tmch -> calcMatchResult(ci -> getIntensityImg(),&arg_f->center_t,&arg_f->radius_t);
 
   //calculate the distance between face's center location and destination
-  arg_f -> dX = dist(arg_f -> center.x,arg_f -> dst_x);
-  arg_f -> dY = dist(arg_f -> center.y,arg_f -> dst_y);
+  arg_f -> dX = dist(arg_f -> center_t.x,arg_f -> dst_x);//choose center_f or center_t
+  arg_f -> dY = dist(arg_f -> center_t.y,arg_f -> dst_y);
     
-  //drow a circle on the detected face and  line from face's center location to destination
-  cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center.x,arg_f -> center.y),arg_f -> radius,CV_RGB(255,255,255),3,8,0);
-  cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center.x,arg_f -> center.y),CV_RGB(255,255,255),3,8,0);  
-
-  if(1)
+  //drow a line from arg_f -> center to destination
+  cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center_f.x,arg_f -> center_f.y),CV_RGB(255,255,255),3,8,0);
+  cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center_t.x,arg_f -> center_t.y),CV_RGB(120,120,120),3,8,0); 
+  
+  cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center_f.x,arg_f -> center_f.y),arg_f -> radius_f,CV_RGB(255,255,255),3,8,0);
+  cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center_t.x,arg_f -> center_t.y),arg_f -> radius_t,CV_RGB(120,120,120),3,8,0);
+  
+  if(faces >= 1)
     {
+      //drow a circle the detected face 
+      cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center_f.x,arg_f -> center_f.y),arg_f -> radius_f,CV_RGB(255,255,255),3,8,0);
+      cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center_t.x,arg_f -> center_t.y),arg_f -> radius_t,CV_RGB(120,120,120),3,8,0);
       //define how long PT unit make movement
       arg_f -> pan = arg_f -> dX;
       arg_f -> tilt = arg_f -> dY;
@@ -117,15 +114,12 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
 
 
 
-
-
-
-
 int main(void)
 {
   ptu = new panTiltUnit();
   ci = new cameraImages();
  
+  pthread_mutex_init(&mutex,NULL);
   double t1=0,t2=0;
   double totalTime=0;
   int times=0;
@@ -140,11 +134,9 @@ int main(void)
   //define the size of recognitive region
   arg.Lx = size.width;
   arg.Ly = size.height;
-
-  //initialize mutex
-  pthread_mutex_init(&mutex,NULL);
-   
-  // make window
+  fd = new faceDetector(ci->getImageSize());
+  
+  // make windows
   cvNamedWindow("Face Detection", CV_WINDOW_AUTOSIZE);
 
   //-----main procces-----//
@@ -152,23 +144,18 @@ int main(void)
     {	 
       //ID for move thread and face detection thread
       pthread_t thread_m,thread_f;
-
-      //starting time measurement
       t1 = getrusageSec();
-
-      // create threads
+      // create threads	->initialize();
+      ci->acquire();
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
       pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
     
       //say goodbye to created threads	
       pthread_join(thread_m, NULL);
       pthread_join(thread_f,NULL);
-
-      //stopping time measurement
       t2 = getrusageSec(); 
       totalTime += t2-t1;
       times ++;
-      
       // key handling
       key = cvWaitKey(100);
       if(key == 'q')
@@ -176,14 +163,13 @@ int main(void)
 	  break;
 	}
     }
-  printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
-
   // release memory
   pthread_mutex_destroy(&mutex);
   cvDestroyWindow("Face Detection");
+  printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
   delete ci;
+  delete fd;
   delete ptu;
   delete tmch;
-  
   return 0;
 }
