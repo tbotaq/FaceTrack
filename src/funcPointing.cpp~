@@ -567,8 +567,6 @@ CvPoint DecideKakupt(CvPoint _pt[] , int _ptNow)
   //角点らしい点を返す関数
 
   CvPoint Anspt;
-  Anspt.x=0;
-  Anspt.y=0;
 
   //１つの点ならそのまま返す
   if ( (_ptNow - 1) <= 0 ) return _pt[0];
@@ -623,7 +621,7 @@ CvPoint DecideKakupt(CvPoint _pt[] , int _ptNow)
   return Anspt;
 }
 
-  void on_mouse_pointing(int event, int x, int y, int flags, void *param)
+void on_mouse_pointing(int event, int x, int y, int flags, void *param)
 {
   IplImage *img = (IplImage *)param;
   CvScalar imgValue;
@@ -635,7 +633,7 @@ CvPoint DecideKakupt(CvPoint _pt[] , int _ptNow)
     }
 }
 
-  void on_mouse_getDepth(int event, int x, int y, int flags, void *param)
+void on_mouse_getDepth(int event, int x, int y, int flags, void *param)
 {
   cameraImages *cam = (cameraImages *)param;
   CvPoint3D32f coordinate;

@@ -36,16 +36,16 @@ double getrusageSec(){
   return s.tv_sec + (double)s.tv_usec*1e-6;
 }
 
-int dist(int center, int dst)
+double dist(int center, int dst)
 {
-  int ret = K * (center - dst);
+  double ret = K * (center - dst);
   return ret;
 }
 
 struct thread_arg
 {
-  int pan;
-  int tilt;
+  double pan;
+  double tilt;
   CvPoint center_t,center_f;
   int radius_t,radius_f;
   double dX;
@@ -148,9 +148,10 @@ int main(void)
       // create threads	->initialize();
       ci->acquire();
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
-      //pthread_create(&thread_m, NULL, thread_move, (void *)&arg);    
+      pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
+    
       //say goodbye to created threads	
-      //pthread_join(thread_m, NULL);
+      pthread_join(thread_m, NULL);
       pthread_join(thread_f,NULL);
       t2 = getrusageSec(); 
       totalTime += t2-t1;

@@ -45,7 +45,7 @@ int connection::sendCommand(int code, char *message)
   //
   // Take 'code' and 'message', write these data to shared memory.
 
-  char *string=0;
+  char *string;
   int res;
 
   // check code existing

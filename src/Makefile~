@@ -3,7 +3,7 @@
 OPTION = -Wall -g -Wextra -pedantic -O2
 FLYOPTION = -Wall -Wextra -pedantic -O2
 CC = g++
-LIB = -lcxcore -lcv -lhighgui -lcvaux -lmesasr  -lpthread -lBiclops -lPMD -lUtils
+LIB = -lcxcore -lcv -lhighgui -lcvaux -lmesasr -lBiclops -lPMD -lUtils -lpthread
 OBJS = cameraImages.o funcPointing.o faceDetector.o imageClassifier.o regionDetector.o regionTracker.o pointProjector.o sharedMemory.o connection.o projectorConnection.o coordinateShifter.o line.o panTiltUnit.o templateMatching.o
 INCD = ../include/
 BIND = ../bin/
@@ -88,8 +88,8 @@ line.o: line.cpp $(INCD)pointing.h
 	$(CC)  $(OPTION) -I$(INCD) $(LIB) -c line.cpp
 
 # panTiltUnit.o
-panTiltUnit.o: panTiltUnit.cpp $(INCD)panTiltUnit.h
-	$(CC) $(OPTION) -I$(PMD_INCD) -I$(Utils_INCD) -I$(INCD) $(LIB) -c panTiltUnit.cpp
+panTiltUnit.o: panTiltUnit.cpp $(Biclops_INCD)panTiltUnit.h
+	$(CC) $(OPTION) -I$(PMD_INCD) -I$(Utils_INCD) -I$(Biclops_INCD) -lBiclops -lPMD -lUtils -c panTiltUnit.cpp
 
 # templateMatching.o
 templateMatching.o: templateMatching.cpp $(INCD)templateMatching.h
