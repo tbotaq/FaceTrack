@@ -5,25 +5,38 @@
 #define LINE_TYPE 8
 #define SHIFT 0
 
-templateMatching::templateMatching(CvSize srcSize)
+templateMatching::templateMatching()
 {
-  //memory allocation
-  templateImage       = cvLoadImage("todai_boys_small.jpg",1);
-  templateGrayImage   = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
-  sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
-  templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
-  differenceMapImage  = cvCreateImage(cvSize(srcSize.width - templateImage->width + 1,srcSize.height - templateImage->height + 1),IPL_DEPTH_32F,1);
 }
 
 templateMatching::~templateMatching()
 {
+  //memory allocation
   cvReleaseImage( &templateGrayImage );
   cvReleaseImage( &sourceBinaryImage );
   cvReleaseImage( &templateBinaryImage );
   cvReleaseImage( &differenceMapImage );
-} 
+}
 
-int templateMatching::calcMatchResult(IplImage *sourceImage,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
+int templateMatching::initialize(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,CvSize srcSize,int flag)
+{
+  cout<<"INI"<<endl;
+  cvGetRectSubPix(sourceImage,templateImage,cvPointTo32f(*center));
+  cout<<"INI2"<<endl;
+  if(templateImage != NULL)
+    {
+      templateGrayImage   = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
+      sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
+      templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
+      differenceMapImage  = cvCreateImage(cvSize(srcSize.width - templateImage->width + 1,srcSize.height - templateImage->height + 1),IPL_DEPTH_32F,1);
+      flag = true;
+    }
+  else
+    cout<<"Failed in creating new template image."<<endl;
+  return 0;
+}
+
+int templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
 {
   //convertion from BGR to gray scale for template image
   cvCvtColor( templateImage, templateGrayImage, CV_BGR2GRAY );
@@ -44,11 +57,3 @@ int templateMatching::calcMatchResult(IplImage *sourceImage,CvPoint *center,int 
   *radius   = max(templateImage->width/2,templateImage->height/2);
   return 0;
 }
-
-/* 
-int templateMatching::updateTempImage(IplImage *detectedImage,CvPoint center,IplImage *newTempImage)
-{
-  cvGetRectSubPix(detectedImage,newTempImage,cvPointTo32f(center));
-  return 0;
-}
-*/
