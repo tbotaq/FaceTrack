@@ -18,10 +18,12 @@ templateMatching::~templateMatching()
   cvReleaseImage( &differenceMapImage );
 }
 
-int templateMatching::initialize(IplImage *sourceImage,IplImage *newTemplateImage,CvPoint *center,CvSize srcSize,int flag)
+int templateMatching::initialize(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,CvSize srcSize,int flag)
 {
-  cvGetRectSubPix(sourceImage,newTemplateImage,cvPointTo32f(*center));
-  if(newTemplateImage != NULL)
+  cout<<"INI"<<endl;
+  cvGetRectSubPix(sourceImage,templateImage,cvPointTo32f(*center));
+  cout<<"INI2"<<endl;
+  if(templateImage != NULL)
     {
       templateGrayImage   = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
       sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
@@ -33,12 +35,6 @@ int templateMatching::initialize(IplImage *sourceImage,IplImage *newTemplateImag
     cout<<"Failed in creating new template image."<<endl;
   return 0;
 }
-
-int templateMatching::createTempImage(IplImage *sourceImage,IplImage *newTemplateImage,CvPoint *center,int flag)
-{
-  
-}
-
 
 int templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
 {
