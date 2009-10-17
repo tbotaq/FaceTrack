@@ -16,7 +16,6 @@ using namespace point;
 class templateMatching
 {
  private:
-  IplImage *templateImage;
   IplImage *templateGrayImage;
   IplImage *sourceBinaryImage;
   IplImage *templateBinaryImage;
@@ -25,9 +24,10 @@ class templateMatching
   CvScalar scalar;
   int key;
  public:
-  templateMatching(CvSize srcSize);
+  templateMatching();
   ~templateMatching();
+  int initialize(CvSize srcSize,IplImage *templateImage);
   int calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius);
-  int updateTempImage(IplImage *detectedImage,CvPoint center,IplImage *newTempImage);
+  int createTempImage(IplImage *sourceImage,IplImage *newTemplateImage,CvPoint *center,int flag);
 };
 #endif

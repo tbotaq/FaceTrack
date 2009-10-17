@@ -61,6 +61,7 @@ struct thread_arg
   int Ly;    //height of window
   int dst_x; //destination point
   int dst_y; //destination point
+  IplImage templateImage ;
 };
 
 
@@ -89,7 +90,7 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
   ci->acquire();
  
   //calculate the center location and radius of matched face
-  tmch -> calcMatchResult(ci -> getIntensityImg(),&arg_f->center,&arg_f->radius);
+  tmch -> calcMatchResult(ci -> getIntensityImg(),&arg_f->templateImage,&arg_f->center,&arg_f->radius);
 
   //calculate the distance between face's center location and destination
   arg_f -> dX = dist(arg_f -> center.x,arg_f -> dst_x);
@@ -110,8 +111,7 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
       arg_f -> pan = 0;
       arg_f -> tilt = 0;
     }
-  // show images
-  cvShowImage("Face Detection",ci->getIntensityImg());
+  
   pthread_mutex_unlock(&mutex);
 }
 
@@ -123,19 +123,22 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
 
 int main(void)
 {
+  cout<<"start"<<endl;
   ptu = new panTiltUnit();
   ci = new cameraImages();
- 
+  tmch = new templateMatching();
+
   double t1=0,t2=0;
   double totalTime=0;
   int times=0;
   int key;
   struct thread_arg arg;
-
+ 
   // initialize camera image class
   ci->initialize();
   CvSize size = ci -> getImageSize();
-  tmch = new templateMatching(size);
+  
+  fd = new faceDetector(size);
 
   //define the size of recognitive region
   arg.Lx = size.width;
@@ -147,7 +150,22 @@ int main(void)
   // make window
   cvNamedWindow("Face Detection", CV_WINDOW_AUTOSIZE);
 
+  int hasBeenInitialized = false;
+  cout<<"Z"<<endl;
   //-----main procces-----//
+  while(!hasBeenInitialized)
+    {
+      cout<<"R"<<endl;
+      fd->faceDetect(ci->getIntensityImg(),&arg.center,&arg.radius);
+      cout<<"NR"<<endl;
+      tmch->initialize(ci->getIntensityImg(),&arg.templateImage,&arg.center,size,hasBeenInitialized);
+      cout<<"H"<<endl;
+      if(hasBeenInitialized)
+	{
+	  break;
+	}
+    }
+  cout<<"S"<<endl;
   while(1)
     {	 
       //ID for move thread and face detection thread
@@ -168,7 +186,10 @@ int main(void)
       t2 = getrusageSec(); 
       totalTime += t2-t1;
       times ++;
-      
+  
+      // show images
+      cvShowImage("Face Detection",ci->getIntensityImg());
+    
       // key handling
       key = cvWaitKey(100);
       if(key == 'q')
@@ -186,4 +207,5 @@ int main(void)
   delete tmch;
   
   return 0;
+  cout<<"END"<<endl;
 }

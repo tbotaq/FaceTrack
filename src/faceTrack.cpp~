@@ -80,7 +80,6 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
   pthread_mutex_lock(&mutex);
   struct thread_arg * arg_f;
   arg_f=(struct thread_arg *)_arg_f;
-  IplImage *templateImage;
 
   //setting center of window as destination
   arg_f -> dst_x = arg_f -> Lx /2;
@@ -90,7 +89,7 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
   ci->acquire();
  
   //calculate the center location and radius of matched face
-  tmch -> calcMatchResult(ci -> getIntensityImg(),templateImage,&arg_f->center,&arg_f->radius);
+  tmch -> calcMatchResult(ci -> getIntensityImg(),&arg_f->center,&arg_f->radius);
 
   //calculate the distance between face's center location and destination
   arg_f -> dX = dist(arg_f -> center.x,arg_f -> dst_x);
@@ -102,7 +101,7 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
 
   if(1)
     {
-      //define how long Biclops shoud  make movement
+      //define how long PT unit make movement
       arg_f -> pan = arg_f -> dX;
       arg_f -> tilt = arg_f -> dY;
     }
@@ -111,9 +110,8 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
       arg_f -> pan = 0;
       arg_f -> tilt = 0;
     }
-
-  templateImage = tmch -> updateTemplateImage(ci->getIntensityImg(),arg_f -> center);
-  
+  // show images
+  cvShowImage("Face Detection",ci->getIntensityImg());
   pthread_mutex_unlock(&mutex);
 }
 
@@ -138,8 +136,7 @@ int main(void)
   ci->initialize();
   CvSize size = ci -> getImageSize();
   tmch = new templateMatching(size);
-  fd = new faceDetector(size);
- 
+
   //define the size of recognitive region
   arg.Lx = size.width;
   arg.Ly = size.height;
@@ -149,53 +146,44 @@ int main(void)
    
   // make window
   cvNamedWindow("Face Detection", CV_WINDOW_AUTOSIZE);
-  while(!prepared)
-    {
-    
 
-      if(prepared)
+  //-----main procces-----//
+  while(1)
+    {	 
+      //ID for move thread and face detection thread
+      pthread_t thread_m,thread_f;
+
+      //starting time measurement
+      t1 = getrusageSec();
+
+      // create threads
+      pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
+      pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
+    
+      //say goodbye to created threads	
+      pthread_join(thread_m, NULL);
+      pthread_join(thread_f,NULL);
+
+      //stopping time measurement
+      t2 = getrusageSec(); 
+      totalTime += t2-t1;
+      times ++;
+      
+      // key handling
+      key = cvWaitKey(100);
+      if(key == 'q')
 	{
-	  //-----main procces-----//
-	  while(1)
-	    {	 
-	      //ID for move thread and face detection thread
-	      pthread_t thread_m,thread_f;
-
-	      //starting time measurement
-	      t1 = getrusageSec();
-
-	      // create threads
-	      pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
-	      pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
-    
-	      //say goodbye to created threads	
-	      pthread_join(thread_m, NULL);
-	      pthread_join(thread_f,NULL);
-
-	      //stopping time measurement
-	      t2 = getrusageSec(); 
-	      totalTime += t2-t1;
-	      times ++;
-
-	      // show images
-	      cvShowImage("Face Detection",ci->getIntensityImg());
-
-	      // key handling
-	      key = cvWaitKey(100);
-	      if(key == 'q')
-		{
-		  break;
-		}
-	    }
+	  break;
 	}
-      printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
-
-      // release memory
-      pthread_mutex_destroy(&mutex);
-      cvDestroyWindow("Face Detection");
-      delete ci;
-      delete ptu;
-      delete tmch;
-  
-      return 0;
     }
+  printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
+
+  // release memory
+  pthread_mutex_destroy(&mutex);
+  cvDestroyWindow("Face Detection");
+  delete ci;
+  delete ptu;
+  delete tmch;
+  
+  return 0;
+}
