@@ -101,7 +101,7 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
 
   if(1)
     {
-      //define how long Biclops shoud  make movement
+      //define how long PT unit make movement
       arg_f -> pan = arg_f -> dX;
       arg_f -> tilt = arg_f -> dY;
     }

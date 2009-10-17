@@ -45,6 +45,7 @@ int faceDetector::setCascadeName(char *name)
 int faceDetector::faceDetect( IplImage* img, CvPoint *center, int *radius )
 {
   int i, ret;
+  ret=0;
 
   cvResize( img, smallImg, CV_INTER_LINEAR );
   cvEqualizeHist( smallImg, smallImg );

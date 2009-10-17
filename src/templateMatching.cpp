@@ -7,13 +7,12 @@
 
 templateMatching::templateMatching(CvSize srcSize)
 {
-  CvSize srcImageSize = srcSize;
-  templateImage       = cvLoadImage("todai_boys_small.jpg",1); 
   //memory allocation
+  templateImage       = cvLoadImage("todai_boys_small.jpg",1);
   templateGrayImage   = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
-  sourceBinaryImage   = cvCreateImage(srcImageSize,IPL_DEPTH_8U,1);
+  sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
   templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
-  differenceMapImage  = cvCreateImage(cvSize(srcImageSize.width - templateImage->width + 1,srcImageSize.height - templateImage->height + 1),IPL_DEPTH_32F,1);
+  differenceMapImage  = cvCreateImage(cvSize(srcSize.width - templateImage->width + 1,srcSize.height - templateImage->height + 1),IPL_DEPTH_32F,1);
 }
 
 templateMatching::~templateMatching()
@@ -24,9 +23,9 @@ templateMatching::~templateMatching()
   cvReleaseImage( &differenceMapImage );
 } 
 
-int templateMatching::calcMatchResult( IplImage *sourceImage, CvPoint *center, int *radius)//this function shoud be given sourceImage to process and returns center location and radius of detected face
+int templateMatching::calcMatchResult(IplImage *sourceImage,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
 {
-  //convertion from BGR to gray scale for source and template image
+  //convertion from BGR to gray scale for template image
   cvCvtColor( templateImage, templateGrayImage, CV_BGR2GRAY );
 
   //Binarization
@@ -45,4 +44,11 @@ int templateMatching::calcMatchResult( IplImage *sourceImage, CvPoint *center, i
   *radius   = max(templateImage->width/2,templateImage->height/2);
   return 0;
 }
-  
+
+/* 
+int templateMatching::updateTempImage(IplImage *detectedImage,CvPoint center,IplImage *newTempImage)
+{
+  cvGetRectSubPix(detectedImage,newTempImage,cvPointTo32f(center));
+  return 0;
+}
+*/
