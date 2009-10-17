@@ -28,5 +28,6 @@ class templateMatching
   templateMatching(CvSize srcSize);
   ~templateMatching();
   int calcMatchResult(IplImage *sourceImage,CvPoint *center,int *radius);
+  //int updateTempImage(IplImage *detectedImage,CvPoint center,IplImage *newTempImage);
 };
 #endif
