@@ -157,61 +157,67 @@ int main(void)
   int faces = 0;
   bool hasCreatedTemp = false;
   int count=0;
-  //this loop is to acquire the template image to use in the first  
+
+  //-----acquire the template image to use in the first-----//  
   while(!hasCreatedTemp)
     {
-      cout<<"Please show your face to the camera."<<endl;
+      cout<<"SYSTEM:\tPlease show your face to the camera."<<endl;
       
       while(faces<1)
 	{
 	  ci->acquire();
 	  faces = fd->faceDetect(ci->getIntensityImg(),&arg.center,&arg.radius);
-	  cout<<"."<<endl;
+	  cout<<"\tSeaching for your face..."<<endl;
 	  sleep(1);
 	}
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
       tmch->presetTempImage(ci->getIntensityImg(),&arg.center,size,arg.templateImage);
       hasCreatedTemp = true;
-      cout<<"Found your face !!"<<endl;
+      cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
   
-  cout<<"\nOK.Now created first template image."<<endl;
+  cout<<"\n\tOK.Now created first template image,which is shown in the window."<<endl;
+  cout<<"\tPress any key to destroy window."<<endl;
+  cvShowImage("Temp",arg.templateImage);
+  cvShowImage("Face Detection",ci->getDepthImg());
+  cvWaitKey(0);
+  cvDestroyWindow("Temp");
 
-  
-  //-----main procces-----//
   /*
-    while(1)
-    {	 
-    //ID for move thread and face detection thread
-    pthread_t thread_m,thread_f;
-
-    //starting time measurement
-    t1 = getrusageSec();
-
-    // create threads
-    pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
-    pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
-    
-    //say goodbye to created threads	
-    pthread_join(thread_m, NULL);
-    pthread_join(thread_f,NULL);
-
-    //stopping time measurement
-    t2 = getrusageSec(); 
-    totalTime += t2-t1;
-    times ++;
+  //-----main procces-----//
   
-    // show images
-    cvShowImage("Face Detection",ci->getIntensityImg());
+  while(1)
+  {	 
+  //ID for move thread and face detection thread
+  pthread_t thread_m,thread_f;
+
+  //starting time measurement
+  t1 = getrusageSec();
+
+  // create threads
+  pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
+  pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
     
-    // key handling
-    key = cvWaitKey(100);
-    if(key == 'q')
-    {
-    break;
-    }
-    }
-    printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
+  //say goodbye to created threads	
+  pthread_join(thread_m, NULL);
+  pthread_join(thread_f,NULL);
+
+  //stopping time measurement
+  t2 = getrusageSec(); 
+  totalTime += t2-t1;
+  times ++;
+  
+  // show images
+  cvShowImage("Face Detection",ci->getIntensityImg());
+    
+  // key handling
+  key = cvWaitKey(100);
+  if(key == 'q')
+  {
+  break;
+  }
+  }
+  printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
   */
 
   // release memory

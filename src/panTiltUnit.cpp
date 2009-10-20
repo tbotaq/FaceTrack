@@ -16,7 +16,7 @@ panTiltUnit::panTiltUnit()
   hasBeenInitialized = false;
   
   //Initialize the Biclops unit.
-  coutDbg << "Phase:Initiallize > START\n";
+  coutDbg << "Phase:Initiallize > START.\n";
   biclops->SetDebugLevel(0);
   if(biclops->Initialize("../data/BiclopsRevI.cfg")) //loading the cfg file
     {
@@ -27,15 +27,15 @@ panTiltUnit::panTiltUnit()
       panAxis -> GetProfile(panProfile);
       tiltAxis -> GetProfile(tiltProfile);
       
-      cout << "Phase:Initialize > FINISHED\n";
+      cout << "Phase:Initialize > FINISHED.\n";
       hasBeenInitialized = true;
       
       if(hasBeenInitialized){
 	biclops->SetDebugLevel(0);
-      coutDbg << "Phase:Homing sequence > START\n";
+      coutDbg << "Phase:Homing sequence > START.\n";
       if(biclops->HomeAxes(axisMask,true)) //finding the home position
 	{
-	  coutDbg << "Phase:Homing sequence > FINISHED\n";
+	  coutDbg << "Phase:Homing sequence > FINISHED.\n";
 	}
       }
     }
@@ -45,7 +45,7 @@ panTiltUnit::~panTiltUnit()
 {
   panAxis -> DisableAmp();
   tiltAxis -> DisableAmp();
-  coutDbg << "Phase:DisableAmp >FINISHED\n";
+  coutDbg << "Phase:DisableAmp >FINISHED.\n";
 }
 
 int panTiltUnit::homing(void)
@@ -54,11 +54,11 @@ int panTiltUnit::homing(void)
     {
       return -1;
     }
-  coutDbg << "Phase:Homing sequence > START\n";
+  coutDbg << "Phase:Homing sequence > START.\n";
   biclops->SetDebugLevel(0);
   if(biclops->HomeAxes(axisMask,true)) //finding the home position
     {
-      coutDbg << "Phase:Homing sequence > FINISHED\n";
+      coutDbg << "Phase:Homing sequence > FINISHED.\n";
     }
   
   return 0;
@@ -80,13 +80,13 @@ int panTiltUnit::move(double pan, double tilt)
   panAxis -> SetProfile(panProfile);
   tiltAxis -> SetProfile(tiltProfile);
 
-  coutDbg << "Phase:Move > Start\n";
+  coutDbg << "Phase:Move > Start.\n";
 
   //Start the move
-  printf("Pan(%2.2f)[degrees], Tilt(%2.2f)[degrees]\n",pan,tilt);
+  printf("Pan(%2.2f)[degrees], Tilt(%2.2f)[degrees].\n",pan,tilt);
   biclops->Move(axisMask);
 
-  cout << "Moved"<<endl;
+  cout << "Phase:Move > Finished."<<endl;
   
   return 0;
 }

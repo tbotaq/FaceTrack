@@ -7,7 +7,7 @@
 #include"PMDUtils.h"
 #include"Biclops.h"
 static char dbgClass[] = "Biclops:";
-const char dbgMethod[] = "main:";
+const char dbgMethod[] = "";
 #define coutDbg cout << dbgClass <<dbgMethod
 
 using namespace std;

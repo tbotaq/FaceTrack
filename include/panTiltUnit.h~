@@ -16,7 +16,6 @@ class panTiltUnit
 {
  private:
   Biclops *biclops;
-  char dbgHdr[32];
   int axisMask;
   PMDAxisControl *panAxis;
   PMDAxisControl *tiltAxis;
@@ -27,7 +26,7 @@ class panTiltUnit
   panTiltUnit();
   ~panTiltUnit();
   int homing();
-  int move(int pan, int tilt);
+  int move(double pan, double tilt);
 };
 
 #endif

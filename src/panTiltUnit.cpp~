@@ -83,7 +83,7 @@ int panTiltUnit::move(double pan, double tilt)
   coutDbg << "Phase:Move > Start\n";
 
   //Start the move
-  printf("Pan(%f)[degrees], Tilt(%f)[degrees]\n",pan,tilt);
+  printf("Pan(%2.2f)[degrees], Tilt(%2.2f)[degrees]\n",pan,tilt);
   biclops->Move(axisMask);
 
   cout << "Moved"<<endl;
