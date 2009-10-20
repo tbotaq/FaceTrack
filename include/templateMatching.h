@@ -26,7 +26,7 @@ class templateMatching
  public:
   templateMatching();
   ~templateMatching();
-  int initialize(IplImage *sourceImage,IplImage *newTemplateImage,CvPoint *center,CvSize srcSize,int flag);
-  int calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius);
+  void presetTempImage(IplImage *sourceImage,CvPoint *center,CvSize srcSize,IplImage *templateImage);
+  void calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius);
 };
 #endif

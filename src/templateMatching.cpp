@@ -18,25 +18,24 @@ templateMatching::~templateMatching()
   cvReleaseImage( &differenceMapImage );
 }
 
-int templateMatching::initialize(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,CvSize srcSize,int flag)
+void templateMatching::presetTempImage(IplImage *sourceImage,CvPoint *center,CvSize srcSize,IplImage *templateImage)
 {
-  cout<<"INI"<<endl;
   cvGetRectSubPix(sourceImage,templateImage,cvPointTo32f(*center));
-  cout<<"INI2"<<endl;
   if(templateImage != NULL)
     {
+      //allocate memory
       templateGrayImage   = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
       sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
       templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
       differenceMapImage  = cvCreateImage(cvSize(srcSize.width - templateImage->width + 1,srcSize.height - templateImage->height + 1),IPL_DEPTH_32F,1);
-      flag = true;
     }
   else
-    cout<<"Failed in creating new template image."<<endl;
-  return 0;
+    {
+      cout<<"Failed in creating new template image."<<endl;
+    }
 }
 
-int templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
+void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
 {
   //convertion from BGR to gray scale for template image
   cvCvtColor( templateImage, templateGrayImage, CV_BGR2GRAY );
@@ -55,5 +54,4 @@ int templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateIm
   center->x = minLocation.x + templateImage->width/2;
   center->y = minLocation.y + templateImage->height/2;
   *radius   = max(templateImage->width/2,templateImage->height/2);
-  return 0;
 }

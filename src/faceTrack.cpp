@@ -116,123 +116,111 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
 }
 
 
-
-
-
-
-
 int main(void)
 {
-  cout<<"start"<<endl;
+  //reference to each function
   ptu = new panTiltUnit();
   ci = new cameraImages();
   tmch = new templateMatching();
 
+  //for time measurement
   double t1=0,t2=0;
   double totalTime=0;
   int times=0;
+  //for key handling
   int key;
+
+  //interface to structure
   struct thread_arg arg;
+
   // initialize camera image class
   ci->initialize();
-  CvSize size = ci -> getImageSize();
+
+  //estimate the size of image
   ci->acquire();
+  CvSize size = ci -> getImageSize();
+ 
+  //pass the image size to class faceDetector's constructor
   fd = new faceDetector(size);
-  //define the size of recognitive region
+
+  //define the size of recognitive region using "size"
   arg.Lx = size.width;
   arg.Ly = size.height;
 
   //initialize mutex
   pthread_mutex_init(&mutex,NULL);
    
-  // make window
+  // define the  window
   cvNamedWindow("Face Detection", CV_WINDOW_AUTOSIZE);
   cvNamedWindow("Temp", CV_WINDOW_AUTOSIZE);
-  int faces=0;
-  int hasBeenInitialized = false;
-  printf("hasBeenInitialized = %d\n",hasBeenInitialized);
 
-  cout<<"Z"<<endl;
-  //-----main procces-----//
-  while(!hasBeenInitialized)
+  int faces = 0;
+  bool hasCreatedTemp = false;
+  int count=0;
+  //this loop is to acquire the template image to use in the first  
+  while(!hasCreatedTemp)
     {
-      cout<<"R"<<endl;
-      do
-	{cout<<"AAAAAAA"<<endl;
+      cout<<"Please show your face to the camera."<<endl;
+      
+      while(faces<1)
+	{
 	  ci->acquire();
-	  cout<<"BBBBBBB"<<endl;
 	  faces = fd->faceDetect(ci->getIntensityImg(),&arg.center,&arg.radius);
-	  cout<<"CCCCCC"<<endl;
-	  //cvCircle(ci->getIntensityImg(),cvPoint(arg.center.x,arg.center.y),arg.radius,CV_RGB(255,255,255),3,8,0);
-	  //cvLine(ci->getIntensityImg(),cvPoint(arg.dst_x,arg.dst_y),cvPoint(arg.center.x,arg.center.y),CV_RGB(255,255,255),3,8,0);
-	  cvShowImage("Face Detection",ci->getIntensityImg());
-	  printf("%d\n",faces);
-	  cout<<"ZZZZZZZZZ"<<endl;
-	}while(faces!=1);
-      if(faces >=1)
-	{
-	  cout<<"R1"<<endl;
-	  arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
-	  cout<<"NR"<<endl;
-	  tmch->initialize(ci->getIntensityImg(),arg.templateImage,&arg.center,size,hasBeenInitialized);
-	  cout<<"H"<<endl;
-	  hasBeenInitialized = true;
-	  printf("hasBeenInitialized = %d\n",hasBeenInitialized);
-	  if(hasBeenInitialized==1)
-	    {
-	      goto S;
-	    }
+	  cout<<"."<<endl;
+	  sleep(1);
 	}
-      cout<<"S"<<endl;
+      arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
+      tmch->presetTempImage(ci->getIntensityImg(),&arg.center,size,arg.templateImage);
+      hasCreatedTemp = true;
+      cout<<"Found your face !!"<<endl;
     }
- S:
-  cvShowImage("Temp",arg.templateImage);
-
-  cvWaitKey(0);
-
-  cout<<"SSSSSSSSSSSSS"<<endl;
-  /*
-  while(1)
-    {	 
-      //ID for move thread and face detection thread
-      pthread_t thread_m,thread_f;
-
-      //starting time measurement
-      t1 = getrusageSec();
-
-      // create threads
-      pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
-      pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
-    
-      //say goodbye to created threads	
-      pthread_join(thread_m, NULL);
-      pthread_join(thread_f,NULL);
-
-      //stopping time measurement
-      t2 = getrusageSec(); 
-      totalTime += t2-t1;
-      times ++;
   
-      // show images
-      cvShowImage("Face Detection",ci->getIntensityImg());
+  cout<<"\nOK.Now created first template image."<<endl;
+
+  
+  //-----main procces-----//
+  /*
+    while(1)
+    {	 
+    //ID for move thread and face detection thread
+    pthread_t thread_m,thread_f;
+
+    //starting time measurement
+    t1 = getrusageSec();
+
+    // create threads
+    pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
+    pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
     
-      // key handling
-      key = cvWaitKey(100);
-      if(key == 'q')
-	{
-	  break;
-	}
+    //say goodbye to created threads	
+    pthread_join(thread_m, NULL);
+    pthread_join(thread_f,NULL);
+
+    //stopping time measurement
+    t2 = getrusageSec(); 
+    totalTime += t2-t1;
+    times ++;
+  
+    // show images
+    cvShowImage("Face Detection",ci->getIntensityImg());
+    
+    // key handling
+    key = cvWaitKey(100);
+    if(key == 'q')
+    {
+    break;
     }
-  printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
+    }
+    printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
   */
+
   // release memory
   //pthread_mutex_destroy(&mutex);
   cvDestroyWindow("Face Detection");
-cvDestroyWindow("Temp");
+  cvDestroyWindow("Temp");
   delete ci;
   delete ptu;
   delete tmch;
-  printf("%d",arg.templateImage);
+ 
   return 0;
-  cout<<"END"<<endl;
 }
