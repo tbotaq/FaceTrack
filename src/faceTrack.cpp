@@ -61,7 +61,7 @@ struct thread_arg
   int Ly;    //height of window
   int dst_x; //destination point
   int dst_y; //destination point
-  IplImage *templateImage ;
+  IplImage *templateImage;
 };
 
 
@@ -77,21 +77,23 @@ void *thread_move(void *_arg_m)//thread for move control
 
 //the thread for face detection method
 void *thread_facedetect(void *_arg_f)//thread for image proccessing
-{ 
+{
+  cout<<"FD-S"<<endl; 
   pthread_mutex_lock(&mutex);
-  struct thread_arg * arg_f;
+  struct thread_arg *arg_f;
+  cout<<"FD-4"<<endl;
   arg_f=(struct thread_arg *)_arg_f;
-
+  cout<<"FD-3"<<endl;
   //setting center of window as destination
   arg_f -> dst_x = arg_f -> Lx /2;
   arg_f -> dst_y = arg_f -> Ly /2;
-
+  cout<<"FD-2"<<endl;
   //acquire current image 
   ci->acquire();
- 
+  cout<<"FD-5"<<endl;
   //calculate the center location and radius of matched face
-  tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,&arg_f->center,&arg_f->radius);
-
+  tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
+  cout<<"FD-1"<<endl;
   //calculate the distance between face's center location and destination
   arg_f -> dX = dist(arg_f -> center.x,arg_f -> dst_x);
   arg_f -> dY = dist(arg_f -> center.y,arg_f -> dst_y);
@@ -111,7 +113,7 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
       arg_f -> pan = 0;
       arg_f -> tilt = 0;
     }
-  
+  cout<<"FD-E"<<endl;
   pthread_mutex_unlock(&mutex);
 }
 
@@ -156,8 +158,7 @@ int main(void)
 
   int faces = 0;
   bool hasCreatedTemp = false;
-  int count=0;
-
+      
   //-----acquire the template image to use in the first-----//  
   while(!hasCreatedTemp)
     {
@@ -167,58 +168,59 @@ int main(void)
 	{
 	  ci->acquire();
 	  faces = fd->faceDetect(ci->getIntensityImg(),&arg.center,&arg.radius);
-	  cout<<"\tSeaching for your face..."<<endl;
+	  cout<<"\tSearching sequence in progress..."<<endl;
 	  sleep(1);
 	}
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
-      tmch->presetTempImage(ci->getIntensityImg(),&arg.center,size,arg.templateImage);
+      tmch->presetTempImage(ci->getIntensityImg(),&arg.center,arg.templateImage);
       hasCreatedTemp = true;
       cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
   
-  cout<<"\n\tOK.Now created first template image,which is shown in the window."<<endl;
+  cout<<"\n\tOK.Now created first template image."<<endl;
   cout<<"\tPress any key to destroy window."<<endl;
   cvShowImage("Temp",arg.templateImage);
-  cvShowImage("Face Detection",ci->getDepthImg());
   cvWaitKey(0);
-  cvDestroyWindow("Temp");
+  
 
-  /*
+ 
   //-----main procces-----//
   
   while(1)
-  {	 
-  //ID for move thread and face detection thread
-  pthread_t thread_m,thread_f;
+    {	 
+      //ID for move thread and face detection thread
+      pthread_t thread_m,thread_f;
 
-  //starting time measurement
-  t1 = getrusageSec();
+      //starting time measurement
+      t1 = getrusageSec();
+      cout<<"A"<<endl;
+      // create threads
+      pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
+      cout<<"AA"<<endl;
+      pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
+      cout<<"B"<<endl;
+      //say goodbye to created threads	
+      pthread_join(thread_m, NULL);
+      pthread_join(thread_f,NULL);
 
-  // create threads
-  pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
-  pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
-    
-  //say goodbye to created threads	
-  pthread_join(thread_m, NULL);
-  pthread_join(thread_f,NULL);
-
-  //stopping time measurement
-  t2 = getrusageSec(); 
-  totalTime += t2-t1;
-  times ++;
-  
-  // show images
-  cvShowImage("Face Detection",ci->getIntensityImg());
-    
-  // key handling
-  key = cvWaitKey(100);
-  if(key == 'q')
-  {
-  break;
-  }
-  }
+      //stopping time measurement
+      t2 = getrusageSec(); 
+      totalTime += t2-t1;
+      times ++;
+      cout<<"D"<<endl;
+      // show images
+      cvShowImage("Face Detection",ci->getIntensityImg());
+      cvShowImage("Temp",arg.templateImage);
+      cout<<"C"<<endl;
+      // key handling
+      key = cvWaitKey(100);
+      if(key == 'q')
+	{
+	  break;
+	}
+    }
   printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
-  */
+ 
 
   // release memory
   //pthread_mutex_destroy(&mutex);

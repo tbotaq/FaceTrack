@@ -16,7 +16,6 @@ using namespace point;
 class templateMatching
 {
  private:
-  IplImage *templateGrayImage;
   IplImage *sourceBinaryImage;
   IplImage *templateBinaryImage;
   IplImage *differenceMapImage;
@@ -26,7 +25,7 @@ class templateMatching
  public:
   templateMatching();
   ~templateMatching();
-  void presetTempImage(IplImage *sourceImage,CvPoint *center,CvSize srcSize,IplImage *templateImage);
-  void calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius);
+  void presetTempImage(IplImage *sourceImage,CvPoint *center,IplImage *templateImage);
+  void calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius);
 };
 #endif

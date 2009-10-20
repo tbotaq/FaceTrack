@@ -12,37 +12,27 @@ templateMatching::templateMatching()
 templateMatching::~templateMatching()
 {
   //memory allocation
-  cvReleaseImage( &templateGrayImage );
   cvReleaseImage( &sourceBinaryImage );
   cvReleaseImage( &templateBinaryImage );
   cvReleaseImage( &differenceMapImage );
 }
 
-void templateMatching::presetTempImage(IplImage *sourceImage,CvPoint *center,CvSize srcSize,IplImage *templateImage)
+void templateMatching::presetTempImage(IplImage *sourceImage,CvPoint *center,IplImage *templateImage)
 {
   cvGetRectSubPix(sourceImage,templateImage,cvPointTo32f(*center));
-  if(templateImage != NULL)
-    {
-      //allocate memory
-      templateGrayImage   = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
-      sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
-      templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
-      differenceMapImage  = cvCreateImage(cvSize(srcSize.width - templateImage->width + 1,srcSize.height - templateImage->height + 1),IPL_DEPTH_32F,1);
-    }
-  else
-    {
-      cout<<"Failed in creating new template image."<<endl;
-    }
+  if(templateImage == NULL)
+    cout<<"Failed in creating new template image."<<endl;
 }
 
-void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
+void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
 {
-  //convertion from BGR to gray scale for template image
-  cvCvtColor( templateImage, templateGrayImage, CV_BGR2GRAY );
-
+  sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
+  templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
+  differenceMapImage  = cvCreateImage(cvSize(srcSize.width - templateImage->width + 1,srcSize.height - templateImage->height + 1),IPL_DEPTH_32F,1);
+ 
   //Binarization
   cvThreshold( sourceImage, sourceBinaryImage, THRESHOLD, THRESHOLD_MAX_VALUE, CV_THRESH_BINARY );
-  cvThreshold( templateGrayImage, templateBinaryImage, THRESHOLD, THRESHOLD_MAX_VALUE, CV_THRESH_BINARY );
+  cvThreshold( templateImage, templateBinaryImage, THRESHOLD, THRESHOLD_MAX_VALUE, CV_THRESH_BINARY );
       
   //calculate the similarity by "SSD",which returns minimum value as most resembled value   
   cvMatchTemplate( sourceBinaryImage, templateBinaryImage, differenceMapImage, CV_TM_SQDIFF );
