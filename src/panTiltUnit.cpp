@@ -80,13 +80,13 @@ int panTiltUnit::move(double pan, double tilt)
   panAxis -> SetProfile(panProfile);
   tiltAxis -> SetProfile(tiltProfile);
 
-  coutDbg << "Phase:Move > Start.\n";
+  cout << "\tPhase:Move > Start.\n";
 
   //Start the move
-  printf("Pan(%2.2f)[degrees], Tilt(%2.2f)[degrees].\n",pan,tilt);
+  printf("\tPan(%2.2f)[degrees], Tilt(%2.2f)[degrees].\n",pan,tilt);
   biclops->Move(axisMask);
 
-  cout << "Phase:Move > Finished."<<endl;
+  cout << "\tPhase:Move > Finished.\n"<<endl;
   
   return 0;
 }

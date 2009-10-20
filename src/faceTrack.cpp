@@ -78,22 +78,16 @@ void *thread_move(void *_arg_m)//thread for move control
 //the thread for face detection method
 void *thread_facedetect(void *_arg_f)//thread for image proccessing
 {
-  cout<<"FD-S"<<endl; 
   pthread_mutex_lock(&mutex);
   struct thread_arg *arg_f;
-  cout<<"FD-4"<<endl;
   arg_f=(struct thread_arg *)_arg_f;
-  cout<<"FD-3"<<endl;
   //setting center of window as destination
   arg_f -> dst_x = arg_f -> Lx /2;
   arg_f -> dst_y = arg_f -> Ly /2;
-  cout<<"FD-2"<<endl;
   //acquire current image 
   ci->acquire();
-  cout<<"FD-5"<<endl;
   //calculate the center location and radius of matched face
   tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
-  cout<<"FD-1"<<endl;
   //calculate the distance between face's center location and destination
   arg_f -> dX = dist(arg_f -> center.x,arg_f -> dst_x);
   arg_f -> dY = dist(arg_f -> center.y,arg_f -> dst_y);
@@ -113,7 +107,6 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
       arg_f -> pan = 0;
       arg_f -> tilt = 0;
     }
-  cout<<"FD-E"<<endl;
   pthread_mutex_unlock(&mutex);
 }
 
@@ -183,7 +176,7 @@ int main(void)
   cvWaitKey(0);
   
 
- 
+  cout<<"Biclops:"<<endl;
   //-----main procces-----//
   
   while(1)
@@ -193,12 +186,11 @@ int main(void)
 
       //starting time measurement
       t1 = getrusageSec();
-      cout<<"A"<<endl;
       // create threads
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
-      cout<<"AA"<<endl;
+     
       pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
-      cout<<"B"<<endl;
+     
       //say goodbye to created threads	
       pthread_join(thread_m, NULL);
       pthread_join(thread_f,NULL);
@@ -207,11 +199,11 @@ int main(void)
       t2 = getrusageSec(); 
       totalTime += t2-t1;
       times ++;
-      cout<<"D"<<endl;
+
       // show images
       cvShowImage("Face Detection",ci->getIntensityImg());
       cvShowImage("Temp",arg.templateImage);
-      cout<<"C"<<endl;
+
       // key handling
       key = cvWaitKey(100);
       if(key == 'q')
@@ -223,7 +215,7 @@ int main(void)
  
 
   // release memory
-  //pthread_mutex_destroy(&mutex);
+  pthread_mutex_destroy(&mutex);
   cvDestroyWindow("Face Detection");
   cvDestroyWindow("Temp");
   delete ci;
