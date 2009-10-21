@@ -17,8 +17,9 @@ templateMatching::~templateMatching()
   cvReleaseImage( &differenceMapImage );
 }
 
-void templateMatching::presetTempImage(IplImage *sourceImage,CvPoint *center,IplImage *templateImage)
+void templateMatching::setTempImage(IplImage *sourceImage,CvPoint *center,IplImage *templateImage)
 {
+
   cvGetRectSubPix(sourceImage,templateImage,cvPointTo32f(*center));
   if(templateImage == NULL)
     cout<<"Failed in creating new template image."<<endl;

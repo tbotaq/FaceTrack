@@ -88,9 +88,11 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
   ci->acquire();
   //calculate the center location and radius of matched face
   tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
+
+
   //calculate the distance between face's center location and destination
-  arg_f -> dX = dist(arg_f -> center.x,arg_f -> dst_x);
-  arg_f -> dY = dist(arg_f -> center.y,arg_f -> dst_y);
+  arg_f -> dX = dist(arg_f -> center.x, arg_f -> dst_x);
+  arg_f -> dY = dist(arg_f -> center.y, arg_f -> dst_y);
     
   //drow a circle on the detected face and  line from face's center location to destination
   cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center.x,arg_f -> center.y),arg_f -> radius,CV_RGB(255,255,255),3,8,0);
@@ -165,7 +167,7 @@ int main(void)
 	  sleep(1);
 	}
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
-      tmch->presetTempImage(ci->getIntensityImg(),&arg.center,arg.templateImage);
+      tmch->setTempImage(ci->getIntensityImg(),&arg.center,arg.templateImage);
       hasCreatedTemp = true;
       cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
@@ -174,7 +176,7 @@ int main(void)
   cout<<"\tPress any key to destroy window."<<endl;
   cvShowImage("Temp",arg.templateImage);
   cvWaitKey(0);
-  
+  cvDestroyWindow("Temp");
 
   cout<<"Biclops:"<<endl;
   //-----main procces-----//
@@ -188,7 +190,6 @@ int main(void)
       t1 = getrusageSec();
       // create threads
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
-     
       pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
      
       //say goodbye to created threads	
