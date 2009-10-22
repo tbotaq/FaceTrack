@@ -5,7 +5,8 @@
 #include "libusbSR.h"
 #include "definesSR.h"
 #include "pointing.h"
-#include<mathfuncs.h>
+//#include<mathfuncs.h>
+#include<math.h>
 //libraies for Biclops 
 #include<panTiltUnit.h>
 //for multi thread coding
@@ -81,14 +82,16 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
   pthread_mutex_lock(&mutex);
   struct thread_arg *arg_f;
   arg_f=(struct thread_arg *)_arg_f;
+
   //setting center of window as destination
   arg_f -> dst_x = arg_f -> Lx /2;
   arg_f -> dst_y = arg_f -> Ly /2;
+
   //acquire current image 
   ci->acquire();
+
   //calculate the center location and radius of matched face
   tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
-
 
   //calculate the distance between face's center location and destination
   arg_f -> dX = dist(arg_f -> center.x, arg_f -> dst_x);
@@ -98,17 +101,25 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
   cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center.x,arg_f -> center.y),arg_f -> radius,CV_RGB(255,255,255),3,8,0);
   cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center.x,arg_f -> center.y),CV_RGB(255,255,255),3,8,0);  
 
-  if(1)
+  double DISTANCE = sqrt(pow(arg_f->dX,2)+pow(arg_f->dY,2));
+
+  if(DISTANCE<10)
     {
       //define how long PT unit make movement
       arg_f -> pan = arg_f -> dX;
       arg_f -> tilt = arg_f -> dY;
+      tmch -> setTempImage(ci->getIntensityImg(),&arg_f->center,arg_f->templateImage);
     }
   else 
     {     
       arg_f -> pan = 0;
       arg_f -> tilt = 0;
     }
+
+  //create a new template image using the acquired data
+  
+  
+  cvWaitKey(1);
   pthread_mutex_unlock(&mutex);
 }
 
@@ -171,12 +182,13 @@ int main(void)
       hasCreatedTemp = true;
       cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
+  cvShowImage("Template Image",arg.templateImage);
   
   cout<<"\n\tOK.Now created first template image."<<endl;
   cout<<"\tPress any key to destroy window."<<endl;
-  cvShowImage("Temp",arg.templateImage);
-  cvWaitKey(0);
-  cvDestroyWindow("Temp");
+  //cvShowImage("Temp",arg.templateImage);
+  //cvWaitKey(0);
+  //cvDestroyWindow("Temp");
 
   cout<<"Biclops:"<<endl;
   //-----main procces-----//
