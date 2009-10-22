@@ -29,40 +29,39 @@
 using namespace std;
 using namespace point;
 
-
-void PPP(string string)
-{
+  void PPP(string string)
+  {
   cout<<string<<endl;
-}
+  }
 
-//declaration of interfaces for each class
-cameraImages *ci;
-faceDetector *fd;
-panTiltUnit *ptu;
-templateMatching *tmch;
+  //declaration of interfaces for each class
+  cameraImages *ci;
+  faceDetector *fd;
+  panTiltUnit *ptu;
+  templateMatching *tmch;
 
-//for mutex lock
-pthread_mutex_t mutex;
+  //for mutex lock
+  pthread_mutex_t mutex;
 
-//function to measure time
-double getrusageSec(){
+  //function to measure time
+  double getrusageSec(){
   struct rusage t;
   struct timeval s;
   getrusage(RUSAGE_SELF, &t);
   s = t.ru_utime;
   return s.tv_sec + (double)s.tv_usec*1e-6;
-}
+  }
 
-//fuction to calculate the distance between face and destination
-double dist(int center, int dst)
-{
+  //fuction to calculate the distance between face and destination
+  double dist(int center, int dst)
+  {
   double ret = K * (center - dst);
   return ret;
-}
+  }
 
-//structure for thread control
-struct thread_arg
-{
+  //the structure used for threads
+  struct thread_arg
+  {
   double pan;
   double tilt;
   CvPoint center;
@@ -75,29 +74,31 @@ struct thread_arg
   int dst_y; //destination point
   IplImage *templateImage;
   bool detectedAbnormalNum;
-};
+  bool updatedCenterLoc;
+  };
 
-
-//the thread for move method
-void *thread_move(void *_arg_m)//thread for move control
-{
+  //the thread for move method
+  void *thread_move(void *_arg_m)
+  {
   pthread_mutex_lock(&mutex);
   struct thread_arg *arg_m;
   arg_m = (struct thread_arg *)_arg_m;
   ptu->move(arg_m->pan, arg_m->tilt);
-     pthread_mutex_unlock(&mutex); 
-}
+  pthread_mutex_unlock(&mutex); 
+  }
 
-//the thread for face detection method
-void *thread_facedetect(void *_arg_f)//thread for image proccessing
+  //the thread for image processing
+void *thread_facedetect(void *_arg_f)
 {
   pthread_mutex_lock(&mutex);
   struct thread_arg *arg_f;
 
+  //previous center points
   double prevX=0,prevY=0;
-  int diffX,diffY;
-  bool updatedCenterLoc = 0;
 
+  //difference between present points and those of previous
+  int diffX,diffY;      
+ 
   arg_f=(struct thread_arg *)_arg_f;
 
   //setting center of window as destination
@@ -107,15 +108,21 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
   //acquire current image 
   ci->acquire();
 
-  if(updatedCenterLoc)
+  if(arg_f->updatedCenterLoc)
     {
       prevX = arg_f->center.x;
       prevY = arg_f->center.y;
     }
+  else
+    {
+      prevX=0;
+      prevX=0;
+    }
+
 
   //calculate the center location and radius of matched face
   tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
-  updatedCenterLoc = 1;
+  arg_f->updatedCenterLoc = true;
 
   //calculate the distance between face's center location and destination
   arg_f -> dX = dist(arg_f -> center.x, arg_f -> dst_x);
@@ -125,14 +132,17 @@ void *thread_facedetect(void *_arg_f)//thread for image proccessing
   cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center.x,arg_f -> center.y),arg_f -> radius,CV_RGB(255,255,255),3,8,0);
   cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center.x,arg_f -> center.y),CV_RGB(255,255,255),3,8,0);  
 
-  diffX = abs(arg_f->center.x - prevX);
+  diffX = abs(arg_f->center.x - prevX);  
   diffY = abs(arg_f->center.y - prevY);
+
   //printf("Input diff>");
   //scanf("%d",&diffX);
   //diffY = diffX;
+
   cout<<"diff="<<diffX<<","<<diffY<<endl;
   arg_f->detectedAbnormalNum = false;
-  if(diffX>10 || diffY>10)
+  
+  if(diffX>100 || diffY>100)
     arg_f->detectedAbnormalNum = true;
   
   if(arg_f->detectedAbnormalNum == false)
@@ -170,6 +180,7 @@ int main(void)
 
   //interface to structure
   struct thread_arg arg;
+  arg.updatedCenterLoc = false;
 
   // initialize camera image class
   ci->initialize();
@@ -198,10 +209,10 @@ int main(void)
   cout<<"SYSTEM:INITIALIZATION"<<endl;
   
   int faces = 0;
-  bool hasCreatedTemp = false;
+  bool hasBeenInitialized = false;
       
   //-----acquire the template image to use in the first-----//  
-  while(!hasCreatedTemp)
+  while(!hasBeenInitialized)
     {
       cout<<"\tPlease show your face to the camera."<<endl;
       
@@ -209,12 +220,12 @@ int main(void)
 	{
 	  ci->acquire();
 	  faces = fd->faceDetect(ci->getIntensityImg(),&arg.center,&arg.radius);
-	  cout<<"\tSearching sequence in progress..."<<endl;
-	  sleep(1);
+	  //cout<<"\tSearching sequence in progress..."<<endl;
+	  //sleep(1);
 	}
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
       tmch->setTempImage(ci->getIntensityImg(),&arg.center,arg.templateImage);
-      hasCreatedTemp = true;
+      hasBeenInitialized = true;
       cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
   cvShowImage("Template Image",arg.templateImage);
@@ -229,7 +240,7 @@ int main(void)
   while(1)
     {	 
 
-      PPP("15");
+      //PPP("15");
       //ID for move thread and face detection thread
       pthread_t thread_m,thread_f;
 
@@ -238,7 +249,7 @@ int main(void)
       // create threads
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
       pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
-      PPP("19");
+      //PPP("19");
       //say goodbye to created threads	
       pthread_join(thread_m, NULL);
       pthread_join(thread_f,NULL);
@@ -247,8 +258,8 @@ int main(void)
       t2 = getrusageSec(); 
       totalTime += t2-t1;
       times ++;
-      PPP("20");
-      if(arg.detectedAbnormalNum)
+      //PPP("20");
+      if(arg.detectedAbnormalNum == true)
 	{
 	  cout<<"SYSTEM:\tDetected abnormal data.Goto Initialization phase."<<endl;
 	  goto INITIALIZATION;
@@ -274,6 +285,6 @@ int main(void)
   delete ci;
   delete ptu;
   delete tmch;
-  PPP("100");
+  //PPP("100");
   return 0;
 }
