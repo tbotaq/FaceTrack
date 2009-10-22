@@ -1,7 +1,7 @@
 //Takuya Otsubo
 //using SR4000 as a camera unit.
 //using Biclops as a Pan-Tilt unit.
-//thanks to Kosei Moriyama,my teacher.
+//Thanks to Kosei Moriyama,who helps me my teacher.
 
 //libraries for image proccess
 #include "opencv/cv.h"
@@ -22,7 +22,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include<stdio.h> 
-#define K 0.4 //const used for PID
+#define K 0.4 //the constant used for PID
 //library for templateMatching
 #include<templateMatching.h>
 
@@ -145,7 +145,7 @@ void *thread_facedetect(void *_arg_f)
   if(diffX>100 || diffY>100)
     arg_f->detectedAbnormalNum = true;
   
-  if(arg_f->detectedAbnormalNum == false)
+  if(!(arg_f->detectedAbnormalNum))
     {
       //define how long PT unit make movement
       arg_f -> pan = arg_f -> dX;
@@ -164,13 +164,13 @@ void *thread_facedetect(void *_arg_f)
 
 int main(void)
 {
-  PPP("0");
+  //PPP("0");
   //reference to each function
   ptu = new panTiltUnit();
-  PPP("1");
+  //PPP("1");
   ci = new cameraImages();
   tmch = new templateMatching();
-  PPP("2");
+  //PPP("2");
   //for time measurement
   double t1=0,t2=0;
   double totalTime=0;
@@ -184,18 +184,18 @@ int main(void)
 
   // initialize camera image class
   ci->initialize();
-  PPP("5");
+  //PPP("5");
   //estimate the size of image
   ci->acquire();
   CvSize size = ci -> getImageSize();
-  PPP("6");
+  //PPP("6");
   //pass the image size to class faceDetector's constructor
   fd = new faceDetector(size);
-  PPP("7");
+  //PPP("7");
   //define the size of recognitive region using "size"
   arg.Lx = size.width;
   arg.Ly = size.height;
-  PPP("10");
+  //PPP("10");
   //initialize mutex
   pthread_mutex_init(&mutex,NULL);
    
@@ -240,7 +240,7 @@ int main(void)
   while(1)
     {	 
 
-      //PPP("15");
+      ////PPP("15");
       //ID for move thread and face detection thread
       pthread_t thread_m,thread_f;
 
@@ -249,7 +249,7 @@ int main(void)
       // create threads
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
       pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
-      //PPP("19");
+      ////PPP("19");
       //say goodbye to created threads	
       pthread_join(thread_m, NULL);
       pthread_join(thread_f,NULL);
@@ -258,8 +258,8 @@ int main(void)
       t2 = getrusageSec(); 
       totalTime += t2-t1;
       times ++;
-      //PPP("20");
-      if(arg.detectedAbnormalNum == true)
+      ////PPP("20");
+      if(arg.detectedAbnormalNum)
 	{
 	  cout<<"SYSTEM:\tDetected abnormal data.Goto Initialization phase."<<endl;
 	  goto INITIALIZATION;
@@ -285,6 +285,6 @@ int main(void)
   delete ci;
   delete ptu;
   delete tmch;
-  //PPP("100");
+  ////PPP("100");
   return 0;
 }
