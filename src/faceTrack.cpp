@@ -1,7 +1,7 @@
 //Takuya Otsubo
 //using SR4000 as a camera unit.
 //using Biclops as a Pan-Tilt unit.
-//Thanks to Kosei Moriyama,who helps me my teacher.
+//Thanks to Kosei Moriyama,who helps me coding.
 
 //libraries for image proccess
 #include "opencv/cv.h"
