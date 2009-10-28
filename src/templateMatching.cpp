@@ -1,3 +1,4 @@
+//Takuya Otsubo
 #include<templateMatching.h>
 #define THRESHOLD 50//threshold value for binarization
 #define THRESHOLD_MAX_VALUE 255//max value for binarization
@@ -7,6 +8,13 @@
 
 templateMatching::templateMatching()
 {
+  sourceBinaryImage = NULL;
+  templateBinaryImage = NULL;
+  differenceMapImage = NULL;
+  minLocation = cvPoint(0, 0);
+  scalar = cvScalar(0);
+  key = 0;
+  errorValue = 0;
 }
 
 templateMatching::~templateMatching()
@@ -25,6 +33,11 @@ void templateMatching::setTempImage(IplImage *sourceImage,CvPoint *center,IplIma
     cout<<"Failed in creating new template image."<<endl;
 }
 
+double templateMatching::getErrorValue()
+{
+  return errorValue;
+}
+
 void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
 {
   sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
@@ -38,8 +51,11 @@ void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateI
   //calculate the similarity by "SSD",which returns minimum value as most resembled value   
   cvMatchTemplate( sourceBinaryImage, templateBinaryImage, differenceMapImage, CV_TM_SQDIFF );
   
+  double a;
   //find the minimum-resembled point of differenceMapImage and write it to minLocation    
-  cvMinMaxLoc( differenceMapImage, NULL, NULL, &minLocation, NULL, NULL );
+  cvMinMaxLoc( differenceMapImage, &errorValue, &a, &minLocation, NULL, NULL );
+
+  cerr << "min, max: " << errorValue << ", " << a << ", " << abs((int)errorValue - (int)a) << endl;
 
   //calculate the center location and radius of detected face
   center->x = minLocation.x + templateImage->width/2;

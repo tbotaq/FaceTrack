@@ -11,20 +11,21 @@
 #include "definesSR.h"
 #include "pointing.h"
 //#include<mathfuncs.h>
-#include<math.h>
+#include <math.h>
 //libraies for Biclops 
-#include<panTiltUnit.h>
+#include <panTiltUnit.h>
 //for multi thread coding
-#include<pthread.h>
+#include <pthread.h>
 #include <iostream>
 //libraries for time count
 #include <time.h>
 #include <sys/time.h>
 #include <sys/resource.h>
-#include<stdio.h> 
-#define K 0.4 //the constant used for PID
+#include <stdio.h>
+//the constant used for PID 
+#define K 0.4 
 //library for templateMatching
-#include<templateMatching.h>
+#include <templateMatching.h>
 
 using namespace std;
 using namespace point;
@@ -107,7 +108,8 @@ void *thread_facedetect(void *_arg_f)
 
   //acquire current image 
   ci->acquire();
-
+  
+  cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
   if(arg_f->updatedCenterLoc)
     {
       prevX = arg_f->center.x;
@@ -115,14 +117,14 @@ void *thread_facedetect(void *_arg_f)
     }
   else
     {
-      prevX=0;
-      prevX=0;
+      prevX = 0;
+      prevX = 0;
     }
-
+ cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
 
   //calculate the center location and radius of matched face
   tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
-  arg_f->updatedCenterLoc = true;
+  arg_f -> updatedCenterLoc = true;
 
   //calculate the distance between face's center location and destination
   arg_f -> dX = dist(arg_f -> center.x, arg_f -> dst_x);
@@ -140,10 +142,11 @@ void *thread_facedetect(void *_arg_f)
   //diffY = diffX;
 
   cout<<"diff="<<diffX<<","<<diffY<<endl;
-  arg_f->detectedAbnormalNum = false;
+  arg_f -> detectedAbnormalNum = false;
   
-  if(diffX>100 || diffY>100)
-    arg_f->detectedAbnormalNum = true;
+  cout<<"ErrorValue="<<tmch->getErrorValue()<<endl;
+  //if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.3)
+    // arg_f -> detectedAbnormalNum = true;
   
   if(!(arg_f->detectedAbnormalNum))
     {
@@ -203,6 +206,8 @@ int main(void)
   cvNamedWindow("Face Detection", CV_WINDOW_AUTOSIZE);
   cvNamedWindow("Temp", CV_WINDOW_AUTOSIZE);
 
+  //flag initialization
+  arg.updatedCenterLoc = false;
 
  INITIALIZATION://LABEL
 
@@ -234,7 +239,7 @@ int main(void)
     
   cout<<"Biclops:"<<endl;
 
-
+  int abnormTimes = 0;
   //-----main procces-----//
   
   while(1)
@@ -243,7 +248,7 @@ int main(void)
       ////PPP("15");
       //ID for move thread and face detection thread
       pthread_t thread_m,thread_f;
-
+      
       //starting time measurement
       t1 = getrusageSec();
       // create threads
@@ -261,9 +266,16 @@ int main(void)
       ////PPP("20");
       if(arg.detectedAbnormalNum)
 	{
-	  cout<<"SYSTEM:\tDetected abnormal data.Goto Initialization phase."<<endl;
-	  goto INITIALIZATION;
+	  abnormTimes++;
+	  cout<<"###detected abnormal number ("<<abnormTimes<<")"<<endl;
+	  if(abnormTimes==5)
+	    {
+	      cout<<"SYSTEM:\tDetected abnormal data.Go to Initialization phase."<<endl;
+	      goto INITIALIZATION;
+	    }
 	}
+      else 
+	abnormTimes = 0;
 
       // show images
       cvShowImage("Face Detection",ci->getIntensityImg());
