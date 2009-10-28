@@ -49,7 +49,7 @@ void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateI
   cvThreshold( templateImage, templateBinaryImage, THRESHOLD, THRESHOLD_MAX_VALUE, CV_THRESH_BINARY );
       
   //calculate the similarity by "SSD",which returns minimum value as most resembled value   
-  cvMatchTemplate( sourceBinaryImage, templateBinaryImage, differenceMapImage, CV_TM_SQDIFF );
+  cvMatchTemplate( sourceBinaryImage, templateBinaryImage, differenceMapImage, CV_TM_SQDIFF_NORMED );
   
   double a;
   //find the minimum-resembled point of differenceMapImage and write it to minLocation    
@@ -62,3 +62,5 @@ void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateI
   center->y = minLocation.y + templateImage->height/2;
   *radius   = max(templateImage->width/2,templateImage->height/2);
 }
+
+
