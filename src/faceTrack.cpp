@@ -1,7 +1,7 @@
 //Takuya Otsubo
 //using SR4000 as a camera unit.
 //using Biclops as a Pan-Tilt unit.
-//Thanks to Kosei Moriyama,who helps me coding.
+//Kosei Moriyama,who helps me coding.
 
 //libraries for image proccess
 #include "opencv/cv.h"
@@ -30,39 +30,40 @@
 using namespace std;
 using namespace point;
 
-  void PPP(string string)
-  {
+void PPP(string string)
+{
   cout<<string<<endl;
-  }
+}
 
-  //declaration of interfaces for each class
-  cameraImages *ci;
-  faceDetector *fd;
-  panTiltUnit *ptu;
-  templateMatching *tmch;
+//declaration of interfaces for each class
+cameraImages *ci;
+faceDetector *fd;
+panTiltUnit *ptu;
+templateMatching *tmch;
 
-  //for mutex lock
-  pthread_mutex_t mutex;
+//for mutex lock
+pthread_mutex_t mutex;
 
-  //function to measure time
-  double getrusageSec(){
+//function to measure time
+double getrusageSec()
+{
   struct rusage t;
   struct timeval s;
   getrusage(RUSAGE_SELF, &t);
   s = t.ru_utime;
   return s.tv_sec + (double)s.tv_usec*1e-6;
-  }
+}
 
-  //fuction to calculate the distance between face and destination
-  double dist(int center, int dst)
-  {
+//fuction to calculate the distance between face and destination
+double dist(int center, int dst)
+{
   double ret = K * (center - dst);
   return ret;
-  }
+}
 
-  //the structure used for threads
-  struct thread_arg
-  {
+//the structure used for threads
+struct thread_arg
+{
   double pan;
   double tilt;
   CvPoint center;
@@ -76,30 +77,30 @@ using namespace point;
   IplImage *templateImage;
   bool detectedAbnormalNum;
   bool updatedCenterLoc;
-  };
+};
 
-  //the thread for move method
-  void *thread_move(void *_arg_m)
-  {
+//the thread for move method
+void *thread_move(void *_arg_m)
+{
   pthread_mutex_lock(&mutex);
   struct thread_arg *arg_m;
   arg_m = (struct thread_arg *)_arg_m;
   ptu->move(arg_m->pan, arg_m->tilt);
   pthread_mutex_unlock(&mutex); 
-  }
+}
 
-  //the thread for image processing
+//the thread for image processing
 void *thread_facedetect(void *_arg_f)
 {
   pthread_mutex_lock(&mutex);
   struct thread_arg *arg_f;
-
+  
   //previous center points
   double prevX=0,prevY=0;
-
+  
   //difference between present points and those of previous
   int diffX,diffY;      
- 
+  
   arg_f=(struct thread_arg *)_arg_f;
 
   //setting center of window as destination
@@ -109,7 +110,7 @@ void *thread_facedetect(void *_arg_f)
   //acquire current image 
   ci->acquire();
   
-  cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
+  //cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
   if(arg_f->updatedCenterLoc)
     {
       prevX = arg_f->center.x;
@@ -120,23 +121,22 @@ void *thread_facedetect(void *_arg_f)
       prevX = 0;
       prevX = 0;
     }
-  cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
-
+  //cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
+  
   //calculate the center location and radius of matched face
   tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
   arg_f -> updatedCenterLoc = true;
-
+  
   //calculate the distance between face's center location and destination
   arg_f -> dX = dist(arg_f -> center.x, arg_f -> dst_x);
   arg_f -> dY = dist(arg_f -> center.y, arg_f -> dst_y);
-    
+  
   diffX = abs(arg_f->center.x - prevX);  
   diffY = abs(arg_f->center.y - prevY);
-
-  cout<<"diff="<<diffX<<","<<diffY<<endl;
+  
+  //cout<<"diff="<<diffX<<","<<diffY<<endl;
   arg_f -> detectedAbnormalNum = false;
   
-  cout<<"ErrorValue="<<tmch->getErrorValue()<<endl;
   if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.4)
     arg_f -> detectedAbnormalNum = true;
   
@@ -152,7 +152,7 @@ void *thread_facedetect(void *_arg_f)
       arg_f -> pan = 0;
       arg_f -> tilt = 0;
     }
-
+  
   //drow a circle on the detected face,line from face's center location to destination
   cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center.x,arg_f -> center.y),arg_f -> radius,CV_RGB(255,255,255),3,8,0);
   cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center.x,arg_f -> center.y),CV_RGB(255,255,255),3,8,0);  
@@ -163,12 +163,12 @@ void *thread_facedetect(void *_arg_f)
 
 int main(void)
 {
-
+  
   //reference to each function
   ptu = new panTiltUnit();
   ci = new cameraImages();
   tmch = new templateMatching();
-
+  
   //for time measurement
   double t1=0,t2=0;
   double totalTime=0;
@@ -207,7 +207,7 @@ int main(void)
 
  INITIALIZATION://LABEL
 
-  cout<<"SYSTEM:INITIALIZATION"<<endl;
+  cout<<"\n\n\n\n\n\nSYSTEM:INITIALIZATION"<<endl;
   
   int faces = 0;
   bool hasBeenInitialized = false;
@@ -235,17 +235,16 @@ int main(void)
   cout<<"Biclops:"<<endl;
 
   int abnormTimes = 0;
+
   //-----main procces-----//
-  
   while(1)
     {	 
-
-      //sleep(1);
       //ID for move thread and face detection thread
       pthread_t thread_m,thread_f;
       
       //starting time measurement
       t1 = getrusageSec();
+
       // create threads
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
       pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
@@ -258,7 +257,7 @@ int main(void)
       t2 = getrusageSec(); 
       totalTime += t2-t1;
       times ++;
-
+      
       if(arg.detectedAbnormalNum)
 	{
 	  abnormTimes++;
