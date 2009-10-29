@@ -137,8 +137,8 @@ void *thread_facedetect(void *_arg_f)
   arg_f -> detectedAbnormalNum = false;
   
   cout<<"ErrorValue="<<tmch->getErrorValue()<<endl;
-  //if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.3)
-  // arg_f -> detectedAbnormalNum = true;
+  if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.4)
+    arg_f -> detectedAbnormalNum = true;
   
   if(!(arg_f->detectedAbnormalNum))
     {
@@ -241,7 +241,7 @@ int main(void)
   while(1)
     {	 
 
-
+      //sleep(1);
       //ID for move thread and face detection thread
       pthread_t thread_m,thread_f;
       
