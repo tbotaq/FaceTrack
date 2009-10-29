@@ -1,4 +1,4 @@
-# -- ~sekiatu/work/SR4000/trunk/src/Makefile
+#~sekiatu/work/SR4000/trunk/src/Makefile
 
 OPTION = -Wall -g -Wextra -pedantic -O2
 FLYOPTION = -Wall -Wextra -pedantic -O2
@@ -40,8 +40,9 @@ $(BIND)faceTrack: faceTrack.cpp $(OBJS)
 ##################
 
 # cameraImages.o
-cameraImages.o: cameraImages.cpp $(INCD)pointing.h
-	$(CC)  $(OPTION) -I$(INCD) $(LIB) -c cameraImages.cpp
+cameraImages.o: cameraImages2.cpp $(INCD)pointing2.h
+	$(CC)  $(OPTION) -I$(INCD) $(LIB) -c cameraImages2.cpp
+	mv cameraImages2.o cameraImage.o
 
 # funcPointing.o
 funcPointing.o: funcPointing.cpp $(INCD)pointing.h

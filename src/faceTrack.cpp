@@ -166,7 +166,6 @@ int main(void)
 
   //reference to each function
   ptu = new panTiltUnit();
-
   ci = new cameraImages();
   tmch = new templateMatching();
 
@@ -174,6 +173,7 @@ int main(void)
   double t1=0,t2=0;
   double totalTime=0;
   int times=0;
+  
   //for key handling
   int key;
 
@@ -201,8 +201,7 @@ int main(void)
   // define the  window
   cvNamedWindow("Face Detection", CV_WINDOW_AUTOSIZE);
   cvNamedWindow("Temp", CV_WINDOW_AUTOSIZE);
-  cvNamedWindow("Threshold(Temp)", CV_WINDOW_AUTOSIZE);
-  cvNamedWindow("Threshold(Src)", CV_WINDOW_AUTOSIZE);
+  
   //flag initialization
   arg.updatedCenterLoc = false;
 
@@ -267,7 +266,7 @@ int main(void)
 	  if(abnormTimes==5)
 	    {
 	      cout<<"SYSTEM:\tDetected abnormal data.Go to Initialization phase."<<endl;
-	      goto INITIALIZATION;
+	      //goto INITIALIZATION;
 	    }
 	}
       else 
@@ -276,9 +275,7 @@ int main(void)
       // show images
       cvShowImage("Face Detection",ci->getIntensityImg());
       cvShowImage("Temp",arg.templateImage);
-      cvShowImage("Threshold(Temp)",tmch->templateBinaryImage);
-      cvShowImage("Threshold(Src)",tmch->sourceBinaryImage);
-      
+            
       // key handling
       key = cvWaitKey(100);
       if(key == 'q')
@@ -287,6 +284,7 @@ int main(void)
 	}
       if(key == 'i')
 	{
+	  cout<<"SYSTEM:\tforce go to INITIALIZE."<<endl;
 	  goto INITIALIZATION;
 	}
     }

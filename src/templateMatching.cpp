@@ -20,8 +20,8 @@ templateMatching::templateMatching()
 templateMatching::~templateMatching()
 {
   //memory allocation
-  cvReleaseImage( &sourceBinaryImage );
-  cvReleaseImage( &templateBinaryImage );
+  //cvReleaseImage( &sourceBinaryImage );
+  //cvReleaseImage( &templateBinaryImage );
   cvReleaseImage( &differenceMapImage );
 }
 
@@ -40,8 +40,8 @@ double templateMatching::getErrorValue()
 
 void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
 {
-  sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
-  templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
+  //sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
+  //templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);
   differenceMapImage  = cvCreateImage(cvSize(srcSize.width - templateImage->width + 1,srcSize.height - templateImage->height + 1),IPL_DEPTH_32F,1);
  
   //Binarization
@@ -51,11 +51,10 @@ void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateI
   //calculate the similarity by "SSD",which returns minimum value as most resembled value   
   cvMatchTemplate( sourceImage, templateImage, differenceMapImage, CV_TM_SQDIFF_NORMED );
   
-  double a;
   //find the minimum-resembled point of differenceMapImage and write it to minLocation    
-  cvMinMaxLoc( differenceMapImage, &errorValue, &a, &minLocation, NULL, NULL );
+  cvMinMaxLoc( differenceMapImage, &errorValue, NULL, &minLocation, NULL, NULL );
 
-  cerr << "min, max: " << errorValue << ", " << a << ", " << abs((int)errorValue - (int)a) << endl;
+  cerr << "errorValue " << errorValue << " Similarity[%] "<< (1-errorValue)*100 <<endl;
 
   //calculate the center location and radius of detected face
   center->x = minLocation.x + templateImage->width/2;
