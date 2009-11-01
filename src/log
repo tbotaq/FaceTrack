@@ -1,0 +1,140 @@
+Biclops:Initiallize > START.
+Opening file ../data/BiclopsRevI.cfg is... successful.
+Parsing file ../data/BiclopsRevI.cfg. 
+....
+....
+Initialize > FINISHED.
+Biclops::Homing sequence > START.
+Biclops:Homing sequence > FINISHED.
+libusbSR version: 1.0.10.554
+
+done.
+SR_OpenUSB() called result:1
+SetIntegrationTime result:2
+SetModulationFrequency result:-1
+SetAutoExposure result:-1
+SetSetAmplitudeThreshold result:4
+SetMode result:0
+Number of images:3
+
+
+
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+	Move > Start.
+	Pan(0.00)[degrees], Tilt(0.00)[degrees].
+	Move > Finished.
+
+###detected abnormal number (1)
+	Move > Start.
+	Pan(10.40)[degrees], Tilt(-3.20)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-4.80)[degrees], Tilt(2.00)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(2.00)[degrees], Tilt(0.00)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-0.80)[degrees], Tilt(0.00)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-0.80)[degrees], Tilt(0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-0.80)[degrees], Tilt(0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-0.40)[degrees], Tilt(0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-0.40)[degrees], Tilt(0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-0.40)[degrees], Tilt(0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.00)[degrees], Tilt(0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.40)[degrees], Tilt(0.80)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(2.00)[degrees], Tilt(10.80)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-0.40)[degrees], Tilt(-6.80)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.00)[degrees], Tilt(2.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.40)[degrees], Tilt(0.00)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.40)[degrees], Tilt(-2.80)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.80)[degrees], Tilt(-0.80)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.80)[degrees], Tilt(-0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.80)[degrees], Tilt(0.00)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(1.60)[degrees], Tilt(3.20)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(-0.40)[degrees], Tilt(-0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.40)[degrees], Tilt(0.00)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.40)[degrees], Tilt(0.40)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(1.60)[degrees], Tilt(1.60)[degrees].
+	Move > Finished.
+
+	Move > Start.
+	Pan(0.40)[degrees], Tilt(0.00)[degrees].
+	Move > Finished.
+
+
+Average time is 0.010268[sec/process]
+(calculated by 26 processes)
+
+Biclops:DisableAmp >FINISHED.
