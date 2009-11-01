@@ -1,7 +1,7 @@
 //Takuya Otsubo
 //using SR4000 as a camera unit.
 //using Biclops as a Pan-Tilt unit.
-//Kosei Moriyama,who helps me coding.
+//Thanks to Kosei Moriyama,who helps me coding.
 
 //libraries for image proccess
 #include "opencv/cv.h"
@@ -136,10 +136,9 @@ void *thread_facedetect(void *_arg_f)
   
   //cout<<"diff="<<diffX<<","<<diffY<<endl;
   arg_f -> detectedAbnormalNum = false;
-  
-  if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.4)
+  if(diffX >100 || diffY >100)
     arg_f -> detectedAbnormalNum = true;
-  
+
   if(!(arg_f->detectedAbnormalNum))
     {
       //define how long PT unit make movement
@@ -199,8 +198,10 @@ int main(void)
   pthread_mutex_init(&mutex,NULL);
    
   // define the  window
-  cvNamedWindow("Face Detection", CV_WINDOW_AUTOSIZE);
-  cvNamedWindow("Temp", CV_WINDOW_AUTOSIZE);
+  //  cvNamedWindow("Face Detection", CV_WINDOW_AUTOSIZE);
+  //  cvNamedWindow("Temp", CV_WINDOW_AUTOSIZE);
+  cvNamedWindow("Face Detection", 0);
+  cvNamedWindow("Template Image", 0);
   
   //flag initialization
   arg.updatedCenterLoc = false;
@@ -227,10 +228,10 @@ int main(void)
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
       tmch->setTempImage(ci->getIntensityImg(),&arg.center,arg.templateImage);
       hasBeenInitialized = true;
-      cout<<"SYSTEM:\tFound your face !!"<<endl;
+      //cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
   
-  cout<<"\n\tOK.Now created first template image."<<endl;
+  //cout<<"\n\tOK.Now created first template image."<<endl;
     
   cout<<"Biclops:"<<endl;
 
@@ -258,22 +259,22 @@ int main(void)
       totalTime += t2-t1;
       times ++;
       
-      if(arg.detectedAbnormalNum)
-	{
-	  abnormTimes++;
-	  cout<<"###detected abnormal number ("<<abnormTimes<<")"<<endl;
-	  if(abnormTimes==5)
-	    {
-	      cout<<"SYSTEM:\tDetected abnormal data.Go to Initialization phase."<<endl;
-	      //goto INITIALIZATION;
-	    }
-	}
-      else 
-	abnormTimes = 0;
+      //if(arg.detectedAbnormalNum)
+      //	{
+      //	  abnormTimes++;
+      //	  cout<<"###detected abnormal number ("<<abnormTimes<<")"<<endl;
+      //	  if(abnormTimes==5)
+      //	    {
+      //	      cout<<"SYSTEM:\tDetected abnormal data.Go to Initialization phase."<<endl;
+      //goto INITIALIZATION;
+      //    }
+      //	}
+      //else 
+      //	abnormTimes = 0;
 
       // show images
       cvShowImage("Face Detection",ci->getIntensityImg());
-      cvShowImage("Temp",arg.templateImage);
+      cvShowImage("Template Image",arg.templateImage);
             
       // key handling
       key = cvWaitKey(100);
@@ -281,18 +282,19 @@ int main(void)
 	{
 	  break;
 	}
-      if(key == 'i')
-	{
-	  cout<<"SYSTEM:\tforce go to INITIALIZE."<<endl;
-	  goto INITIALIZATION;
-	}
+      //if(key == 'i')
+      //	{
+      //	  cout<<"SYSTEM:\tforce go to INITIALIZE."<<endl;
+      goto INITIALIZATION;
+      //}
     }
   printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
  
   // release memory
   pthread_mutex_destroy(&mutex);
   cvDestroyWindow("Face Detection");
- 
+  cvDestroyWindow("Template Image");
+
   delete ci;
   delete ptu;
   delete tmch;
