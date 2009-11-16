@@ -16,8 +16,6 @@ using namespace point;
 class templateMatching
 {
  private:
-  
-  IplImage *differenceMapImage;
   CvPoint minLocation;
   CvScalar scalar;
   int key;
@@ -30,5 +28,6 @@ class templateMatching
   double getErrorValue();
   IplImage *sourceBinaryImage;
   IplImage *templateBinaryImage;
+  IplImage *differenceMapImage;
 };
 #endif

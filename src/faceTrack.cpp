@@ -1,7 +1,7 @@
 //Takuya Otsubo
 //using SR4000 as a camera unit.
 //using Biclops as a Pan-Tilt unit.
-//Kosei Moriyama,who helps me coding.
+//Thanks to Kosei Moriyama,who helps me coding.
 
 //libraries for image proccess
 #include "opencv/cv.h"
@@ -40,6 +40,7 @@ cameraImages *ci;
 faceDetector *fd;
 panTiltUnit *ptu;
 templateMatching *tmch;
+regionTracker *rt;
 
 //for mutex lock
 pthread_mutex_t mutex;
@@ -122,6 +123,7 @@ void *thread_facedetect(void *_arg_f)
       prevX = 0;
     }
   //cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
+
   
   //calculate the center location and radius of matched face
   tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
@@ -155,7 +157,7 @@ void *thread_facedetect(void *_arg_f)
   
   //drow a circle on the detected face,line from face's center location to destination
   cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center.x,arg_f -> center.y),arg_f -> radius,CV_RGB(255,255,255),3,8,0);
-  cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center.x,arg_f -> center.y),CV_RGB(255,255,255),3,8,0);  
+  cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center.x,arg_f -> center.y),CV_RGB(255,255,255),3,8,0);    
  
   pthread_mutex_unlock(&mutex);
 }
@@ -168,6 +170,7 @@ int main(void)
   ptu = new panTiltUnit();
   ci = new cameraImages();
   tmch = new templateMatching();
+ 
   
   //for time measurement
   double t1=0,t2=0;
@@ -183,7 +186,7 @@ int main(void)
 
   // initialize camera image class
   ci->initialize();
-
+  rt = new regionTracker(ci);
   //estimate the size of image
   ci->acquire();
   CvSize size = ci -> getImageSize();
@@ -201,7 +204,9 @@ int main(void)
   // define the  window
   cvNamedWindow("Face Detection", 0);
   cvNamedWindow("Template Image", 0);
-  
+  cvNamedWindow("Difference Map Image", 0);
+  cvNamedWindow("Binary Image", 0);
+
   //flag initialization
   arg.updatedCenterLoc = false;
 
@@ -241,10 +246,12 @@ int main(void)
     {	 
       //ID for move thread and face detection thread
       pthread_t thread_m,thread_f;
-      
+      PPP("AAAA");
+      rt->track();
+      PPP("BBBB");
       //starting time measurement
       t1 = getrusageSec();
-
+      
       // create threads
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
       pthread_create(&thread_m, NULL, thread_move, (void *)&arg);
@@ -274,7 +281,8 @@ int main(void)
       // show images
       cvShowImage("Face Detection",ci->getIntensityImg());
       cvShowImage("Template Image",arg.templateImage);
-            
+      cvShowImage("Difference Map Image",tmch->differenceMapImage);
+      cvShowImage("Binary Image",rt->getResult());
       // key handling
       key = cvWaitKey(100);
       if(key == 'q')
@@ -283,7 +291,7 @@ int main(void)
 	}
       if(key == 'i')
 	{
-	  cout<<"SYSTEM:\tforce go to INITIALIZE."<<endl;
+	  cout<<"SYSTEM:\tforce initialize"<<endl;
 	  goto INITIALIZATION;
 	}
     }
@@ -293,10 +301,13 @@ int main(void)
   pthread_mutex_destroy(&mutex);
   cvDestroyWindow("Face Detection");
   cvDestroyWindow("Template Image");
-  
+  cvDestroyWindow("Difference Map Image");
+  cvDestroyWindow("Binary Image");
+
   delete ci;
   delete ptu;
   delete tmch;
-
+  delete rt;
+  
   return 0;
 }

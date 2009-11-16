@@ -1,11 +1,11 @@
-Biclops:Initiallize > START.
-Opening file ../data/BiclopsRevI.cfg is... successful.
-Parsing file ../data/BiclopsRevI.cfg. 
+Biclops:Initiallize > START
+Opening file /home/2009/ootsubo/work/SR4000/trunk/data/BiclopsRevI.cfg is... successful.
+Parsing file /home/2009/ootsubo/work/SR4000/trunk/data/BiclopsRevI.cfg. 
 ....
 ....
-Initialize > FINISHED.
-Biclops::Homing sequence > START.
-Biclops:Homing sequence > FINISHED.
+Initialize > FINISHED
+Biclops:Homing sequence > START
+Biclops:Homing sequence > FINISHED
 libusbSR version: 1.0.10.554
 
 done.
@@ -28,113 +28,470 @@ SYSTEM:	Found your face !!
 
 	OK.Now created first template image.
 Biclops:
-	Move > Start.
-	Pan(0.00)[degrees], Tilt(0.00)[degrees].
-	Move > Finished.
-
+Biclops:Move > Start
+Pan(-3.20)[degrees], Tilt(-1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(1.20)[degrees], Tilt(1.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(1.20)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(0.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(-0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(0.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(0.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
 ###detected abnormal number (1)
-	Move > Start.
-	Pan(10.40)[degrees], Tilt(-3.20)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-4.80)[degrees], Tilt(2.00)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(2.00)[degrees], Tilt(0.00)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-0.80)[degrees], Tilt(0.00)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-0.80)[degrees], Tilt(0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-0.80)[degrees], Tilt(0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-0.40)[degrees], Tilt(0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-0.40)[degrees], Tilt(0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-0.40)[degrees], Tilt(0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.00)[degrees], Tilt(0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.40)[degrees], Tilt(0.80)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(2.00)[degrees], Tilt(10.80)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-0.40)[degrees], Tilt(-6.80)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.00)[degrees], Tilt(2.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.40)[degrees], Tilt(0.00)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.40)[degrees], Tilt(-2.80)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.80)[degrees], Tilt(-0.80)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.80)[degrees], Tilt(-0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.80)[degrees], Tilt(0.00)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(1.60)[degrees], Tilt(3.20)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(-0.40)[degrees], Tilt(-0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.40)[degrees], Tilt(0.00)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.40)[degrees], Tilt(0.40)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(1.60)[degrees], Tilt(1.60)[degrees].
-	Move > Finished.
-
-	Move > Start.
-	Pan(0.40)[degrees], Tilt(0.00)[degrees].
-	Move > Finished.
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (2)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (3)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (4)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (5)
+SYSTEM:	Detected abnormal data.Go to Initialization phase.
+Biclops:Move > Start
+Pan(12.00)[degrees], Tilt(1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-18.40)[degrees], Tilt(0.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(20.80)[degrees], Tilt(3.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-7.60)[degrees], Tilt(4.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(2.40)[degrees], Tilt(-3.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-3.60)[degrees], Tilt(-1.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(1.20)[degrees], Tilt(-2.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (1)
+SYSTEM:	force go to INITIALIZE.
 
 
-Average time is 0.010268[sec/process]
-(calculated by 26 processes)
 
-Biclops:DisableAmp >FINISHED.
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+Biclops:Move > Start
+Pan(15.20)[degrees], Tilt(5.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (1)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (2)
+Biclops:Move > Start
+Pan(-19.60)[degrees], Tilt(1.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-4.80)[degrees], Tilt(-0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-8.40)[degrees], Tilt(19.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-6.00)[degrees], Tilt(-12.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(4.00)[degrees], Tilt(6.80)[degrees]
+Moved
+SYSTEM:	force go to INITIALIZE.
+
+
+
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+Biclops:Move > Start
+Pan(16.00)[degrees], Tilt(-15.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-11.20)[degrees], Tilt(8.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(12.40)[degrees], Tilt(-8.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(4.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(8.00)[degrees], Tilt(1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(6.80)[degrees], Tilt(1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(8.00)[degrees], Tilt(2.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-8.80)[degrees], Tilt(-1.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-4.80)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-11.20)[degrees], Tilt(2.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-9.60)[degrees], Tilt(-1.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.40)[degrees], Tilt(-2.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(1.60)[degrees], Tilt(-3.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(8.00)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(9.20)[degrees], Tilt(-1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(14.40)[degrees], Tilt(0.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(5.20)[degrees], Tilt(3.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-19.60)[degrees], Tilt(-2.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-8.00)[degrees], Tilt(2.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(0.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(2.00)[degrees], Tilt(-2.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (1)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (2)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (3)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (4)
+SYSTEM:	force go to INITIALIZE.
+
+
+
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+Biclops:Move > Start
+Pan(14.80)[degrees], Tilt(-5.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (1)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (2)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (3)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (4)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (5)
+SYSTEM:	Detected abnormal data.Go to Initialization phase.
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (6)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (7)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (8)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (9)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (10)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (11)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (12)
+SYSTEM:	force go to INITIALIZE.
+
+
+
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.40)[degrees], Tilt(1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(1.20)[degrees], Tilt(0.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(6.80)[degrees], Tilt(2.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-1.20)[degrees], Tilt(-1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-8.40)[degrees], Tilt(-0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(4.80)[degrees], Tilt(0.40)[degrees]
+Moved
+SYSTEM:	force go to INITIALIZE.
+
+
+
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+Biclops:Move > Start
+Pan(-4.40)[degrees], Tilt(-3.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(2.40)[degrees], Tilt(2.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(-0.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(-0.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(-0.40)[degrees]
+Moved
+SYSTEM:	force go to INITIALIZE.
+
+
+
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(-0.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(0.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+SYSTEM:	force go to INITIALIZE.
+
+
+
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+Biclops:Move > Start
+Pan(-0.40)[degrees], Tilt(-0.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(2.40)[degrees], Tilt(-1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(8.80)[degrees], Tilt(4.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(4.00)[degrees], Tilt(2.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(2.40)[degrees], Tilt(0.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-3.20)[degrees], Tilt(1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-5.60)[degrees], Tilt(-1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-1.60)[degrees], Tilt(-2.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-2.00)[degrees], Tilt(-3.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.40)[degrees], Tilt(1.20)[degrees]
+Moved
+Biclops:Move > Start
+Pan(1.20)[degrees], Tilt(-2.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-0.80)[degrees], Tilt(-9.60)[degrees]
+Moved
+Biclops:Move > Start
+Pan(-2.00)[degrees], Tilt(-2.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (1)
+Biclops:Move > Start
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Moved
+###detected abnormal number (2)
+Biclops:Move > Start
+Pan(22.80)[degrees], Tilt(-6.40)[degrees]
+Moved
+Biclops:Move > Start
+Pan(1.20)[degrees], Tilt(6.00)[degrees]
+Moved
+Biclops:Move > Start
+Pan(7.60)[degrees], Tilt(-2.80)[degrees]
+Moved
+Biclops:Move > Start
+Pan(3.60)[degrees], Tilt(-0.80)[degrees]
+Moved
+SYSTEM:	force go to INITIALIZE.
+
+
+
+
+
+
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+Biclops:Move > Start
+Pan(-17.20)[degrees], Tilt(5.20)[degrees]
+Moved
+
+Average time is 0.010289[sec/process]
+(calculated by 110 processes)
+
+Biclops:DisableAmp >FINISHED
