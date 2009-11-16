@@ -37,7 +37,7 @@ double templateMatching::getErrorValue()
   return errorValue;
 }
 
-void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius)//given sourceImage to process and returns center location and radius of detected face
+void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius)
 {
   //sourceBinaryImage   = cvCreateImage(srcSize,IPL_DEPTH_8U,1);
   //templateBinaryImage = cvCreateImage(cvGetSize(templateImage),IPL_DEPTH_8U,1);

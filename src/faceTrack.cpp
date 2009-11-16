@@ -80,16 +80,6 @@ struct thread_arg
   bool updatedCenterLoc;
 };
 
-//the thread for move method
-void *thread_move(void *_arg_m)
-{
-  pthread_mutex_lock(&mutex);
-  struct thread_arg *arg_m;
-  arg_m = (struct thread_arg *)_arg_m;
-  ptu->move(arg_m->pan, arg_m->tilt);
-  pthread_mutex_unlock(&mutex); 
-}
-
 //the thread for image processing
 void *thread_facedetect(void *_arg_f)
 {
@@ -126,7 +116,7 @@ void *thread_facedetect(void *_arg_f)
 
   
   //calculate the center location and radius of matched face
-  tmch -> calcMatchResult(ci -> getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
+  tmch -> calcMatchResult(ci->getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
   arg_f -> updatedCenterLoc = true;
   
   //calculate the distance between face's center location and destination
@@ -162,6 +152,15 @@ void *thread_facedetect(void *_arg_f)
   pthread_mutex_unlock(&mutex);
 }
 
+//the thread for move method
+void *thread_move(void *_arg_m)
+{
+  pthread_mutex_lock(&mutex);
+  struct thread_arg *arg_m;
+  arg_m = (struct thread_arg *)_arg_m;
+  ptu->move(arg_m->pan, arg_m->tilt);
+  pthread_mutex_unlock(&mutex); 
+}
 
 int main(void)
 {
@@ -187,6 +186,7 @@ int main(void)
   // initialize camera image class
   ci->initialize();
   rt = new regionTracker(ci);
+
   //estimate the size of image
   ci->acquire();
   CvSize size = ci -> getImageSize();
