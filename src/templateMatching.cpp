@@ -53,8 +53,7 @@ void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateI
   
   //find the minimum-resembled point of differenceMapImage and write it to minLocation    
   cvMinMaxLoc( differenceMapImage, &errorValue, NULL, &minLocation, NULL, NULL );
-
-  
+ 
   cerr << "\tSimilarity[%]"<< (1-errorValue)*100 <<endl;
   
   //calculate the center location and radius of detected face

@@ -101,7 +101,7 @@ void *thread_facedetect(void *_arg_f)
   //acquire current image 
   ci->acquire();
   
-  //cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
+  cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
   if(arg_f->updatedCenterLoc)
     {
       prevX = arg_f->center.x;
@@ -112,11 +112,11 @@ void *thread_facedetect(void *_arg_f)
       prevX = 0;
       prevX = 0;
     }
-  //cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
+  cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
 
   
   //calculate the center location and radius of matched face
-  tmch -> calcMatchResult(ci->getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
+  tmch -> calcMatchResult(rt->getResult(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
   arg_f -> updatedCenterLoc = true;
   
   //calculate the distance between face's center location and destination
@@ -126,7 +126,7 @@ void *thread_facedetect(void *_arg_f)
   diffX = abs(arg_f->center.x - prevX);  
   diffY = abs(arg_f->center.y - prevY);
   
-  //cout<<"diff="<<diffX<<","<<diffY<<endl;
+  cout<<"diff="<<diffX<<","<<diffY<<endl;
   arg_f -> detectedAbnormalNum = false;
   
   if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.4)
@@ -137,7 +137,7 @@ void *thread_facedetect(void *_arg_f)
       //define how long PT unit make movement
       arg_f -> pan = arg_f -> dX;
       arg_f -> tilt = arg_f -> dY;
-      tmch -> setTempImage(ci->getIntensityImg(),&arg_f->center,arg_f->templateImage);
+      tmch -> setTempImage(rt->getResult(),&arg_f->center,arg_f->templateImage);
     }
   else 
     {     
@@ -169,7 +169,6 @@ int main(void)
   ptu = new panTiltUnit();
   ci = new cameraImages();
   tmch = new templateMatching();
- 
   
   //for time measurement
   double t1=0,t2=0;
@@ -181,6 +180,9 @@ int main(void)
 
   //interface to structure
   struct thread_arg arg;
+
+  cout<<arg.Lx<<endl;
+  cout<<arg.Ly<<endl;
   arg.updatedCenterLoc = false;
 
   // initialize camera image class
@@ -230,7 +232,7 @@ int main(void)
 	  //sleep(1);
 	}
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
-      tmch->setTempImage(ci->getIntensityImg(),&arg.center,arg.templateImage);
+      tmch->setTempImage(rt->getResult(),&arg.center,arg.templateImage);
       hasBeenInitialized = true;
       cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
