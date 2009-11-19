@@ -19,14 +19,13 @@ templateMatching::templateMatching()
 
 templateMatching::~templateMatching()
 {
-    //cvReleaseImage( &sourceBinaryImage );
+  //cvReleaseImage( &sourceBinaryImage );
   //cvReleaseImage( &templateBinaryImage );
   cvReleaseImage( &differenceMapImage );
 }
 
 void templateMatching::setTempImage(IplImage *sourceImage,CvPoint *center,IplImage *templateImage)
 {
-
   cvGetRectSubPix(sourceImage,templateImage,cvPointTo32f(*center));
   if(templateImage == NULL)
     cout<<"Failed in creating new template image."<<endl;
@@ -60,4 +59,35 @@ void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateI
   center->x = minLocation.x + templateImage->width/2;
   center->y = minLocation.y + templateImage->height/2;
   *radius   = max(templateImage->width/2,templateImage->height/2);
+}
+
+int templateMatching::getAvgDepth(IplImage *humanImage,IplImage *depthImage)
+{
+
+  int sum=0;
+  CvScalar humanValue =cvScalar(0);
+  CvScalar depthValue =cvScalar(0);
+  int points=0;
+  int ret=0;
+  
+  for(int i=0;i<144;i++)
+    {
+      for(int j=0;j<176;j++)
+	{
+	  humanValue = cvGet2D(humanImage,i,j); 
+	  depthValue = cvGet2D(depthImage,i,j);
+	  
+	  if(humanValue.val[0]!=0)
+	    {
+	      sum+=depthValue.val[0];
+	      points++;
+	    }
+	}
+    }
+  
+  ret = sum/points;
+  
+  cout<<"sum="<<sum<<endl;
+  return sum;
+  
 }

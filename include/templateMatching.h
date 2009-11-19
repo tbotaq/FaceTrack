@@ -26,6 +26,7 @@ class templateMatching
   void setTempImage(IplImage *sourceImage,CvPoint *center,IplImage *templateImage);
   void calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius);
   double getErrorValue();
+  int getAvgDepth(IplImage *humanImage,IplImage *depthImage);
   IplImage *sourceBinaryImage;
   IplImage *templateBinaryImage;
   IplImage *differenceMapImage;

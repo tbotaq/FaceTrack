@@ -1,48 +1,40 @@
-//Takuya Otsubo
 //using SR4000 as a camera unit.
 //using Biclops as a Pan-Tilt unit.
-//Thanks to Kosei Moriyama,who helps me coding.
 
-//libraries for image proccess
 #include "opencv/cv.h"
 #include "opencv/cxcore.h"
 #include "opencv/highgui.h"
+//for SR4000
 #include "libusbSR.h"
 #include "definesSR.h"
 #include "pointing.h"
-//#include<mathfuncs.h>
-#include <math.h>
-//libraies for Biclops 
+//for Biclops 
 #include <panTiltUnit.h>
+//for templateMatching
+#include <templateMatching.h>
 //for multi thread coding
 #include <pthread.h>
-#include <iostream>
 //libraries for time count
-#include <time.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+//etc...
+#include <math.h>
+#include <iostream>
 #include <stdio.h>
-//the constant used for PID 
+
+//the constant value for proportional move control
 #define K 0.4 
-//library for templateMatching
-#include <templateMatching.h>
 
 using namespace std;
 using namespace point;
 
-void PPP(string string)
-{
-  cout<<string<<endl;
-}
-
-//declaration of interfaces for each class
 cameraImages *ci;
 faceDetector *fd;
 panTiltUnit *ptu;
 templateMatching *tmch;
-regionTracker *rt;
+regionTracker *human;
 
-//for mutex lock
+//mutex lock
 pthread_mutex_t mutex;
 
 //function to measure time
@@ -62,7 +54,7 @@ double dist(int center, int dst)
   return ret;
 }
 
-//the structure used for threads
+//the structure used by threads
 struct thread_arg
 {
   double pan;
@@ -83,7 +75,9 @@ struct thread_arg
 //the thread for image processing
 void *thread_facedetect(void *_arg_f)
 {
+  //lock
   pthread_mutex_lock(&mutex);
+  
   struct thread_arg *arg_f;
   
   //previous center points
@@ -95,11 +89,8 @@ void *thread_facedetect(void *_arg_f)
   arg_f=(struct thread_arg *)_arg_f;
 
   //setting center of window as destination
-  arg_f -> dst_x = arg_f -> Lx /2;
-  arg_f -> dst_y = arg_f -> Ly /2;
-
-  //acquire current image 
-  ci->acquire();
+  arg_f->dst_x = arg_f->Lx /2;
+  arg_f->dst_y = arg_f->Ly /2;
   
   cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
   if(arg_f->updatedCenterLoc)
@@ -114,40 +105,42 @@ void *thread_facedetect(void *_arg_f)
     }
   cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
 
-  
+  //acquire current image 
+  ci->acquire();  
+
   //calculate the center location and radius of matched face
-  tmch -> calcMatchResult(rt->getResult(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
-  arg_f -> updatedCenterLoc = true;
+  tmch->calcMatchResult(ci->getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
+  arg_f->updatedCenterLoc = true;
   
   //calculate the distance between face's center location and destination
-  arg_f -> dX = dist(arg_f -> center.x, arg_f -> dst_x);
-  arg_f -> dY = dist(arg_f -> center.y, arg_f -> dst_y);
+  arg_f->dX = dist(arg_f->center.x, arg_f->dst_x);
+  arg_f->dY = dist(arg_f->center.y, arg_f->dst_y);
   
   diffX = abs(arg_f->center.x - prevX);  
   diffY = abs(arg_f->center.y - prevY);
   
   cout<<"diff="<<diffX<<","<<diffY<<endl;
-  arg_f -> detectedAbnormalNum = false;
+  arg_f->detectedAbnormalNum = false;
   
   if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.4)
-    arg_f -> detectedAbnormalNum = true;
+    arg_f->detectedAbnormalNum = true;
   
   if(!(arg_f->detectedAbnormalNum))
     {
       //define how long PT unit make movement
-      arg_f -> pan = arg_f -> dX;
-      arg_f -> tilt = arg_f -> dY;
-      tmch -> setTempImage(rt->getResult(),&arg_f->center,arg_f->templateImage);
+      arg_f->pan = arg_f->dX;
+      arg_f->tilt = arg_f->dY;
+      tmch->setTempImage(ci->getIntensityImg(),&arg_f->center,arg_f->templateImage);
     }
   else 
     {     
-      arg_f -> pan = 0;
-      arg_f -> tilt = 0;
+      arg_f->pan = 0;
+      arg_f->tilt = 0;
     }
   
   //drow a circle on the detected face,line from face's center location to destination
-  cvCircle(ci->getIntensityImg(),cvPoint(arg_f -> center.x,arg_f -> center.y),arg_f -> radius,CV_RGB(255,255,255),3,8,0);
-  cvLine(ci->getIntensityImg(),cvPoint(arg_f -> dst_x,arg_f -> dst_y),cvPoint(arg_f -> center.x,arg_f -> center.y),CV_RGB(255,255,255),3,8,0);    
+  cvCircle(ci->getIntensityImg(),cvPoint(arg_f->center.x,arg_f->center.y),arg_f->radius,CV_RGB(255,255,255),3,8,0);
+  cvLine(ci->getIntensityImg(),cvPoint(arg_f->dst_x,arg_f->dst_y),cvPoint(arg_f->center.x,arg_f->center.y),CV_RGB(255,255,255),3,8,0);    
  
   pthread_mutex_unlock(&mutex);
 }
@@ -165,6 +158,7 @@ void *thread_move(void *_arg_m)
 int main(void)
 {
   
+
   //reference to each function
   ptu = new panTiltUnit();
   ci = new cameraImages();
@@ -181,17 +175,17 @@ int main(void)
   //interface to structure
   struct thread_arg arg;
 
-  cout<<arg.Lx<<endl;
-  cout<<arg.Ly<<endl;
+  
   arg.updatedCenterLoc = false;
 
   // initialize camera image class
   ci->initialize();
-  rt = new regionTracker(ci);
+  human = new regionTracker(ci);
+ 
 
   //estimate the size of image
   ci->acquire();
-  CvSize size = ci -> getImageSize();
+  CvSize size = ci->getImageSize();
 
   //pass the image size to class faceDetector's constructor
   fd = new faceDetector(size);
@@ -204,11 +198,9 @@ int main(void)
   pthread_mutex_init(&mutex,NULL);
    
   // define the  window
-  cvNamedWindow("Face Detection", 0);
+  cvNamedWindow("Result", 0);
   cvNamedWindow("Template Image", 0);
-  cvNamedWindow("Difference Map Image", 0);
-  cvNamedWindow("Binary Image", 0);
-
+ 
   //flag initialization
   arg.updatedCenterLoc = false;
 
@@ -222,6 +214,7 @@ int main(void)
   //-----acquire the template image to use in the first-----//  
   while(!hasBeenInitialized)
     {
+     
       cout<<"\tPlease show your face to the camera."<<endl;
       
       while(faces<1)
@@ -232,7 +225,7 @@ int main(void)
 	  //sleep(1);
 	}
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
-      tmch->setTempImage(rt->getResult(),&arg.center,arg.templateImage);
+      tmch->setTempImage(ci->getIntensityImg(),&arg.center,arg.templateImage);
       hasBeenInitialized = true;
       cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
@@ -248,9 +241,9 @@ int main(void)
     {	 
       //ID for move thread and face detection thread
       pthread_t thread_m,thread_f;
-      PPP("AAAA");
-      rt->track();
-      PPP("BBBB");
+    
+      human->track();
+ 
       //starting time measurement
       t1 = getrusageSec();
       
@@ -267,49 +260,48 @@ int main(void)
       totalTime += t2-t1;
       times ++;
       
-      if(arg.detectedAbnormalNum)
-	{
-	  abnormTimes++;
-	  cout<<"###detected abnormal number ("<<abnormTimes<<")"<<endl;
-	  if(abnormTimes==5)
-	    {
-	      cout<<"SYSTEM:\tDetected abnormal data.Go to Initialization phase."<<endl;
-	      //goto INITIALIZATION;
-	    }
-	}
-      else 
-	abnormTimes = 0;
+      //if(arg.detectedAbnormalNum)
+      {
+	//abnormTimes++;
+	//cout<<"###detected abnormal number ("<<abnormTimes<<")"<<endl;
+	//if(abnormTimes==5)
+	//  {
+	//  cout<<"SYSTEM:\tDetected abnormal data.Go to Initialization phase."<<endl;
+	//goto INITIALIZATION;
+	// }
+	//	}
+	//else 
+	//abnormTimes = 0;
 
-      // show images
-      cvShowImage("Face Detection",ci->getIntensityImg());
-      cvShowImage("Template Image",arg.templateImage);
-      cvShowImage("Difference Map Image",tmch->differenceMapImage);
-      cvShowImage("Binary Image",rt->getResult());
-      // key handling
-      key = cvWaitKey(100);
-      if(key == 'q')
-	{
-	  break;
-	}
-      if(key == 'i')
-	{
-	  cout<<"SYSTEM:\tforce initialize"<<endl;
-	  goto INITIALIZATION;
-	}
+	// show images
+	cvShowImage("Result",ci->getIntensityImg());
+	cvShowImage("Template Image",arg.templateImage);
+            
+	// key handling
+	key = cvWaitKey(100);
+	if(key == 'q')
+	  {
+	    break;
+	  }
+	if(key == 'i')
+	  {
+	    cout<<"SYSTEM:\tforce initialize"<<endl;
+	    goto INITIALIZATION;
+	  }
+	goto INITIALIZATION;
+      }
     }
   printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
  
   // release memory
   pthread_mutex_destroy(&mutex);
-  cvDestroyWindow("Face Detection");
+  cvDestroyWindow("Result");
   cvDestroyWindow("Template Image");
-  cvDestroyWindow("Difference Map Image");
-  cvDestroyWindow("Binary Image");
-
+ 
   delete ci;
   delete ptu;
   delete tmch;
-  delete rt;
+  delete human;
   
   return 0;
 }
