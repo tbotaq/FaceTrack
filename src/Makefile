@@ -4,7 +4,7 @@ OPTION = -Wall -g -Wextra -pedantic -O2
 FLYOPTION = -Wall -Wextra -pedantic -O2
 CC = g++
 LIB = -lcxcore -lcv -lhighgui -lcvaux -lmesasr  -lpthread -lBiclops -lPMD -lUtils
-OBJS = cameraImages.o funcPointing.o faceDetector.o imageClassifier.o regionDetector.o regionTracker.o pointProjector.o sharedMemory.o connection.o projectorConnection.o coordinateShifter.o line.o panTiltUnit.o templateMatching.o
+OBJS = cameraImages.o funcPointing.o faceDetector.o imageClassifier.o regionDetector.o regionTracker.o pointProjector.o sharedMemory.o connection.o projectorConnection.o coordinateShifter.o line.o panTiltUnit.o templateMatching.o tools.o
 INCD = ../include/
 BIND = ../bin/
 SRCS = $(OBJS:.o=.c)
@@ -96,6 +96,9 @@ panTiltUnit.o: panTiltUnit.cpp $(INCD)panTiltUnit.h
 templateMatching.o: templateMatching.cpp $(INCD)templateMatching.h
 	$(CC) $(OPTION) -I$(INCD) $(LIB) -c templateMatching.cpp
 
+#tools.o
+tools.o: tools.cpp $(INCD)tools.h
+	$(CC) $(OPTION) -I$(INCD) $(LIB) -c tools.cpp 
 ##################
 # for flymake
 ##################

@@ -21,6 +21,7 @@
 #include <math.h>
 #include <iostream>
 #include <stdio.h>
+#include <tools.h>
 
 //the constant value for proportional move control
 #define K 0.4 
@@ -33,26 +34,11 @@ faceDetector *fd;
 panTiltUnit *ptu;
 templateMatching *tmch;
 regionTracker *human;
+tools *tool;
 
 //mutex lock
 pthread_mutex_t mutex;
 
-//function to measure time
-double getrusageSec()
-{
-  struct rusage t;
-  struct timeval s;
-  getrusage(RUSAGE_SELF, &t);
-  s = t.ru_utime;
-  return s.tv_sec + (double)s.tv_usec*1e-6;
-}
-
-//fuction to calculate the distance between face and destination
-double dist(int center, int dst)
-{
-  double ret = K * (center - dst);
-  return ret;
-}
 
 //the structure used by threads
 struct thread_arg
@@ -103,7 +89,7 @@ void *thread_facedetect(void *_arg_f)
       prevX = 0;
       prevX = 0;
     }
-  cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
+  
 
   //acquire current image 
   ci->acquire();  
@@ -113,12 +99,13 @@ void *thread_facedetect(void *_arg_f)
   arg_f->updatedCenterLoc = true;
   
   //calculate the distance between face's center location and destination
-  arg_f->dX = dist(arg_f->center.x, arg_f->dst_x);
-  arg_f->dY = dist(arg_f->center.y, arg_f->dst_y);
+  arg_f->dX = tool->dist(arg_f->center.x, arg_f->dst_x);
+  arg_f->dY = tool->dist(arg_f->center.y, arg_f->dst_y);
   
   diffX = abs(arg_f->center.x - prevX);  
   diffY = abs(arg_f->center.y - prevY);
   
+  cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
   cout<<"diff="<<diffX<<","<<diffY<<endl;
   arg_f->detectedAbnormalNum = false;
   
@@ -138,7 +125,7 @@ void *thread_facedetect(void *_arg_f)
       arg_f->tilt = 0;
     }
   
-  //drow a circle on the detected face,line from face's center location to destination
+  //drow a circle on the detected face and the line from face's center location to destination
   cvCircle(ci->getIntensityImg(),cvPoint(arg_f->center.x,arg_f->center.y),arg_f->radius,CV_RGB(255,255,255),3,8,0);
   cvLine(ci->getIntensityImg(),cvPoint(arg_f->dst_x,arg_f->dst_y),cvPoint(arg_f->center.x,arg_f->center.y),CV_RGB(255,255,255),3,8,0);    
  
@@ -157,13 +144,10 @@ void *thread_move(void *_arg_m)
 
 int main(void)
 {
-  
-
-  //reference to each function
   ptu = new panTiltUnit();
   ci = new cameraImages();
   tmch = new templateMatching();
-  
+  tool = new tools();
   //for time measurement
   double t1=0,t2=0;
   double totalTime=0;
@@ -176,30 +160,26 @@ int main(void)
   struct thread_arg arg;
 
   
-  arg.updatedCenterLoc = false;
-
+  
   // initialize camera image class
   ci->initialize();
-  human = new regionTracker(ci);
- 
 
   //estimate the size of image
   ci->acquire();
+  human = new regionTracker(ci);
   CvSize size = ci->getImageSize();
-
-  //pass the image size to class faceDetector's constructor
   fd = new faceDetector(size);
-
-  //define the size of recognitive region using "size"
-  arg.Lx = size.width;
-  arg.Ly = size.height;
 
   //initialize mutex
   pthread_mutex_init(&mutex,NULL);
    
+  //define the size of recognitive region using "size"
+  arg.Lx = size.width;
+  arg.Ly = size.height;
+
   // define the  window
   cvNamedWindow("Result", 0);
-  cvNamedWindow("Template Image", 0);
+  cvNamedWindow("Current Template Image", 0);
  
   //flag initialization
   arg.updatedCenterLoc = false;
@@ -245,7 +225,7 @@ int main(void)
       human->track();
  
       //starting time measurement
-      t1 = getrusageSec();
+      t1 = tool->getrusageSec();
       
       // create threads
       pthread_create(&thread_f, NULL, thread_facedetect, (void *)&arg);
@@ -253,10 +233,10 @@ int main(void)
 
       //say goodbye to created threads	
       pthread_join(thread_m, NULL);
-      pthread_join(thread_f,NULL);
+      pthread_join(thread_f, NULL);
 
       //stopping time measurement
-      t2 = getrusageSec(); 
+      t2 = tool->getrusageSec(); 
       totalTime += t2-t1;
       times ++;
       
@@ -275,7 +255,7 @@ int main(void)
 
 	// show images
 	cvShowImage("Result",ci->getIntensityImg());
-	cvShowImage("Template Image",arg.templateImage);
+	cvShowImage("Current Template Image",arg.templateImage);
             
 	// key handling
 	key = cvWaitKey(100);
@@ -296,12 +276,12 @@ int main(void)
   // release memory
   pthread_mutex_destroy(&mutex);
   cvDestroyWindow("Result");
-  cvDestroyWindow("Template Image");
+  cvDestroyWindow("Current Template Image");
  
   delete ci;
   delete ptu;
   delete tmch;
   delete human;
-  
+  delete tool;
   return 0;
 }
