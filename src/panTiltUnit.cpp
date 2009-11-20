@@ -39,58 +39,52 @@ panTiltUnit::panTiltUnit()
 	  }
       }
     }
-     }
+}
 
-  panTiltUnit::~panTiltUnit()
+panTiltUnit::~panTiltUnit()
+{
+  panAxis -> DisableAmp();
+  tiltAxis -> DisableAmp();
+  coutDbg << "DisableAmp >FINISHED\n";
+}
+
+int panTiltUnit::homing(void)
+{
+  if (!hasBeenInitialized)
     {
-      panAxis -> DisableAmp();
-      tiltAxis -> DisableAmp();
-      coutDbg << "DisableAmp >FINISHED\n";
+      return -1;
+    }
+  coutDbg << "Homing sequence > START\n";
+  biclops->SetDebugLevel(0);
+  if(biclops->HomeAxes(axisMask,true))
+    {
+      coutDbg << "Homing sequence > FINISHED\n";
+    }
+  
+  return 0;
+}
+
+int panTiltUnit::move(double pan, double tilt)
+{
+  biclops->SetDebugLevel(0);
+  if (!hasBeenInitialized)
+    {
+      return -1;
     }
 
-  int panTiltUnit::homing(void)
-  {
-    if (!hasBeenInitialized)
-      {
-	return -1;
-      }
-    coutDbg << "Homing sequence > START\n";
-    biclops->SetDebugLevel(0);
-    if(biclops->HomeAxes(axisMask,true)) //finding the home position
-      {
-	coutDbg << "Homing sequence > FINISHED\n";
-      }
+  //Change the profile to move to a new location
+  panProfile.pos += PMDUtils::DegsToRevs((int)pan);
+  tiltProfile.pos += PMDUtils::DegsToRevs((int)tilt);
   
-    return 0;
-  }
+  //Update
+  panAxis -> SetProfile(panProfile);
+  tiltAxis -> SetProfile(tiltProfile);
 
-  int panTiltUnit::move(double pan, double tilt)
-  {
-    PMDint32 captureValue;
-    biclops->SetDebugLevel(0);
-    if (!hasBeenInitialized)
-      {
-	return -1;
-      }
-    //Change the profile to move to a new location
-    panProfile.pos += PMDUtils::DegsToRevs((int)pan);
-    tiltProfile.pos += PMDUtils::DegsToRevs((int)tilt);
-    
-  
-    //Update
-    panAxis -> SetProfile(panProfile);
-    tiltAxis -> SetProfile(tiltProfile);
-
-    coutDbg << "Move > Start\n";
-
-    //Start the move
-    printf("Pan(%2.2f)[degrees], Tilt(%2.2f)[degrees]\n",pan,tilt);
+  //Start the move
+  printf("Pan(%2.2f)[degrees], Tilt(%2.2f)[degrees]\n",pan,tilt);
  
-    biclops->Move(axisMask);
- 
-
-    cout << "Moved"<<endl;
-  
-    return 0;
-  }
+  biclops->Move(axisMask);
+       
+  return 0;
+}
 

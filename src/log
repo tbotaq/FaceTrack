@@ -16,482 +16,1020 @@ SetAutoExposure result:-1
 SetSetAmplitudeThreshold result:4
 SetMode result:0
 Number of images:3
-
-
-
-
-
-
 SYSTEM:INITIALIZATION
 	Please show your face to the camera.
 SYSTEM:	Found your face !!
 
 	OK.Now created first template image.
 Biclops:
-Biclops:Move > Start
-Pan(-3.20)[degrees], Tilt(-1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(1.20)[degrees], Tilt(1.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(1.20)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(0.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(-0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(0.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(0.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (1)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (2)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (3)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (4)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (5)
-SYSTEM:	Detected abnormal data.Go to Initialization phase.
-Biclops:Move > Start
-Pan(12.00)[degrees], Tilt(1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-18.40)[degrees], Tilt(0.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(20.80)[degrees], Tilt(3.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-7.60)[degrees], Tilt(4.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(2.40)[degrees], Tilt(-3.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-3.60)[degrees], Tilt(-1.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(1.20)[degrees], Tilt(-2.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (1)
-SYSTEM:	force go to INITIALIZE.
-
-
-
-
-
-
+prevX,prevY=0,0
+diffX,diffY=81,76
+ErrorValue=0.0492371
+Pan(-2.80)[degrees], Tilt(1.60)[degrees]
+Average Depth =16416
 SYSTEM:INITIALIZATION
 	Please show your face to the camera.
 SYSTEM:	Found your face !!
 
 	OK.Now created first template image.
 Biclops:
-Biclops:Move > Start
-Pan(15.20)[degrees], Tilt(5.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (1)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (2)
-Biclops:Move > Start
-Pan(-19.60)[degrees], Tilt(1.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-4.80)[degrees], Tilt(-0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-8.40)[degrees], Tilt(19.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-6.00)[degrees], Tilt(-12.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(4.00)[degrees], Tilt(6.80)[degrees]
-Moved
-SYSTEM:	force go to INITIALIZE.
-
-
-
-
-
-
-SYSTEM:INITIALIZATION
-	Please show your face to the camera.
-SYSTEM:	Found your face !!
-
-	OK.Now created first template image.
-Biclops:
-Biclops:Move > Start
-Pan(16.00)[degrees], Tilt(-15.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-11.20)[degrees], Tilt(8.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(12.40)[degrees], Tilt(-8.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(4.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(8.00)[degrees], Tilt(1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(6.80)[degrees], Tilt(1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(8.00)[degrees], Tilt(2.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-8.80)[degrees], Tilt(-1.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-4.80)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-11.20)[degrees], Tilt(2.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-9.60)[degrees], Tilt(-1.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.40)[degrees], Tilt(-2.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(1.60)[degrees], Tilt(-3.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(8.00)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(9.20)[degrees], Tilt(-1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(14.40)[degrees], Tilt(0.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(5.20)[degrees], Tilt(3.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-19.60)[degrees], Tilt(-2.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-8.00)[degrees], Tilt(2.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(0.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(2.00)[degrees], Tilt(-2.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (1)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (2)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (3)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (4)
-SYSTEM:	force go to INITIALIZE.
-
-
-
-
-
-
-SYSTEM:INITIALIZATION
-	Please show your face to the camera.
-SYSTEM:	Found your face !!
-
-	OK.Now created first template image.
-Biclops:
-Biclops:Move > Start
-Pan(14.80)[degrees], Tilt(-5.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (1)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (2)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (3)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (4)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (5)
-SYSTEM:	Detected abnormal data.Go to Initialization phase.
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (6)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (7)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (8)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (9)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (10)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (11)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (12)
-SYSTEM:	force go to INITIALIZE.
-
-
-
-
-
-
-SYSTEM:INITIALIZATION
-	Please show your face to the camera.
-SYSTEM:	Found your face !!
-
-	OK.Now created first template image.
-Biclops:
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.40)[degrees], Tilt(1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(1.20)[degrees], Tilt(0.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(6.80)[degrees], Tilt(2.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-1.20)[degrees], Tilt(-1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-8.40)[degrees], Tilt(-0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(4.80)[degrees], Tilt(0.40)[degrees]
-Moved
-SYSTEM:	force go to INITIALIZE.
-
-
-
-
-
-
-SYSTEM:INITIALIZATION
-	Please show your face to the camera.
-SYSTEM:	Found your face !!
-
-	OK.Now created first template image.
-Biclops:
-Biclops:Move > Start
-Pan(-4.40)[degrees], Tilt(-3.20)[degrees]
-Moved
-Biclops:Move > Start
+prevX,prevY=93,76
+diffX,diffY=1,1
+ErrorValue=0.0556496
 Pan(2.40)[degrees], Tilt(2.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(-0.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(-0.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(-0.40)[degrees]
-Moved
-SYSTEM:	force go to INITIALIZE.
-
-
-
-
-
-
+Average Depth =64127
 SYSTEM:INITIALIZATION
 	Please show your face to the camera.
 SYSTEM:	Found your face !!
 
 	OK.Now created first template image.
 Biclops:
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(-0.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(0.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-SYSTEM:	force go to INITIALIZE.
-
-
-
-
-
-
+prevX,prevY=78,66
+diffX,diffY=0,0
+ErrorValue=0.0416776
+Pan(-4.00)[degrees], Tilt(-2.40)[degrees]
+Average Depth =64763
 SYSTEM:INITIALIZATION
 	Please show your face to the camera.
 SYSTEM:	Found your face !!
 
 	OK.Now created first template image.
 Biclops:
-Biclops:Move > Start
-Pan(-0.40)[degrees], Tilt(-0.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(2.40)[degrees], Tilt(-1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(8.80)[degrees], Tilt(4.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(4.00)[degrees], Tilt(2.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(2.40)[degrees], Tilt(0.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-3.20)[degrees], Tilt(1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-5.60)[degrees], Tilt(-1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-1.60)[degrees], Tilt(-2.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-2.00)[degrees], Tilt(-3.20)[degrees]
-Moved
-Biclops:Move > Start
+prevX,prevY=99,75
+diffX,diffY=1,1
+ErrorValue=0.0528145
+Pan(4.80)[degrees], Tilt(1.60)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=79,68
+diffX,diffY=0,1
+ErrorValue=0.0441337
+Pan(-3.60)[degrees], Tilt(-1.20)[degrees]
+Average Depth =63176
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=95,75
+diffX,diffY=0,1
+ErrorValue=0.045318
+Pan(2.80)[degrees], Tilt(1.60)[degrees]
+Average Depth =64478
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=83,73
+diffX,diffY=1,1
+ErrorValue=0.0396772
+Pan(-1.60)[degrees], Tilt(0.80)[degrees]
+Average Depth =64651
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=91,75
+diffX,diffY=1,0
+ErrorValue=0.0460764
+Pan(1.60)[degrees], Tilt(1.20)[degrees]
+Average Depth =63974
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=79,69
+diffX,diffY=1,0
+ErrorValue=0.0447513
+Pan(-3.20)[degrees], Tilt(-1.20)[degrees]
+Average Depth =64511
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=94,70
+diffX,diffY=1,0
+ErrorValue=0.0492898
+Pan(2.80)[degrees], Tilt(-0.80)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=97,66
+diffX,diffY=1,0
+ErrorValue=0.0866253
+Pan(4.00)[degrees], Tilt(-2.40)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=82,73
+diffX,diffY=1,1
+ErrorValue=0.079719
+Pan(-2.00)[degrees], Tilt(0.80)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=90,72
+diffX,diffY=1,1
+ErrorValue=0.0803848
+Pan(1.20)[degrees], Tilt(0.40)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=85,73
+diffX,diffY=0,0
+ErrorValue=0.0753679
+Pan(-1.20)[degrees], Tilt(0.40)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=91,73
+diffX,diffY=2,1
+ErrorValue=0.104194
+Pan(2.00)[degrees], Tilt(0.80)[degrees]
+Average Depth =8156
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=84,70
+diffX,diffY=0,0
+ErrorValue=0.0824891
+Pan(-1.60)[degrees], Tilt(-0.80)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=90,72
+diffX,diffY=2,1
+ErrorValue=0.11316
+Pan(1.60)[degrees], Tilt(0.40)[degrees]
+Average Depth =20183
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=84,70
+diffX,diffY=1,1
+ErrorValue=0.0739557
+Pan(-1.20)[degrees], Tilt(-0.40)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=87,73
+diffX,diffY=1,1
+ErrorValue=0.0754223
 Pan(0.00)[degrees], Tilt(0.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.40)[degrees], Tilt(1.20)[degrees]
-Moved
-Biclops:Move > Start
-Pan(1.20)[degrees], Tilt(-2.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-0.80)[degrees], Tilt(-9.60)[degrees]
-Moved
-Biclops:Move > Start
-Pan(-2.00)[degrees], Tilt(-2.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (1)
-Biclops:Move > Start
-Pan(0.00)[degrees], Tilt(0.00)[degrees]
-Moved
-###detected abnormal number (2)
-Biclops:Move > Start
-Pan(22.80)[degrees], Tilt(-6.40)[degrees]
-Moved
-Biclops:Move > Start
-Pan(1.20)[degrees], Tilt(6.00)[degrees]
-Moved
-Biclops:Move > Start
-Pan(7.60)[degrees], Tilt(-2.80)[degrees]
-Moved
-Biclops:Move > Start
-Pan(3.60)[degrees], Tilt(-0.80)[degrees]
-Moved
-SYSTEM:	force go to INITIALIZE.
-
-
-
-
-
-
+Average Depth =9286
 SYSTEM:INITIALIZATION
 	Please show your face to the camera.
 SYSTEM:	Found your face !!
 
 	OK.Now created first template image.
 Biclops:
-Biclops:Move > Start
-Pan(-17.20)[degrees], Tilt(5.20)[degrees]
-Moved
+prevX,prevY=84,73
+diffX,diffY=1,0
+ErrorValue=0.0765167
+Pan(-1.20)[degrees], Tilt(0.40)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
 
-Average time is 0.010289[sec/process]
-(calculated by 110 processes)
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=92,72
+diffX,diffY=1,1
+ErrorValue=0.08843
+Pan(2.00)[degrees], Tilt(0.40)[degrees]
+Average Depth =6952
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=85,71
+diffX,diffY=0,0
+ErrorValue=0.0793712
+Pan(-1.20)[degrees], Tilt(-0.40)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=88,70
+diffX,diffY=2,1
+ErrorValue=0.104541
+Pan(0.80)[degrees], Tilt(-0.40)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=92,75
+diffX,diffY=4,1
+ErrorValue=0.195299
+Pan(3.20)[degrees], Tilt(1.60)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=92,73
+diffX,diffY=0,0
+ErrorValue=0.0655633
+Pan(1.60)[degrees], Tilt(0.40)[degrees]
+Average Depth =63806
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=73,77
+diffX,diffY=1,0
+ErrorValue=0.0968978
+Pan(-6.40)[degrees], Tilt(2.00)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=67,73
+diffX,diffY=0,0
+ErrorValue=0.0598079
+Pan(-8.40)[degrees], Tilt(0.40)[degrees]
+Average Depth =61938
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=109,73
+diffX,diffY=1,1
+ErrorValue=0.0184384
+Pan(8.80)[degrees], Tilt(0.80)[degrees]
+Average Depth =7663
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=83,73
+diffX,diffY=0,0
+ErrorValue=0.0209565
+Pan(-2.00)[degrees], Tilt(0.40)[degrees]
+Average Depth =7601
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=91,73
+diffX,diffY=1,1
+ErrorValue=0.0237727
+Pan(1.60)[degrees], Tilt(0.80)[degrees]
+Average Depth =7597
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=78,75
+diffX,diffY=1,1
+ErrorValue=0.0399549
+Pan(-3.60)[degrees], Tilt(1.60)[degrees]
+Average Depth =7598
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=88,72
+diffX,diffY=1,0
+ErrorValue=0.0160545
+Pan(0.40)[degrees], Tilt(0.00)[degrees]
+Average Depth =7633
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=82,72
+diffX,diffY=0,1
+ErrorValue=0.0566583
+Pan(-2.40)[degrees], Tilt(0.40)[degrees]
+Average Depth =7502
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=80,75
+diffX,diffY=1,0
+ErrorValue=0.0446805
+Pan(-2.80)[degrees], Tilt(1.20)[degrees]
+Average Depth =7561
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=99,67
+diffX,diffY=3,0
+ErrorValue=0.0250679
+Pan(5.60)[degrees], Tilt(-2.00)[degrees]
+Average Depth =7809
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=118,68
+diffX,diffY=2,0
+ErrorValue=0.0137951
+Pan(12.80)[degrees], Tilt(-1.60)[degrees]
+Average Depth =7892
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=113,81
+diffX,diffY=2,2
+ErrorValue=0.00882928
+Pan(10.80)[degrees], Tilt(4.40)[degrees]
+Average Depth =9037
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=110,75
+diffX,diffY=3,1
+ErrorValue=0.0118603
+Pan(10.00)[degrees], Tilt(1.60)[degrees]
+Average Depth =9583
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=102,71
+diffX,diffY=2,1
+ErrorValue=0.00926065
+Pan(6.40)[degrees], Tilt(0.00)[degrees]
+Average Depth =9516
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=70,70
+diffX,diffY=1,1
+ErrorValue=0.0122554
+Pan(-7.60)[degrees], Tilt(-0.40)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=68,73
+diffX,diffY=2,1
+ErrorValue=0.00879922
+Pan(-8.80)[degrees], Tilt(0.80)[degrees]
+Average Depth =9566
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=64,79
+diffX,diffY=0,0
+ErrorValue=0.012752
+Pan(-9.60)[degrees], Tilt(2.80)[degrees]
+Average Depth =9973
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=75,72
+diffX,diffY=1,0
+ErrorValue=0.0158411
+Pan(-5.60)[degrees], Tilt(0.00)[degrees]
+Average Depth =9834
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=68,75
+diffX,diffY=2,1
+ErrorValue=0.0115636
+Pan(-8.80)[degrees], Tilt(1.60)[degrees]
+Average Depth =9955
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=67,70
+diffX,diffY=0,0
+ErrorValue=0.0112937
+Pan(-8.40)[degrees], Tilt(-0.80)[degrees]
+Average Depth =9940
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=84,82
+diffX,diffY=0,1
+ErrorValue=0.008962
+Pan(-1.60)[degrees], Tilt(4.40)[degrees]
+Average Depth =11445
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=89,71
+diffX,diffY=0,1
+ErrorValue=0.0374275
+Pan(0.40)[degrees], Tilt(0.00)[degrees]
+Average Depth =12608
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=90,75
+diffX,diffY=1,1
+ErrorValue=0.0415928
+Pan(1.20)[degrees], Tilt(1.60)[degrees]
+Average Depth =13476
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=91,75
+diffX,diffY=1,1
+ErrorValue=0.023302
+Pan(1.60)[degrees], Tilt(1.60)[degrees]
+Average Depth =14039
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=86,72
+diffX,diffY=0,0
+ErrorValue=0.0234182
+Pan(-0.80)[degrees], Tilt(0.00)[degrees]
+Average Depth =14257
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=88,72
+diffX,diffY=0,0
+ErrorValue=0.0416411
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Average Depth =14369
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=88,72
+diffX,diffY=1,1
+ErrorValue=0.0471762
+Pan(0.40)[degrees], Tilt(0.40)[degrees]
+Average Depth =14377
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=89,72
+diffX,diffY=1,0
+ErrorValue=0.0452764
+Pan(0.80)[degrees], Tilt(0.00)[degrees]
+Average Depth =14326
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=97,71
+diffX,diffY=1,0
+ErrorValue=0.0317838
+Pan(4.00)[degrees], Tilt(-0.40)[degrees]
+Average Depth =13949
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=86,70
+diffX,diffY=2,1
+ErrorValue=0.0382336
+Pan(0.00)[degrees], Tilt(-0.40)[degrees]
+Average Depth =13689
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=105,71
+diffX,diffY=2,1
+ErrorValue=0.029791
+Pan(7.60)[degrees], Tilt(0.00)[degrees]
+Average Depth =14088
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=112,73
+diffX,diffY=3,1
+ErrorValue=0.0459252
+Pan(10.80)[degrees], Tilt(0.80)[degrees]
+Average Depth =14297
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=108,77
+diffX,diffY=1,1
+ErrorValue=0.0337541
+Pan(8.40)[degrees], Tilt(2.40)[degrees]
+Average Depth =15220
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=72,68
+diffX,diffY=0,0
+ErrorValue=0.0393056
+Pan(-6.40)[degrees], Tilt(-1.60)[degrees]
+Average Depth =14852
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=91,72
+diffX,diffY=0,0
+ErrorValue=0.041183
+Pan(1.20)[degrees], Tilt(0.00)[degrees]
+Average Depth =15221
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=81,73
+diffX,diffY=0,0
+ErrorValue=0.0208643
+Pan(-2.80)[degrees], Tilt(0.40)[degrees]
+Average Depth =14994
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=81,66
+diffX,diffY=0,0
+ErrorValue=0.00342063
+Pan(-2.80)[degrees], Tilt(-2.40)[degrees]
+Average Depth =13609
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=72,66
+diffX,diffY=0,0
+ErrorValue=0.00480866
+Pan(-6.40)[degrees], Tilt(-2.40)[degrees]
+Average Depth =12347
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=78,68
+diffX,diffY=0,1
+ErrorValue=0.0169841
+Pan(-4.00)[degrees], Tilt(-1.20)[degrees]
+Average Depth =11293
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=88,72
+diffX,diffY=1,1
+ErrorValue=0.0200794
+Pan(0.40)[degrees], Tilt(0.40)[degrees]
+Average Depth =11264
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=94,72
+diffX,diffY=1,0
+ErrorValue=0.0121851
+Pan(2.80)[degrees], Tilt(0.00)[degrees]
+Average Depth =11141
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=87,70
+diffX,diffY=0,0
+ErrorValue=0.0173259
+Pan(-0.40)[degrees], Tilt(-0.80)[degrees]
+Average Depth =11025
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=86,71
+diffX,diffY=0,1
+ErrorValue=0.0146046
+Pan(-0.80)[degrees], Tilt(0.00)[degrees]
+Average Depth =11023
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=85,72
+diffX,diffY=1,0
+ErrorValue=0.0141046
+Pan(-0.80)[degrees], Tilt(0.00)[degrees]
+Average Depth =10964
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=91,69
+diffX,diffY=1,1
+ErrorValue=0.015088
+Pan(1.60)[degrees], Tilt(-0.80)[degrees]
+Average Depth =11033
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=112,72
+diffX,diffY=1,0
+ErrorValue=0.0155523
+Pan(10.00)[degrees], Tilt(0.00)[degrees]
+Average Depth =11277
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=114,71
+diffX,diffY=2,0
+ErrorValue=0.0112619
+Pan(11.20)[degrees], Tilt(-0.40)[degrees]
+Average Depth =11166
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=110,72
+diffX,diffY=3,1
+ErrorValue=0.0326551
+Pan(10.00)[degrees], Tilt(0.40)[degrees]
+Average Depth =11406
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=93,75
+diffX,diffY=1,1
+ErrorValue=0.00655941
+Pan(2.40)[degrees], Tilt(1.60)[degrees]
+Average Depth =11723
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=77,71
+diffX,diffY=1,1
+ErrorValue=0.0122774
+Pan(-4.80)[degrees], Tilt(0.00)[degrees]
+Average Depth =11624
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=77,77
+diffX,diffY=1,1
+ErrorValue=0.00559859
+Pan(-4.80)[degrees], Tilt(2.40)[degrees]
+Average Depth =12447
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=70,73
+diffX,diffY=1,1
+ErrorValue=0.00674248
+Pan(-7.60)[degrees], Tilt(0.80)[degrees]
+Average Depth =13354
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=69,81
+diffX,diffY=0,1
+ErrorValue=0.0266515
+Pan(-7.60)[degrees], Tilt(4.00)[degrees]
+Average Depth =14502
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=84,68
+diffX,diffY=0,1
+ErrorValue=0.0327917
+Pan(-1.60)[degrees], Tilt(-1.20)[degrees]
+Average Depth =15314
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=61,66
+diffX,diffY=0,1
+ErrorValue=0.0375902
+Pan(-10.80)[degrees], Tilt(-2.00)[degrees]
+Average Depth =15061
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=79,79
+diffX,diffY=0,1
+ErrorValue=0.0541839
+Pan(-3.60)[degrees], Tilt(3.20)[degrees]
+Average Depth =15123
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=68,68
+diffX,diffY=0,1
+ErrorValue=0.0311191
+Pan(-8.00)[degrees], Tilt(-1.20)[degrees]
+Average Depth =15369
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=75,74
+diffX,diffY=0,1
+ErrorValue=0.0585456
+Pan(-5.20)[degrees], Tilt(1.20)[degrees]
+Average Depth =16376
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=103,73
+diffX,diffY=1,1
+ErrorValue=0.0580705
+Pan(6.40)[degrees], Tilt(0.80)[degrees]
+Average Depth =16946
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=88,70
+diffX,diffY=66,48
+ErrorValue=1
+Pan(0.00)[degrees], Tilt(0.00)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=127,66
+diffX,diffY=0,0
+ErrorValue=0.0211074
+Pan(15.60)[degrees], Tilt(-2.40)[degrees]
+Average Depth =14617
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=57,60
+diffX,diffY=0,0
+ErrorValue=0.0254105
+Pan(-12.40)[degrees], Tilt(-4.80)[degrees]
+Average Depth =16416
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=98,55
+diffX,diffY=0,0
+ErrorValue=0.0159787
+Pan(4.00)[degrees], Tilt(-6.80)[degrees]
+Average Depth =9303
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=79,83
+diffX,diffY=0,0
+ErrorValue=0.0135563
+Pan(-3.60)[degrees], Tilt(4.40)[degrees]
+Average Depth =9145
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=90,56
+diffX,diffY=1,0
+ErrorValue=0.018212
+Pan(1.20)[degrees], Tilt(-6.40)[degrees]
+Average Depth =8333
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=88,64
+diffX,diffY=1,1
+ErrorValue=0.123666
+Pan(0.40)[degrees], Tilt(-2.80)[degrees]
+Average Depth =7543
+SYSTEM:INITIALIZATION
+	Please show your face to the camera.
+SYSTEM:	Found your face !!
+
+	OK.Now created first template image.
+Biclops:
+prevX,prevY=89,66
+diffX,diffY=0,1
+ErrorValue=0.137726
+Pan(0.40)[degrees], Tilt(-2.00)[degrees]
+Average Depth =16416
+
+Average time is 0.010248[sec/process]
+(calculated by 92 processes)
 
 Biclops:DisableAmp >FINISHED

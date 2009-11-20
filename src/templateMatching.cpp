@@ -84,10 +84,12 @@ int templateMatching::getAvgDepth(IplImage *humanImage,IplImage *depthImage)
 	    }
 	}
     }
-  
-  ret = sum/points;
-  
-  cout<<"sum="<<sum<<endl;
-  return sum;
-  
+  if(sum!=0)
+    {
+      ret = sum/points;
+      //cerr<<"sum="<<sum<<endl;
+      //cerr<<"points="<<points<<endl;
+      cerr<<"Avg Depth="<<ret<<endl;
+      return ret;
+    }
 }

@@ -36,6 +36,12 @@ tools *tool;
 //mutex lock
 pthread_mutex_t mutex;
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                             //
+//                                      theread definition                                     //
+//                                                                                             //
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 //the structure used by threads
 struct thread_arg
 {
@@ -73,8 +79,7 @@ void *thread_facedetect(void *_arg_f)
   //setting center of window as destination
   arg_f->dst_x = arg_f->Lx /2;
   arg_f->dst_y = arg_f->Ly /2;
-  
-  cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
+    
   if(arg_f->updatedCenterLoc)
     {
       prevX = arg_f->center.x;
@@ -86,7 +91,6 @@ void *thread_facedetect(void *_arg_f)
       prevX = 0;
     }
   
-
   //acquire current image 
   ci->acquire();  
 
@@ -139,12 +143,19 @@ void *thread_move(void *_arg_m)
   pthread_mutex_unlock(&mutex); 
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                             //
+//                                      main program                                           //
+//                                                                                             //
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 int main(void)
 {
   ptu = new panTiltUnit();
   ci = new cameraImages();
   tmch = new templateMatching();
   tool = new tools();
+
   //for time measurement
   double t1=0,t2=0;
   double totalTime=0;
@@ -156,8 +167,6 @@ int main(void)
   //interface to structure
   struct thread_arg arg;
 
-  
-  
   // initialize camera image class
   ci->initialize();
 
@@ -177,13 +186,15 @@ int main(void)
   // define the  window
   cvNamedWindow("Result", 0);
   cvNamedWindow("Current Template Image", 0);
+  cvNamedWindow("Human Image", 0);
+  cvNamedWindow("Depth Image", 0);
  
   //flag initialization
   arg.updatedCenterLoc = false;
 
  INITIALIZATION://LABEL
 
-  cout<<"\n\n\n\n\n\nSYSTEM:INITIALIZATION"<<endl;
+  cout<<"SYSTEM:INITIALIZATION"<<endl;
   
   int faces = 0;
   bool hasBeenInitialized = false;
@@ -236,49 +247,57 @@ int main(void)
       t2 = tool->getrusageSec(); 
       totalTime += t2-t1;
       times ++;
-      
-      //if(arg.detectedAbnormalNum)
-      {
-	//abnormTimes++;
-	//cout<<"###detected abnormal number ("<<abnormTimes<<")"<<endl;
-	//if(abnormTimes==5)
-	//  {
-	//  cout<<"SYSTEM:\tDetected abnormal data.Go to Initialization phase."<<endl;
-	//goto INITIALIZATION;
-	// }
-	//	}
-	//else 
-	//abnormTimes = 0;
-
-	// show images
-	cvShowImage("Result",ci->getIntensityImg());
-	cvShowImage("Current Template Image",arg.templateImage);
             
-	// key handling
-	key = cvWaitKey(100);
-	if(key == 'q')
-	  {
-	    break;
-	  }
-	if(key == 'i')
-	  {
-	    cout<<"SYSTEM:\tforce initialize"<<endl;
-	    goto INITIALIZATION;
-	  }
-	goto INITIALIZATION;
-      }
+      //if(arg.detectedAbnormalNum)
+      //{
+      //abnormTimes++;
+      //cout<<"###detected abnormal number ("<<abnormTimes<<")"<<endl;
+      //if(abnormTimes==5)
+      //  {
+      //  cout<<"SYSTEM:\tDetected abnormal data.Go to Initialization phase."<<endl;
+      //goto INITIALIZATION;
+      // }
+      //	}
+      //else 
+      //abnormTimes = 0;
+
+      // show images
+      cvShowImage("Result",ci->getIntensityImg());
+      cvShowImage("Current Template Image",arg.templateImage);
+      cvShowImage("Human Image",human->getResult());
+      cvShowImage("Depth Image",ci->getDepthImg());
+            
+
+      cout<<"Average Depth ="<<tmch->getAvgDepth(human->getResult(),ci->getDepthImg())<<endl;
+      // key handling
+      key = cvWaitKey(100);
+      if(key == 'q')
+	{
+	  break;
+	}
+      if(key == 'i')
+	{
+	  cout<<"SYSTEM:\tforce initialize"<<endl;
+	  goto INITIALIZATION;
+	}
+      goto INITIALIZATION;
     }
+
   printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
  
   // release memory
   pthread_mutex_destroy(&mutex);
   cvDestroyWindow("Result");
   cvDestroyWindow("Current Template Image");
- 
+  cvDestroyWindow("Human Image");
+  cvDestroyWindow("Depth Image");
+
   delete ci;
   delete ptu;
   delete tmch;
   delete human;
   delete tool;
+
   return 0;
 }
+
