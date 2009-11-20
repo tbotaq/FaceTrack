@@ -56,7 +56,7 @@ struct thread_arg
   int dst_x; //destination point
   int dst_y; //destination point
   IplImage *templateImage;
-  bool detectedAbnormalNum;
+  bool detectedAbnormalValue;
   bool updatedCenterLoc;
 };
 
@@ -95,7 +95,7 @@ void *thread_facedetect(void *_arg_f)
   ci->acquire();  
 
   //calculate the center location and radius of matched face
-  tmch->calcMatchResult(ci->getIntensityImg(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
+  tmch->calcMatchResult(human->getResult(),arg_f->templateImage,ci->getImageSize(),&arg_f->center,&arg_f->radius);
   arg_f->updatedCenterLoc = true;
   
   //calculate the distance between face's center location and destination
@@ -105,20 +105,23 @@ void *thread_facedetect(void *_arg_f)
   diffX = abs(arg_f->center.x - prevX);  
   diffY = abs(arg_f->center.y - prevY);
   
-  cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
-  cout<<"diffX,diffY="<<diffX<<","<<diffY<<endl;
-  cout<<"ErrorValue="<<tmch->getErrorValue()<<endl;
-  arg_f->detectedAbnormalNum = false;
+ 
+  arg_f->detectedAbnormalValue = false;
   
-  if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.4)
-    arg_f->detectedAbnormalNum = true;
-  
-  if(!(arg_f->detectedAbnormalNum))
+  if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.2)
+    {
+      cerr<<"++++Detected Abnormal Value++++"<<endl;
+      cerr<<"++++diffX,diffY="<<diffX<<","<<diffY<<endl;
+      cerr<<"++++ErrorValue="<<tmch->getErrorValue()<<endl;
+      arg_f->detectedAbnormalValue = true;
+    }
+
+  if(!(arg_f->detectedAbnormalValue))
     {
       //define how long PT unit make movement
       arg_f->pan = arg_f->dX;
       arg_f->tilt = arg_f->dY;
-      tmch->setTempImage(ci->getIntensityImg(),&arg_f->center,arg_f->templateImage);
+      tmch->setTempImage(human->getResult(),&arg_f->center,arg_f->templateImage);
     }
   else 
     {     
@@ -167,6 +170,9 @@ int main(void)
   //interface to structure
   struct thread_arg arg;
 
+  arg.pan=0;
+  arg.tilt=0;
+
   // initialize camera image class
   ci->initialize();
 
@@ -186,7 +192,7 @@ int main(void)
   // define the  window
   cvNamedWindow("Result", 0);
   cvNamedWindow("Current Template Image", 0);
-  cvNamedWindow("Human Image", 0);
+  cvNamedWindow("Human Image(Source Image)", 0);
   cvNamedWindow("Depth Image", 0);
  
   //flag initialization
@@ -213,7 +219,7 @@ int main(void)
 	  //sleep(1);
 	}
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
-      tmch->setTempImage(ci->getIntensityImg(),&arg.center,arg.templateImage);
+      tmch->setTempImage(human->getResult(),&arg.center,arg.templateImage);
       hasBeenInitialized = true;
       cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
@@ -248,7 +254,7 @@ int main(void)
       totalTime += t2-t1;
       times ++;
             
-      //if(arg.detectedAbnormalNum)
+      //if(arg.detectedAbnormalValue)
       //{
       //abnormTimes++;
       //cout<<"###detected abnormal number ("<<abnormTimes<<")"<<endl;
@@ -264,11 +270,12 @@ int main(void)
       // show images
       cvShowImage("Result",ci->getIntensityImg());
       cvShowImage("Current Template Image",arg.templateImage);
-      cvShowImage("Human Image",human->getResult());
+      cvShowImage("Human Image(Source Image)",human->getResult());
       cvShowImage("Depth Image",ci->getDepthImg());
             
 
       cout<<"Average Depth ="<<tmch->getAvgDepth(human->getResult(),ci->getDepthImg())<<endl;
+
       // key handling
       key = cvWaitKey(100);
       if(key == 'q')
@@ -289,7 +296,7 @@ int main(void)
   pthread_mutex_destroy(&mutex);
   cvDestroyWindow("Result");
   cvDestroyWindow("Current Template Image");
-  cvDestroyWindow("Human Image");
+  cvDestroyWindow("Human Image(Source Image)");
   cvDestroyWindow("Depth Image");
 
   delete ci;
