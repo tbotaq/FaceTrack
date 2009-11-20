@@ -23,9 +23,6 @@
 #include <stdio.h>
 #include <tools.h>
 
-//the constant value for proportional move control
-#define K 0.4 
-
 using namespace std;
 using namespace point;
 
@@ -38,7 +35,6 @@ tools *tool;
 
 //mutex lock
 pthread_mutex_t mutex;
-
 
 //the structure used by threads
 struct thread_arg
@@ -105,8 +101,9 @@ void *thread_facedetect(void *_arg_f)
   diffX = abs(arg_f->center.x - prevX);  
   diffY = abs(arg_f->center.y - prevY);
   
-  cout<<"!!prevX,prevY="<<prevX<<","<<prevY<<endl;
-  cout<<"diff="<<diffX<<","<<diffY<<endl;
+  cout<<"prevX,prevY="<<prevX<<","<<prevY<<endl;
+  cout<<"diffX,diffY="<<diffX<<","<<diffY<<endl;
+  cout<<"ErrorValue="<<tmch->getErrorValue()<<endl;
   arg_f->detectedAbnormalNum = false;
   
   if(diffX>100 || diffY>100 || tmch->getErrorValue()>0.4)
