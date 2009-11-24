@@ -272,8 +272,7 @@ int main(void)
       cvShowImage("Current Template Image",arg.templateImage);
       cvShowImage("Human Image(Source Image)",human->getResult());
       cvShowImage("Depth Image",ci->getDepthImg());
-            
-
+ 
       cout<<"Average Depth ="<<tmch->getAvgDepth(human->getResult(),ci->getDepthImg())<<endl;
 
       // key handling
@@ -287,7 +286,7 @@ int main(void)
 	  cout<<"SYSTEM:\tforce initialize"<<endl;
 	  goto INITIALIZATION;
 	}
-      goto INITIALIZATION;
+      //goto INITIALIZATION;
     }
 
   printf("\nAverage time is %f[sec/process]\n(calculated by %d processes)\n\n",totalTime/times,times);
@@ -307,4 +306,3 @@ int main(void)
 
   return 0;
 }
-
