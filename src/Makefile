@@ -14,6 +14,7 @@ PMD_INCD = ../../../Biclops/motion/libPMD/include/
 Utils_INCD = ../../../Biclops/motion/libUtils/include/
 
 all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)faceTrack
+test : $(BIND)testProgram
 
 clean:
 	- @ rm -rf $(OBJS)
@@ -34,6 +35,10 @@ $(BIND)calibDataCollector: calibDataCollector.cpp $(OBJS)
 # faceTrack
 $(BIND)faceTrack: faceTrack.cpp $(OBJS)
 	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ faceTrack.cpp $(OBJS)
+
+# testProgram
+$(BIND)testProgram: testProgram.cpp $(OBJS)
+	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ testProgram.cpp $(OBJS)
 
 ##################
 # object files

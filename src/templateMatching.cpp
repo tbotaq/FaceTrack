@@ -24,7 +24,7 @@ templateMatching::~templateMatching()
   cvReleaseImage( &differenceMapImage );
 }
 
-void templateMatching::setTempImage(IplImage *sourceImage,CvPoint *center,IplImage *templateImage)
+void templateMatching::setTempImage(IplImage *sourceImage,CvPoint *center,int *radius,IplImage *templateImage)
 {
   cvGetRectSubPix(sourceImage,templateImage,cvPointTo32f(*center));
   if(templateImage == NULL)
@@ -57,15 +57,15 @@ void templateMatching::calcMatchResult(IplImage *sourceImage,IplImage *templateI
   cout << "\tminLocation(x,y)=(" << minLocation.x <<","<<minLocation.y<<")"<<endl;
   cout << "\tWidth(templateImage)=" << templateImage->width <<endl;
   cout << "\tHeight(templateImage)=" << templateImage->height << endl;
+
   //calculate the center location and radius of detected face
   center->x = minLocation.x + templateImage->width/2;
-  center->y = minLocation.y + templateImage->height/2;
+  center->y = minLocation.y + templateImage->height/2;
   *radius   = max(templateImage->width/2,templateImage->height/2);
 }
 
 int templateMatching::getAvgDepth(IplImage *humanImage,IplImage *depthImage)
 {
-
   int sum=0;
   CvScalar humanValue =cvScalar(0);
   CvScalar depthValue =cvScalar(0);

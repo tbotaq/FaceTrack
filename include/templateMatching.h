@@ -23,7 +23,7 @@ class templateMatching
  public:
   templateMatching();
   ~templateMatching();
-  void setTempImage(IplImage *sourceImage,CvPoint *center,IplImage *templateImage);
+  void setTempImage(IplImage *sourceImage,CvPoint *center,int *radius,IplImage *templateImage);
   void calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius);
   double getErrorValue();
   int getAvgDepth(IplImage *humanImage,IplImage *depthImage);
