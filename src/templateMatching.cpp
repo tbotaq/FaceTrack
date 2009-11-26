@@ -26,7 +26,9 @@ templateMatching::~templateMatching()
 
 void templateMatching::setTempImage(IplImage *sourceImage,CvPoint *center,int *radius,IplImage *templateImage)
 {
+  cout<<"DDD"<<endl;
   cvGetRectSubPix(sourceImage,templateImage,cvPointTo32f(*center));
+  cout<<"EEE"<<endl;
   if(templateImage == NULL)
     cout<<"Failed in creating new template image."<<endl;
 }

@@ -121,7 +121,7 @@ void *thread_facedetect(void *_arg_f)
       //define how long PT unit make movement
       arg_f->pan = arg_f->dX;
       arg_f->tilt = arg_f->dY;
-      tmch->setTempImage(human->getResult(),&arg_f->center,arg_f->templateImage);
+      tmch->setTempImage(human->getResult(),&arg_f->center,&arg_f->radius,arg_f->templateImage);
     }
   else 
     {     
@@ -219,7 +219,7 @@ int main(void)
 	  //sleep(1);
 	}
       arg.templateImage = cvCreateImage(cvSize(arg.radius*2,arg.radius*2),IPL_DEPTH_8U,1);
-      tmch->setTempImage(human->getResult(),&arg.center,arg.templateImage);
+      tmch->setTempImage(human->getResult(),&arg.center,&arg.radius,arg.templateImage);
       hasBeenInitialized = true;
       cout<<"SYSTEM:\tFound your face !!"<<endl;
     }
