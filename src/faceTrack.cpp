@@ -230,6 +230,8 @@ int main(void)
 
   int abnormTimes = 0;
 
+
+  cout<<"(Lx,Ly)="<<arg.Lx<<","<<arg.Ly<<endl;
   //-----main procces-----//
   while(1)
     {	 
