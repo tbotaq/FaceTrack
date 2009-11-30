@@ -97,3 +97,18 @@ int templateMatching::getAvgDepth(IplImage *humanImage,IplImage *depthImage)
       return ret;
     }
 }
+
+
+IplImage *templateMatching::getHumanImage()
+{
+
+  //This 2D loop converts the region regarded as human to white
+
+  for(int y=0;y<imageSize.heighr;y++)
+    for(int x=0;x<imageSize.width;x++)
+      {
+	currentValue=cvGet2D(depthImage,y,x);
+	currentValue.val[0] /= 50;
+
+	if(currentValue.val[0]
+	 

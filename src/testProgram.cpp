@@ -16,107 +16,86 @@
 using namespace std;
 using namespace point;
 
-faceDetector *fd;
-cameraImages *ci;
-
-
-void getFaceInfo(IplImage *intensityImage,CvPoint *center,int radius)
-{
-  //input intensity image
-  //get face's center location
-  //get face"s radius
-
-  fd->faceDetect(intensityImage,center,&radius);
-}
-
-IplImage *createHumanImage(IplImage *depthImage,CvPoint *center)
-{
-  cout<<"A"<<endl;
-  //input depth image and face's center location
-  //return human image (human region is colored white)
-
-  IplImage *retImage;
-  cout<<"B"<<endl;
-  //create "human image" from input image
-  CvSize imageSize = cvGetSize(depthImage);
-  cout<<"C"<<endl;
-  CvScalar faceCenterDepth = cvScalar(0);
-  CvScalar currentValue = cvScalar(0);
-  faceCenterDepth=cvGet2D(depthImage,center->y,center->x);
-  cout<<"D"<<endl;
-  int faceThreshold = 50;
-  cout<<"E"<<endl;
-
-  
-  for(int y=0;y<imageSize.height;y++)
-    for(int x=0;y<imageSize.width;x++)
-      {
-	currentValue = cvGet2D(depthImage,y,x);
-	if(currentValue.val[0] < (faceCenterDepth.val[0] + faceThreshold) || currentValue.val[0] > (faceCenterDepth.val[0] - faceThreshold))
-	  cvSet2D(retImage,y,x,CV_RGB(255,255,255));
-	else
-	  cvSet2D(retImage,y,x,CV_RGB(0,0,0));
-      }
-  
-  return retImage;
-}
-
-IplImage *createTempImg(IplImage *humanImage,CvPoint *center,int radius)
-{
-  //input pointer to source/template image
-  //input face info(center location and radius)
-  //cut souceImage to create templateImage
-  //return template image 
-
-  IplImage *retImage;
-  int tempWidth = radius * 2;
-  int tempHeight = tempWidth;//this formula might need changed
-
-  retImage = cvCreateImage(cvSize(tempWidth,tempHeight),IPL_DEPTH_8U,1);
-  cvGetRectSubPix(humanImage,retImage,cvPointTo32f(*center));
-
-  return retImage;
-}
-
-void calcMatchResult(IplImage *sourceImage,IplImage *templateImage)
-  {
-
-    //ask to hagiwara
-
-  }
-
-
 int main(void)
 {
-  cout<<"1"<<endl;
-  ci = new cameraImages();
+ 
+  IplImage *intensityImage,*humanImage;
+  templateMatching *tmch =new templateMatching();
+  cameraImages *ci = new cameraImages();
   ci->initialize();
   ci->acquire();
-  fd = new faceDetector(ci->getImageSize());
+  faceDetector *fd = new faceDetector(ci->getImageSize());
 
-  CvPoint *center;
+  int faces=0;
+  CvPoint center;
   int radius;
-  cout<<"25"<<endl;
-  //get face location and radius
-  getFaceInfo(ci->getIntensityImg(),center,radius);
-  cout<<"30"<<endl;
-  //convert depth image into human image(human region is colored white)
-  IplImage *humanImage = createHumanImage(ci->getDepthImg(),center);
-  cout<<"50"<<endl;
-  //create template image using faceDetector::faceDetect()
-  IplImage *templateImage = createTempImg(humanImage,center,radius);
 
-  cvNamedWindow("Template Image",0);
-  cvShowImage("Template Image",templateImage);
-  int key = cvWaitKey(10);
-  if(key=='q')
-    cvDestroyWindow("Template Image");
+  CvSize imageSize = ci->getImageSize();
+  CvScalar faceCenterDepth = cvScalar(0);
+  CvScalar currentValue = cvScalar(0);
 
-  cvReleaseImage(&templateImage);
-  cout<<"100"<<endl;
+  int faceThreshold;
+  cout<<"Input face threshold"<<endl;
+  cin>>faceThreshold;
+  cout<<"center="<<center.x<<","<<center.y<<endl;
 
-  delete ci;
-  delete fd;
+  int WHITE=0,BLACK=0;
+
+  cvNamedWindow("Result",0);
+  cvNamedWindow("Depth",0);
+
+  //get face information (center location and radius)
+  while(faces<1)
+    {
+      ci->acquire();
+      faces = fd->faceDetect(ci->getIntensityImg(),&center,&radius);
+    }
+  ci->acquire();
+  faceCenterDepth=cvGet2D(ci->getDepthImg(),center.y,center.x);
+  faceCenterDepth.val[0] /= 50;
+
+  while(1)
+    {
+      ci->acquire();
+      int WHITE=0,BLACK=0;
+      
+      for(int y=0;y<imageSize.height;y++)
+	{
+	  for(int x=0;x<imageSize.width;x++)
+	    {
+	      currentValue = cvGet2D(ci->getDepthImg(),y,x);
+	      currentValue.val[0] /= 50;
+	      if(!(currentValue.val[0] > (faceCenterDepth.val[0] + faceThreshold) || currentValue.val[0] < (faceCenterDepth.val[0] - faceThreshold)))
+		{
+		  cvSet2D(ci->getIntensityImg(),y,x,CV_RGB(255,255,255));
+		  WHITE++;
+		}
+	      else
+		{
+		  cvSet2D(ci->getIntensityImg(),y,x,CV_RGB(0,0,0));
+		  BLACK++;
+		  
+		}
+	    }
+	}
+      int totalPixels = imageSize.height*imageSize.width;
+      cout<<"WHITE,BLACK="<<WHITE*100/totalPixels<<","<<BLACK*100/totalPixels<<endl;
+      cout<<"Choosed value on depth image="<<currentValue.val[0]<<endl;
+
+      cvCircle(ci->getIntensityImg(),center,1,CV_RGB(255,255,255),1,8,0);
+
+      cvShowImage("Result",ci->getIntensityImg());
+      cvShowImage("Depth",ci->getDepthImg());
+      char key = cvWaitKey(10)j;
+      if(key=='q')
+	break;
+    }
+
+  delete ci,fd,tmch;
+  cvDestroyWindow("Result");
+  cvDestroyWindow("Depth");
 
   return 0;
 }
+  
+
