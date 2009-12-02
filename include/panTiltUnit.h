@@ -26,7 +26,7 @@ class panTiltUnit
   panTiltUnit();
   ~panTiltUnit();
   int homing();
-  int move(double pan, double tilt);
+  int move( double pan, double tilt );
 };
 
 #endif

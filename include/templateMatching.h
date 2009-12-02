@@ -20,15 +20,16 @@ class templateMatching
   CvScalar scalar;
   int key;
   double errorValue;
+  IplImage *templateImg;
+  IplImage *differenceMapImg;
  public:
   templateMatching();
   ~templateMatching();
-  void setTempImage(IplImage *sourceImage,CvPoint *center,int *radius,IplImage *templateImage);
-  void calcMatchResult(IplImage *sourceImage,IplImage *templateImage,CvSize srcSize,CvPoint *center,int *radius);
+  void setTempImg(IplImage *sourceImg,IplImage *templaeImg,CvPoint center);
+  void createTemplateImg(IplImage *sourceImg,IplImage *templateImg,CvPoint templateCenterLoc);
+  void calcMatchResult(IplImage *sourceImg,IplImage *templateImg,CvSize srcSize,CvPoint center);
   double getErrorValue();
-  int getAvgDepth(IplImage *humanImage,IplImage *depthImage);
-  IplImage *sourceBinaryImage;
-  IplImage *templateBinaryImage;
-  IplImage *differenceMapImage;
+  int getAvgDepth(IplImage *humanImg,IplImage *depthImg);
+ 
 };
 #endif

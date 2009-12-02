@@ -13,7 +13,7 @@ Biclops_INCD = ../../../Biclops/Biclops/Software/libBiclops/include/
 PMD_INCD = ../../../Biclops/motion/libPMD/include/
 Utils_INCD = ../../../Biclops/motion/libUtils/include/
 
-all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)faceTrack
+all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)faceTrack $(BIND)handTrack
 test : $(BIND)testProgram
 
 clean:
@@ -35,6 +35,10 @@ $(BIND)calibDataCollector: calibDataCollector.cpp $(OBJS)
 # faceTrack
 $(BIND)faceTrack: faceTrack.cpp $(OBJS)
 	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ faceTrack.cpp $(OBJS)
+
+# handTrack
+$(BIND)handTrack: handTrack.cpp $(OBJS)
+	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ handTrack.cpp $(OBJS)
 
 # testProgram
 $(BIND)testProgram: testProgram.cpp $(OBJS)

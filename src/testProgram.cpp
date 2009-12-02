@@ -28,6 +28,8 @@ int main(void)
 
   int faces=0;
   CvPoint center;
+  center.x = 0;
+  center.y = 0;
   int radius;
 
   CvSize imageSize = ci->getImageSize();
@@ -50,52 +52,62 @@ int main(void)
       ci->acquire();
       faces = fd->faceDetect(ci->getIntensityImg(),&center,&radius);
     }
-  ci->acquire();
   faceCenterDepth=cvGet2D(ci->getDepthImg(),center.y,center.x);
   faceCenterDepth.val[0] /= 50;
+
+  int startX = center.x - radius;
+  int startY = center.y -radius;
+  int endX = center.x + radius;
+  int endY = center.y + radius;
+
+  IplImage *faceBinaryImage;
+  faceBinaryImage = cvCreateImage(cvSize(imageSize.width,imageSize.height),IPL_DEPTH_8U,1);
 
   while(1)
     {
       ci->acquire();
       int WHITE=0,BLACK=0;
       
-      for(int y=0;y<imageSize.height;y++)
+      for(int y=startY;y<endY;y++)
 	{
-	  for(int x=0;x<imageSize.width;x++)
-	    {
+	  for(int x=startX;x<endX;x++)
+	    {cout<<"2"<<endl;
 	      currentValue = cvGet2D(ci->getDepthImg(),y,x);
+	      cout<<"3"<<endl;
 	      currentValue.val[0] /= 50;
+	      //int diff = currentValue.val[0] - faceCenterDepth.val[0];
 	      if(!(currentValue.val[0] > (faceCenterDepth.val[0] + faceThreshold) || currentValue.val[0] < (faceCenterDepth.val[0] - faceThreshold)))
-		{
-		  cvSet2D(ci->getIntensityImg(),y,x,CV_RGB(255,255,255));
+		{cout<<"A"<<endl;
+		  cvSet2D(faceBinaryImage,y,x,CV_RGB(255,255,255));
 		  WHITE++;
 		}
 	      else
-		{
-		  cvSet2D(ci->getIntensityImg(),y,x,CV_RGB(0,0,0));
+		{cout<<"B"<<endl;
+		  cout<<"x,y="<<x<<","<<y<<endl;
+		  cvSet2D(faceBinaryImage,y,x,CV_RGB(0,0,0));
 		  BLACK++;
-		  
 		}
 	    }
 	}
       int totalPixels = imageSize.height*imageSize.width;
-      cout<<"WHITE,BLACK="<<WHITE*100/totalPixels<<","<<BLACK*100/totalPixels<<endl;
+      cout<<"WHITE,BLACK="<<WHITE*100/totalPixels<<","<<BLACK*100/totalPixels<<"[%]"<<endl;
       cout<<"Choosed value on depth image="<<currentValue.val[0]<<endl;
 
       cvCircle(ci->getIntensityImg(),center,1,CV_RGB(255,255,255),1,8,0);
 
-      cvShowImage("Result",ci->getIntensityImg());
+      cvShowImage("Result",faceBinaryImage);
       cvShowImage("Depth",ci->getDepthImg());
-      char key = cvWaitKey(10)j;
+      
+      char key = cvWaitKey(10);
       if(key=='q')
 	break;
     }
 
   delete ci,fd,tmch;
+  cvReleaseImage(&faceBinaryImage);
   cvDestroyWindow("Result");
   cvDestroyWindow("Depth");
 
   return 0;
 }
-  
 
