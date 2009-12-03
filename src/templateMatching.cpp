@@ -27,7 +27,7 @@ void templateMatching::createTemplateImg( IplImage *sourceImg, IplImage *templat
   cvGetRectSubPix( sourceImg, templateImg, cvPointTo32f( templateCenterLoc ) );
 }
 
-void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateImg, CvSize srcSize, CvPoint center )
+void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateImg, CvSize srcSize, CvPoint center, int radius )
 {
   differenceMapImg  = cvCreateImage( cvSize( srcSize.width - templateImg -> width + 1, srcSize.height - templateImg -> height + 1 ),IPL_DEPTH_32F,1 );
 
@@ -42,6 +42,8 @@ void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateI
   //calculate the center location and radius of detected face
   center.x = minLocation.x + templateImg -> width / 2;
   center.y = minLocation.y + templateImg -> height / 2;
+
+  radius = max(templateImg->width/2,templateImg->height/2);
 }
 
 double templateMatching::getErrorValue()
