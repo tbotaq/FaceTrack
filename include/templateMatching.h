@@ -30,6 +30,7 @@ class templateMatching
   void calcMatchResult(IplImage *sourceImg,IplImage *templateImg,CvSize srcSize,CvPoint *center,int *radius);
   double getErrorValue();
   int getAvgDepth(IplImage *humanImg,IplImage *depthImg);
+  double getSimilarity();
  
 };
 #endif

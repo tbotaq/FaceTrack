@@ -34,16 +34,23 @@ int main( void )
   faceDetector *fd = new faceDetector( imageSize );
   regionTracker *human = new regionTracker( ci );
   templateMatching *tmch = new templateMatching();
-  panTiltUnit *ptu = new panTiltUnit();
   tools *tool = new tools();
   
   int key;
-  IplImage *interfaceImg = NULL,*templateImgH = NULL,*templateImgF = NULL;
+  IplImage *interfaceImg = NULL,*dstTemplateImg = NULL,*faceTemplateImg = NULL;
 
   CvPoint tempPt1,tempPt2,tempPtCenter;
   int tempWidth,tempHeight;
 
   bool createdTemplateImg = false;
+
+  CvPoint dstCenterLoc = cvPoint(0,0),faceCenterLoc = cvPoint(0,0);
+  CvPoint dstPrevCenterLoc = cvPoint(0,0),facePrevCenterLoc = cvPoint(0,0);
+  int diffDstCenterLocX = 0,diffDstCenterLocY = 0,diffFaceCenterLocX = 0,diffFaceCenterLocY = 0;
+  int dstSize = 0,radius = 0;
+  bool updatedTamplateImg = false;
+  double pan = 0,tilt = 0;
+  int frames = 0;
 
   tempWidth = TEMP_WIDTH;
   tempHeight = TEMP_HEIGHT;
@@ -52,8 +59,7 @@ int main( void )
   tempPt1 = cvPoint( tempPtCenter.x - tempWidth / 2, tempPtCenter.y - tempHeight / 2 );
   tempPt2 = cvPoint( tempPtCenter.x + tempWidth / 2, tempPtCenter.y + tempHeight / 2 );
 
-  cvNamedWindow("SET YOUR HAND", 0 ); 
-  
+  cvNamedWindow("SET YOUR HAND", 0 );  
 
   cout<<"Press 't' key to create template image"<<endl;
 
@@ -62,102 +68,132 @@ int main( void )
     {
       ci -> acquire();
       interfaceImg = ci -> getIntensityImg();
+
+      fd -> faceDetect( interfaceImg, &faceCenterLoc, &radius );
+
       cvRectangle( interfaceImg, tempPt1, tempPt2, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
+
       cvShowImage("SET YOUR HAND", ci -> getIntensityImg() );
+
       key = cvWaitKey( 10 );
-      if( human -> track()==0 && key == 't' )
+
+      if( human -> track() == 0 && key == 't' )
 	{
-	  templateImgH = cvCreateImage( cvSize( tempWidth, tempHeight ), IPL_DEPTH_8U, 1 );
-	  tmch -> createTemplateImg( human -> getResult(), templateImgH, &tempPtCenter );
-	  cvNamedWindow("TEMPLATE IMAGE", 0 );
-	  cvShowImage("TEMPLATE IMAGE", templateImgH );
+	  faceTemplateImg = cvCreateImage( cvSize( radius*2, radius*2 ), IPL_DEPTH_8U, 1 );
+	  dstTemplateImg = cvCreateImage( cvSize( tempWidth, tempHeight ), IPL_DEPTH_8U, 1 );
+
+	  tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
+	  tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &tempPtCenter );
+
+	  cvNamedWindow( "Destination Template Image", 0 );
+	  cvNamedWindow( "Face Template Image", 0 );
+
+	  cvShowImage( "Destination Template Image", dstTemplateImg );
+	  cvShowImage( "Face Template Image", faceTemplateImg );
+
 	  cout<<"Created temlate image is shown.OK?(y or n)"<<endl;
+
 	  key = cvWaitKey( 0 );
 	  if( key == 'y' )
 	    createdTemplateImg = true;
+	  if( key == 'n' )
+	    continue;
 	  if( key == 'q' )
 	    {
-	      cvReleaseImage(&templateImgH);
-
+	      cvReleaseImage( &dstTemplateImg );
 	      delete ci;
 	      delete fd;
 	      delete human;
 	      delete tmch;
-	      delete ptu;
 	      delete tool;
 	      return 0;
 	    }
 	}
     }
 
-  cvDestroyWindow("SET YOUR HAND");
+  cvDestroyWindow( "SET YOUR HAND" );
 
-  cvNamedWindow("Match Result", 0);
+  cvNamedWindow( "Match Result", 0);
 
-  CvPoint dstCenterLoc = cvPoint(0,0);
-  CvPoint dstPrevCenterLoc = cvPoint(0,0);
-  int diffCenterLocX=0,diffCenterLocY=0;
-  int dstSize = 0;
-  bool updatedTamplateImg = false;
-  double pan=0,tilt=0;
-  int frames = 0;
-
+  
+  //tracking loop
   while(1)
     {
       ci->acquire();
       interfaceImg = ci -> getIntensityImg();
 
-      if(human->track() == 0)
+      if( !updatedTamplateImg )
+	fd -> faceDetect( interfaceImg, &faceCenterLoc, &radius );
+
+      if( human -> track() == 0 )
 	{
 	  dstPrevCenterLoc = dstCenterLoc;
-	  tmch -> calcMatchResult( human -> getResult(), templateImgH, imageSize, &dstCenterLoc, &dstSize );
-	  diffCenterLocX = abs(dstCenterLoc.x-dstPrevCenterLoc.x);
-	  diffCenterLocY = abs(dstCenterLoc.y-dstPrevCenterLoc.y);
+	  facePrevCenterLoc = faceCenterLoc;
 
-	  if( updatedTamplateImg && ( diffCenterLocX > 10 || diffCenterLocY > 10 ) )
-	    {
-	      cout<<"### Detected Abnormal Value"<<endl;
-	      dstCenterLoc = dstPrevCenterLoc;
-	    }
-	  if( frames % 4 == 0 )
-	    {
-	      cout<<"#####"<<endl;
-	      dstCenterLoc.x -= 2;
-	      dstCenterLoc.y -= 2;
-	    }
+	  tmch -> calcMatchResult( human -> getResult(), dstTemplateImg, imageSize, &dstCenterLoc, &dstSize );
+	  cout<<"Similarity[%] of dst \t= "<<tmch->getSimilarity()<<"[%]"<<endl;
+	  tmch -> calcMatchResult( human -> getResult(), faceTemplateImg, imageSize, &faceCenterLoc, &radius );
+	  cout<<"Similarity[%] of face\t= "<<tmch->getSimilarity()<<"[%]"<<endl;
 
-	  cout<<"CX="<<dstCenterLoc.x<<endl;
-	  cout<<"CY="<<dstCenterLoc.y<<endl;
-	  cvCircle( interfaceImg, dstCenterLoc, dstSize, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
+	  diffDstCenterLocX = abs( dstCenterLoc.x - dstPrevCenterLoc.x );
+	  diffDstCenterLocY = abs( dstCenterLoc.y - dstPrevCenterLoc.y );
+
+	  diffFaceCenterLocX = abs( faceCenterLoc.x - facePrevCenterLoc.x );
+	  diffFaceCenterLocY = abs( faceCenterLoc.y - facePrevCenterLoc.y );
+
+	  if( updatedTamplateImg )
+	    {
+	      if( diffDstCenterLocX > 10 || diffDstCenterLocY > 10 )
+		{
+		  cout<<"### Detected Abnormal Value in Destination Tracking."<<endl;
+		  dstCenterLoc = dstPrevCenterLoc;
+		}
+	      if( diffFaceCenterLocX > 10 || diffFaceCenterLocY > 10)
+		{
+		  cout<<"### Detected Abnormal Value in Face Tracking."<<endl;
+		  faceCenterLoc = facePrevCenterLoc;
+		}
+
+	      if( frames % 4 == 0 )
+		{
+		  dstCenterLoc.x -= 2;
+		  dstCenterLoc.y -= 2;
+		  faceCenterLoc.x -= 2;
+		  faceCenterLoc.y -= 2;
+		}
+	    }
 	}
-      pan = tool->getMoveDist(tempPtCenter.x,dstCenterLoc.x);
-      tilt = tool->getMoveDist(tempPtCenter.y,dstCenterLoc.y);
-      //ptu->move(pan,tilt);
-      cout<<"(pan,tilt) = ("<<pan<<","<<tilt<<")"<<endl;
-      //templateImgH = cvCreateImage( cvSize(
-      tmch -> createTemplateImg( human -> getResult(), templateImgH, &dstCenterLoc);
+
+      cvCircle( interfaceImg, dstCenterLoc, dstSize, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
+      cvCircle( interfaceImg, faceCenterLoc, radius, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
+	    
+      
+      tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &dstCenterLoc );
+      tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
       updatedTamplateImg = true;
 
-      cvShowImage("Match Result", interfaceImg);
-      cvShowImage("TEMPLATE IMAGE", templateImgH);
+      cvShowImage( "Match Result", interfaceImg );
+      cvShowImage( "Destination Template Image", dstTemplateImg );
+      cvShowImage( "Face Template Image", faceTemplateImg );
 
       key = cvWaitKey(10);
-      if(key == 'q')
+      if( key == 'q' )
 	break;
+
       frames++;
     }
   
-  cvDestroyWindow("TEMPLATE IMAGE");
-  cvDestroyWindow("Match Result");
+  cvDestroyWindow( "Destination Template Image" );
+  cvDestroyWindow( "Face Template Image" );
+  cvDestroyWindow( "Match Result" );
 
-
-  cvReleaseImage(&templateImgH);
+  cvReleaseImage( &dstTemplateImg );
+  cvReleaseImage( &faceTemplateImg );
 
   delete ci;
   delete fd;
   delete human;
   delete tmch;
-  delete ptu;
   delete tool;
 
   return 0;

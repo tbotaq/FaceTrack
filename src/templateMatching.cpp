@@ -29,16 +29,13 @@ void templateMatching::createTemplateImg( IplImage *sourceImg, IplImage *templat
 
 void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateImg, CvSize srcSize, CvPoint *center, int *radius )
 {
-  cout<<"0"<<endl;
   differenceMapImg  = cvCreateImage( cvSize( srcSize.width - templateImg -> width + 1, srcSize.height - templateImg -> height + 1 ),IPL_DEPTH_32F,1 );
-  cout<<"1"<<endl;
   //calculate the similarity by "SSD",which returns minimum value as most matching-value   
   cvMatchTemplate( sourceImg, templateImg, differenceMapImg, CV_TM_SQDIFF_NORMED );
-  cout<<"3"<<endl;
   //find the minimum-resembled point of differenceMapImage and write it to minLocation    
   cvMinMaxLoc( differenceMapImg, &errorValue, NULL, &minLocation, NULL, NULL );
  
-  cout << "\tSimilarity[%]= "<< ( 1 - errorValue ) * 100 <<endl;
+  //cout << "\tSimilarity[%]= "<< ( 1 - errorValue ) * 100 <<endl;
  
   //calculate the center location and radius of detected face
   center->x = minLocation.x + templateImg -> width / 2;
@@ -82,5 +79,8 @@ int templateMatching::getAvgDepth( IplImage *humanImage, IplImage *depthImage )
     return -1;
 }
 
-
+double templateMatching::getSimilarity()
+{
+  return ( (1 - errorValue ) * 100 );
+}
 
