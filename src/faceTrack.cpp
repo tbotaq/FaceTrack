@@ -95,7 +95,7 @@ void *thread_facedetect( void *_arg_f )
   ci -> acquire();  
 
   //calculate the center location and radius of matched face
-  tmch -> calcMatchResult( human -> getResult(), arg_f -> templateImg, ci -> getImageSize(), arg_f -> center, arg_f -> radius );
+  tmch -> calcMatchResult( human -> getResult(), arg_f -> templateImg, ci -> getImageSize(), &(arg_f -> center), &(arg_f -> radius) );
   arg_f -> updatedCenterLoc = true;
   
   //calculate the distance between face's center location and destination

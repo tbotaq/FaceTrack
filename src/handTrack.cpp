@@ -65,7 +65,7 @@ int main( void )
       key = cvWaitKey( 10 );
       if( human -> track()==0 && key == 't' )
 	{
-	  templateImg = cvCreateImage( cvSize( tempWidth, tempHeight ), IPL_DEPTH_32F, 1 );
+	  templateImg = cvCreateImage( cvSize( tempWidth, tempHeight ), IPL_DEPTH_8U, 1 );
 	  tmch -> createTemplateImg( human -> getResult(), templateImg, tempPtCenter );
 	  cvShowImage("TEMPLATE IMAGE", templateImg );
 	  cout<<"Created temlate image is shown.OK?(y or n)"<<endl;
@@ -88,7 +88,7 @@ int main( void )
 
       if(human->track() == 0)
 	{
-	  tmch -> calcMatchResult( human -> getResult(), templateImg, imageSize, dstCenterLoc, dstSize );
+	  tmch -> calcMatchResult( human -> getResult(), templateImg, imageSize, &dstCenterLoc, &dstSize );
 	  cvCircle( interfaceImg, dstCenterLoc, dstSize, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
 	}
       
@@ -98,6 +98,8 @@ int main( void )
       if(key == 'q')
 	break;
     }
+
+
 
   cvDestroyWindow("SET YOUR HAND");
   cvDestroyWindow("TEMPLATE IMAGE");

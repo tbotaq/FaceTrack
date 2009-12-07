@@ -27,23 +27,24 @@ void templateMatching::createTemplateImg( IplImage *sourceImg, IplImage *templat
   cvGetRectSubPix( sourceImg, templateImg, cvPointTo32f( templateCenterLoc ) );
 }
 
-void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateImg, CvSize srcSize, CvPoint center, int radius )
+void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateImg, CvSize srcSize, CvPoint *center, int *radius )
 {
+  cout<<"0"<<endl;
   differenceMapImg  = cvCreateImage( cvSize( srcSize.width - templateImg -> width + 1, srcSize.height - templateImg -> height + 1 ),IPL_DEPTH_32F,1 );
-
+  cout<<"1"<<endl;
   //calculate the similarity by "SSD",which returns minimum value as most matching-value   
   cvMatchTemplate( sourceImg, templateImg, differenceMapImg, CV_TM_SQDIFF_NORMED );
-  
+  cout<<"3"<<endl;
   //find the minimum-resembled point of differenceMapImage and write it to minLocation    
   cvMinMaxLoc( differenceMapImg, &errorValue, NULL, &minLocation, NULL, NULL );
  
   cout << "\tSimilarity[%]= "<< ( 1 - errorValue ) * 100 <<endl;
  
   //calculate the center location and radius of detected face
-  center.x = minLocation.x + templateImg -> width / 2;
-  center.y = minLocation.y + templateImg -> height / 2;
+  center->x = minLocation.x + templateImg -> width / 2;
+  center->y = minLocation.y + templateImg -> height / 2;
 
-  radius = max(templateImg->width/2,templateImg->height/2);
+  *radius = max(templateImg->width/2,templateImg->height/2);
 }
 
 double templateMatching::getErrorValue()
