@@ -62,7 +62,8 @@ int main( void )
   tempPt1 = cvPoint( tempPtCenter.x - tempWidth / 2, tempPtCenter.y - tempHeight / 2 );
   tempPt2 = cvPoint( tempPtCenter.x + tempWidth / 2, tempPtCenter.y + tempHeight / 2 );
 
-  cvNamedWindow("SET YOUR HAND", 0 );  
+  cvNamedWindow( "SET YOUR HAND", 0 );  
+  
 
   cout<<"Press 't' key to create template image"<<endl;
 
@@ -87,40 +88,47 @@ int main( void )
 
       key = cvWaitKey( 10 );
 
-      if( human -> track() == 0 && key == 't' )
+      if( human -> track() == 0)
 	{
-	  //setting the size of template image
-	  dstTemplateImg = cvCreateImage( cvSize( tempWidth, tempHeight ), IPL_DEPTH_8U, 1 );
-	  faceTemplateImg = cvCreateImage( cvSize( radius*2, radius*2 ), IPL_DEPTH_8U, 1 );
-	  
-	  //create template images
-	  tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
-	  tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &tempPtCenter );
-
-	  cvNamedWindow( "Destination Template Image", 0 );
-	  cvNamedWindow( "Face Template Image", 0 );
-
-	  cvShowImage( "Destination Template Image", dstTemplateImg );
-	  cvShowImage( "Face Template Image", faceTemplateImg );
-
-	  cout<<"Created temlate image is shown.OK?(y or n)"<<endl;
-
-	  key = cvWaitKey( 0 );
-
-	  if( key == 'y' )
-	    createdTemplateImg = true;
-	  if( key == 'n' )
-	    continue;
-	  if( key == 'q' )
+	  cvNamedWindow( "Binary Image", 0 );
+	  cvShowImage( "Binary Image", human -> getResult() ); 
+	  if( key == 't' )
 	    {
-	      //release memory and terminate this program
-	      cvReleaseImage( &dstTemplateImg );
-	      delete ci;
-	      delete fd;
-	      delete human;
-	      delete tmch;
-	      delete tool;
-	      return 0;
+	      //setting the size of template image
+	      dstTemplateImg = cvCreateImage( cvSize( tempWidth, tempHeight ), IPL_DEPTH_8U, 1 );
+	      faceTemplateImg = cvCreateImage( cvSize( radius*2, radius*2 ), IPL_DEPTH_8U, 1 );
+	  
+	      //create template images
+	      tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
+	      tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &tempPtCenter );
+
+	      cvNamedWindow( "Destination Template Image", 0 );
+	      cvNamedWindow( "Face Template Image", 0 );
+	  
+
+	      cvShowImage( "Destination Template Image", dstTemplateImg );
+	      cvShowImage( "Face Template Image", faceTemplateImg );
+	      
+
+	      cout<<"Created temlate image is shown.OK?(y or n)"<<endl;
+
+	      key = cvWaitKey( 0 );
+
+	      if( key == 'y' )
+		createdTemplateImg = true;
+	      if( key == 'n' )
+		continue;
+	      if( key == 'q' )
+		{
+		  //release memory and terminate this program
+		  cvReleaseImage( &dstTemplateImg );
+		  delete ci;
+		  delete fd;
+		  delete human;
+		  delete tmch;
+		  delete tool;
+		  return 0;
+		}
 	    }
 	}
     }
@@ -166,7 +174,7 @@ int main( void )
 		  cout<<"### Detected Abnormal Value in Destination Tracking."<<endl;
 		  dstCenterLoc = dstPrevCenterLoc;
 		}
-	      if( diffFaceCenterLocX > 10 || diffFaceCenterLocY > 10)
+	      if( diffFaceCenterLocX > 10 || diffFaceCenterLocY > 10 )
 		{
 		  cout<<"### Detected Abnormal Value in Face Tracking."<<endl;
 		  faceCenterLoc = facePrevCenterLoc;
@@ -195,6 +203,7 @@ int main( void )
       cvShowImage( "Match Result", interfaceImg );
       cvShowImage( "Destination Template Image", dstTemplateImg );
       cvShowImage( "Face Template Image", faceTemplateImg );
+      cvShowImage( "Binary Image", human -> getResult() );
 
       key = cvWaitKey(10);
       if( key == 'q' )
@@ -207,6 +216,7 @@ int main( void )
   cvDestroyWindow( "Destination Template Image" );
   cvDestroyWindow( "Face Template Image" );
   cvDestroyWindow( "Match Result" );
+  cvDestroyWindow( "Binary Image" );
 
   cvReleaseImage( &dstTemplateImg );
   cvReleaseImage( &faceTemplateImg );
