@@ -19,7 +19,7 @@ double tools::getrusageSec()
   }
 
 
-double tools::dist(int center, int dst)
+double tools::getMoveDist(int center, int dst)
   {
     double ret = 0.4 * (center - dst);
     return ret;

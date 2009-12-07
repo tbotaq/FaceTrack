@@ -99,8 +99,8 @@ void *thread_facedetect( void *_arg_f )
   arg_f -> updatedCenterLoc = true;
   
   //calculate the distance between face's center location and destination
-  arg_f -> dX = tool -> dist( arg_f -> center.x,  arg_f -> dst_x );
-  arg_f -> dY = tool -> dist( arg_f -> center.y,  arg_f -> dst_y );
+  arg_f -> dX = tool -> getMoveDist( arg_f -> center.x,  arg_f -> dst_x );
+  arg_f -> dY = tool -> getMoveDist( arg_f -> center.y,  arg_f -> dst_y );
   
   diffX = abs( arg_f -> center.x - prevX );  
   diffY = abs( arg_f -> center.y - prevY );
@@ -120,7 +120,7 @@ void *thread_facedetect( void *_arg_f )
       //define how long PT unit make movement
       arg_f -> pan = arg_f -> dX;
       arg_f -> tilt = arg_f -> dY;
-      tmch -> createTemplateImg( human -> getResult(), arg_f -> templateImg, arg_f -> center );
+      tmch -> createTemplateImg( human -> getResult(), arg_f -> templateImg, &(arg_f -> center) );
     }
   else 
     {     
@@ -221,7 +221,7 @@ int main( void )
 	  trackResult = human -> track();
 	}while( trackResult == -1 );
 
-      tmch -> createTemplateImg( human -> getResult(),arg.templateImg, arg.center );
+      tmch -> createTemplateImg( human -> getResult(),arg.templateImg, &(arg.center) );
       hasBeenInitialized = true;
     }
     

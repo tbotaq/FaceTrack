@@ -14,7 +14,7 @@ class tools
   tools();
   ~tools();
   double getrusageSec();
-  double dist(int center, int dst);
+  double getMoveDist(int center, int dst);
 };
 
 #endif

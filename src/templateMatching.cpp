@@ -22,9 +22,9 @@ templateMatching::~templateMatching()
 
 
 
-void templateMatching::createTemplateImg( IplImage *sourceImg, IplImage *templateImg, CvPoint templateCenterLoc )
+void templateMatching::createTemplateImg( IplImage *sourceImg, IplImage *templateImg, CvPoint *templateCenterLoc )
 {
-  cvGetRectSubPix( sourceImg, templateImg, cvPointTo32f( templateCenterLoc ) );
+  cvGetRectSubPix( sourceImg, templateImg, cvPointTo32f( *templateCenterLoc ) );
 }
 
 void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateImg, CvSize srcSize, CvPoint *center, int *radius )
