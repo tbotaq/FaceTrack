@@ -21,7 +21,7 @@ class templateMatching
   int key;
   double errorValue;
   IplImage *templateImg;
-  IplImage *differenceMapImg;
+  IplImage *differenceMapImg,*diffMapImg;
  public:
   templateMatching();
   ~templateMatching();
@@ -33,5 +33,6 @@ class templateMatching
   double getSimilarity();
   IplImage *getDiffMapImg();
   IplImage *getDiffMapImg(IplImage *sourceImg,IplImage *templateImg,IplImage *diffMapImg);
+  int resizeBinarizedImg(IplImage *binarizedImg);
 };
 #endif

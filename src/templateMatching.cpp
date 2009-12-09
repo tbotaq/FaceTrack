@@ -18,6 +18,7 @@ templateMatching::templateMatching()
 templateMatching::~templateMatching()
 {
   cvReleaseImage( &differenceMapImg );
+  cvReleaseImage( &diffMapImg );
 }
 
 
@@ -30,17 +31,16 @@ void templateMatching::createTemplateImg( IplImage *sourceImg, IplImage *templat
 void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateImg, CvSize srcSize, CvPoint *center, int *radius )
 {
   differenceMapImg  = cvCreateImage( cvSize( srcSize.width - templateImg -> width + 1, srcSize.height - templateImg -> height + 1 ),IPL_DEPTH_32F,1 );
+  
   //calculate the similarity by "SSD",which returns minimum value as most matching-value   
   cvMatchTemplate( sourceImg, templateImg, differenceMapImg, CV_TM_SQDIFF_NORMED );
+  
   //find the minimum-resembled point of differenceMapImage and write it to minLocation    
   cvMinMaxLoc( differenceMapImg, &errorValue, NULL, &minLocation, NULL, NULL );
- 
-  //cout << "\tSimilarity[%]= "<< ( 1 - errorValue ) * 100 <<endl;
- 
+    
   //calculate the center location and radius of detected face
   center->x = minLocation.x + templateImg -> width / 2;
   center->y = minLocation.y + templateImg -> height / 2;
-
   *radius = max(templateImg->width/2,templateImg->height/2);
 }
 
@@ -49,9 +49,9 @@ IplImage *templateMatching::getDiffMapImg()
   return differenceMapImg;
 }
 
-IplImage *templateMatching::getDiffMapImg(IplImage *sourceImg,IplImage *templateImg,IplImage *diffMapImg)
+IplImage *templateMatching::getDiffMapImg( IplImage *sourceImg, IplImage *templateImg, IplImage *diffMapImg )
 {
-  diffMapImg  = cvCreateImage( cvSize( sourceImg -> width - templateImg -> width + 1, sourceImg -> height - templateImg -> height + 1 ),IPL_DEPTH_32F,1 );
+  diffMapImg  = cvCreateImage( cvSize( sourceImg -> width - templateImg -> width + 1, sourceImg -> height - templateImg -> height + 1 ), IPL_DEPTH_32F, 1 );
   cvMatchTemplate( sourceImg, templateImg, diffMapImg, CV_TM_SQDIFF_NORMED );
   return diffMapImg;
 }
@@ -74,7 +74,7 @@ int templateMatching::getAvgDepth( IplImage *humanImage, IplImage *depthImage )
       {
 	humanValue = cvGet2D( humanImage, i, j ); 
 	depthValue = cvGet2D( depthImage, i, j );
-	  
+	
 	if( humanValue.val[0] != 0 )
 	  {
 	    sum += depthValue.val[0];
@@ -89,6 +89,37 @@ int templateMatching::getAvgDepth( IplImage *humanImage, IplImage *depthImage )
     }
   else
     return -1;
+}
+
+int templateMatching::resizeBinarizedImg( IplImage *binarizedImg )
+{
+  CvScalar currentValue = cvScalar( 0 ), prevCurrentValue = cvScalar( 0 );
+  bool findFirstWhite = false;
+  int minX=200,maxX,minY;
+  
+  for( int i=0; i < binarizedImg -> height; i++ )
+    for( int j = 0; j < binarizedImg -> width; j++ )
+      {
+	if(j!=0)
+	  prevCurrentValue = currentValue;
+	currentValue = cvGet2D( binarizedImg, i, j ); 
+	if( currentValue.val[0] == 1 )
+	  {
+	    if( !findFirstWhite )
+	      {
+		minY = i;
+		findFirstWhite = true;
+	      }
+	    if( minX > j )
+	      minX = j;
+	    if( maxX < j )
+	      maxX = j;
+	  }
+      }
+
+  cout<<"minX,maxX,minY ="<<minX<<","<<maxX<<","<<minY<<endl;
+
+  return 0;
 }
 
 double templateMatching::getSimilarity()

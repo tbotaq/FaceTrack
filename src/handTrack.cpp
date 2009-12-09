@@ -21,8 +21,8 @@
 #include <tools.h>
 
 //width and height of template image created in the first
-#define TEMP_WIDTH 50
-#define TEMP_HEIGHT 45
+#define TEMP_WIDTH 80
+#define TEMP_HEIGHT 75
 #define DST_THRESHOLD 70
 #define FACE_THRESHOLD 40
 #define A 0.1
@@ -140,9 +140,11 @@ int main( void )
   double dstSimilarity,faceSimilarity;
   int ohandx = 0, ohandy = 0, ofacex = 0, ofacey = 0;
   int mx = 0, my = 0;
+  bool outOfRegion;
 
   while(createdTemplateImg)
     {
+      outOfRegion = false;
       //acquire current frame
       ci->acquire();
       interfaceImg = ci -> getIntensityImg();
@@ -191,12 +193,17 @@ int main( void )
 
 	  // set -1 as an invalid value if the similarity is smaller than threshold
 	  if( dstSimilarity < DST_THRESHOLD )
-	    dstCenterLoc = cvPoint( -1, -1 );
+	    {
+	      dstCenterLoc = cvPoint( -1, -1 );
+	      outOfRegion = true;
+	    }
 	  if( faceSimilarity < FACE_THRESHOLD )
-	    faceCenterLoc = cvPoint( -1, -1 );
-
+	    {
+	      faceCenterLoc = cvPoint( -1, -1 );
+	      outOfRegion = true;
+	    }
 	  // move pan/tilt unit
-	  	  if(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x != -1 )) 
+	  if(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x != -1 )) 
 	    { 
 	      ofacex = faceCenterLoc.x, ofacey = faceCenterLoc.y, ohandx = dstCenterLoc.x, ohandy = dstCenterLoc.y;
 	    }
@@ -223,13 +230,15 @@ int main( void )
 	}
 
       //unknown phenomenon handling
-      if( frames % 4 == 0 )
+      if( !outOfRegion && frames % 4 == 0 )
 	{
 	  dstCenterLoc.x -= 2;
 	  dstCenterLoc.y -= 2;
 	  faceCenterLoc.x -= 2;
 	  faceCenterLoc.y -= 2;
 	}
+
+      tmch->resizeBinarizedImg(dstTemplateImg);
 
       //draw two circles to destinarion and face
       cvCircle( interfaceImg, dstCenterLoc, dstSize, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
