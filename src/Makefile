@@ -13,8 +13,9 @@ Biclops_INCD = ../../../Biclops/Biclops/Software/libBiclops/include/
 PMD_INCD = ../../../Biclops/motion/libPMD/include/
 Utils_INCD = ../../../Biclops/motion/libUtils/include/
 
-all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)faceTrack $(BIND)handTrack
+all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)faceTrack 
 test : $(BIND)testProgram
+hand : $(BIND)handTrack
 
 clean:
 	- @ rm -rf $(OBJS)

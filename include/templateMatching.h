@@ -31,6 +31,7 @@ class templateMatching
   double getErrorValue();
   int getAvgDepth(IplImage *humanImg,IplImage *depthImg);
   double getSimilarity();
- 
+  IplImage *getDiffMapImg();
+  IplImage *getDiffMapImg(IplImage *sourceImg,IplImage *templateImg,IplImage *diffMapImg);
 };
 #endif

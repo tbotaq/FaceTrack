@@ -44,6 +44,18 @@ void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateI
   *radius = max(templateImg->width/2,templateImg->height/2);
 }
 
+IplImage *templateMatching::getDiffMapImg()
+{
+  return differenceMapImg;
+}
+
+IplImage *templateMatching::getDiffMapImg(IplImage *sourceImg,IplImage *templateImg,IplImage *diffMapImg)
+{
+  diffMapImg  = cvCreateImage( cvSize( sourceImg -> width - templateImg -> width + 1, sourceImg -> height - templateImg -> height + 1 ),IPL_DEPTH_32F,1 );
+  cvMatchTemplate( sourceImg, templateImg, diffMapImg, CV_TM_SQDIFF_NORMED );
+  return diffMapImg;
+}
+
 double templateMatching::getErrorValue()
 {
   return errorValue;
@@ -83,4 +95,3 @@ double templateMatching::getSimilarity()
 {
   return ( (1 - errorValue ) * 100 );
 }
-
