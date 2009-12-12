@@ -1,3 +1,9 @@
+// faceTrack ver1.0
+// Grid-separeted tracking
+// Pan/Tilt unit moves to the grid where the face is detected.
+// Unsupport multi thread process
+// Unsupport PID control as move control.
+
 //libraries for image proccess
 #include "opencv/cv.h"
 #include "opencv/cxcore.h"
