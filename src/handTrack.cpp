@@ -25,8 +25,6 @@
 #define TEMP_HEIGHT 75
 #define DST_THRESHOLD 70
 #define FACE_THRESHOLD 40
-#define A 0.1
-#define B 0.1
 
 using namespace std;
 using namespace point;
@@ -43,8 +41,9 @@ int main( void )
   tools *tool = new tools();
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //-------------------------------------------------variables declaration ------------------------------------------------//
+  //-------------------------------------------------variables declaration-------------------------------------------------//
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   //images
   IplImage *interfaceImg = NULL,*dstTemplateImg = NULL,*faceTemplateImg = NULL,*dstDiffMapImg = NULL,*faceDiffMapImg = NULL;
 
@@ -52,7 +51,7 @@ int main( void )
   CvPoint imageCenterLoc;
   CvPoint tempPt1,tempPt2,tempPtCenter;
   int tempWidth,tempHeight;
-  imageCenterLoc = cvPoint( imageSize.x / 2, imageSize.height / 2 );
+  imageCenterLoc = cvPoint( imageSize.width / 2, imageSize.height / 2 );
   tempWidth = TEMP_WIDTH;
   tempHeight = TEMP_HEIGHT;
   tempPtCenter = cvPoint( imageCenterLoc.x + 25, imageCenterLoc.y - 25 );
@@ -107,10 +106,11 @@ int main( void )
   cvMoveWindow( "Face Diff Map Image", windowOrigin.x + vartical_offset, windowOrigin.y + align_offset * 2);
   cvMoveWindow( "Match Result", windowOrigin.x + vartical_offset * 2, windowOrigin.y);
 
-  ///////////////////////////////////// 
-  //   create first template image   //
-  /////////////////////////////////////
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //--------------------------------------------create first template image------------------------------------------------//
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
   cout<<"Press 't' key to create template image"<<endl;
   
   while( !createdTemplateImg )
@@ -139,9 +139,9 @@ int main( void )
 	      faceTemplateImg = cvCreateImage( cvSize( radius*2, radius*2 ), IPL_DEPTH_8U, 1 );
 	  
 	      //create template images
-	      tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
 	      tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &tempPtCenter );
-  
+	      tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
+
 	      cvShowImage( "Destination Template Image", dstTemplateImg );
 	      cvShowImage( "Face Template Image", faceTemplateImg );
 	    
@@ -158,9 +158,9 @@ int main( void )
   //calling pan/tilt unit
   panTiltUnit *ptu = new panTiltUnit();
 
-  ///////////////////////////////////// 
-  //         tracking loop           //
-  ///////////////////////////////////// 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //-------------------------------------------------tracking loop---------------------------------------------------------//
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   while(createdTemplateImg)
     {
@@ -218,12 +218,42 @@ int main( void )
 	    {
 	      outOfRegion = true;
 	      frames = 0;//resetting frame-count
-	      
+
+	      do{
+		cout<<"Retrying template-matching in destination."<<endl;
+		if( human -> track() == 0 )
+		  {
+		    //create template images
+		    tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &dstCenterLoc );
+		    tmch -> calcMatchResult( human -> getResult(), dstTemplateImg, imageSize, &dstCenterLoc, &dstSize );
+		    cout<< tmch -> getSimilarity() <<endl;
+		    cvShowImage( "Binary Image", human -> getResult() );
+		    key = cvWaitKey(10);
+		    if( key == 'q')
+		      return 0;
+		  }
+	      }while( tmch -> getSimilarity() < 90 );
 	    }
+
 	  if( faceSimilarity < FACE_THRESHOLD && updatedTamplateImg )
 	    {
 	      outOfRegion = true;
 	      frames = 0;
+
+	      do{
+		cout<<"Retrying template-matching in face."<<endl;
+		if( human -> track() == 0 )
+		  {
+		    //create template images
+		    tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
+		    tmch -> calcMatchResult( human -> getResult(), faceTemplateImg, imageSize, &faceCenterLoc, &radius );
+		    cout<< tmch -> getSimilarity() <<endl;
+		    cvShowImage( "Binary Image", human -> getResult() );
+		    key = cvWaitKey(10);
+		    if( key == 'q')
+		      return 0;
+		  }
+	      }while( tmch -> getSimilarity() < 90 );
 	    }
 
 	  /*
@@ -272,15 +302,15 @@ int main( void )
 	    {
 	      //if both objects are in the region,calculate middle location between hand and face and set pan/tilt value
 	      midLocOfFaceAndDst = cvPoint( ( dstCenterLoc.x + faceCenterLoc.x ) / 2, ( dstCenterLoc.y + faceCenterLoc.y ) / 2 );
-	      pan = tool -> getMoveDist( imageCenterLoc.x, midLocOfFaceAndDst.x );
-	      tilt = tool -> getMoveDist( imageCenterLoc.y, midLocOfFaceAndDst.y );
+	      pan = tool -> getMoveDist( midLocOfFaceAndDst.x, imageCenterLoc.x );
+	      tilt = tool -> getMoveDist( midLocOfFaceAndDst.y, imageCenterLoc.y );
 	    }
 
 	  //draw a line from region's center location to middle location between hand and face
 	  cvLine( interfaceImg, imageCenterLoc, midLocOfFaceAndDst, CV_RGB(255,255,255), 1, 8, 0 );
 	 	  
 	  //move pan/tilt unit
-	  ptu -> move( -pan, -tilt );
+	  ptu -> move( pan, tilt );
 
 	  //unknown phenomenon handling
 	  if( !outOfRegion && frames % 4 == 0 )
