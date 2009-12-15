@@ -33,42 +33,62 @@ using namespace point;
 
 int main( void )
 {
+  //initializations of classes
   cameraImages *ci = new cameraImages();
   ci -> initialize();
   CvSize imageSize = ci -> getImageSize();
   faceDetector *fd = new faceDetector( imageSize );
   regionTracker *human = new regionTracker( ci );
   templateMatching *tmch = new templateMatching();
- 
   tools *tool = new tools();
-  
-  int key;
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //-------------------------------------------------variables declaration ------------------------------------------------//
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //images
   IplImage *interfaceImg = NULL,*dstTemplateImg = NULL,*faceTemplateImg = NULL,*dstDiffMapImg = NULL,*faceDiffMapImg = NULL;
 
+  //used in creating template image.
+  CvPoint imageCenterLoc;
   CvPoint tempPt1,tempPt2,tempPtCenter;
   int tempWidth,tempHeight;
+  imageCenterLoc = cvPoint( imageSize.x / 2, imageSize.height / 2 );
+  tempWidth = TEMP_WIDTH;
+  tempHeight = TEMP_HEIGHT;
+  tempPtCenter = cvPoint( imageCenterLoc.x + 25, imageCenterLoc.y - 25 );
+  tempPt1 = cvPoint( tempPtCenter.x - tempWidth / 2, tempPtCenter.y - tempHeight / 2 );
+  tempPt2 = cvPoint( tempPtCenter.x + tempWidth / 2, tempPtCenter.y + tempHeight / 2 );
 
   //flags
   bool createdTemplateImg = false;
   bool updatedTamplateImg = false;
+  bool outOfRegion = false;
 
-  CvPoint dstCenterLoc = cvPoint(0,0),faceCenterLoc = cvPoint(0,0);
-  CvPoint dstPrevCenterLoc = cvPoint(0,0),facePrevCenterLoc = cvPoint(0,0);
+  //locations of face and destination(hand)
+  CvPoint dstCenterLoc = {0,0},faceCenterLoc = {0,0};
+  CvPoint dstPrevCenterLoc = {0,0},facePrevCenterLoc = {0,0};
+  CvPoint midLocOfFaceAndDst = {0,0};
+
+  //for key handlling
+  int key = 0;
+
+  //differences
   int diffDstCenterLocX = 0,diffDstCenterLocY = 0,diffFaceCenterLocX = 0,diffFaceCenterLocY = 0;
+  
+  //size of destination and face(radius)
   int dstSize = 0,radius = 0;
   
+  //meant to be passed to panTiltUnit::move()
   double pan = 0,tilt = 0;
+
+  //numbers of frames
   int frames = 0;
 
-  tempWidth = TEMP_WIDTH;
-  tempHeight = TEMP_HEIGHT;
+  //error value and similality in template matching
+  double currentDstErrorValue=0,currentFaceErrorValue=0;
+  double dstSimilarity=0,faceSimilarity=0;
 
-  tempPtCenter = cvPoint( imageSize.width / 2 + 25, imageSize.height / 2 - 25 );
-  tempPt1 = cvPoint( tempPtCenter.x - tempWidth / 2, tempPtCenter.y - tempHeight / 2 );
-  tempPt2 = cvPoint( tempPtCenter.x + tempWidth / 2, tempPtCenter.y + tempHeight / 2 );
-
-  //set and  UI windows 
-
+  //define and set GUI windows 
   CvPoint windowOrigin = {10, 10};
   int align_offset = 270, vartical_offset = 350;
   cvNamedWindow( "SET YOUR HAND", 0);
@@ -131,26 +151,16 @@ int main( void )
 
 	      if( key == 'y' )
 		createdTemplateImg = true;
-	      // cvReleaseImage( &dstTemplateImg );
-	      // cvReleaseImage( &faceTemplateImg );
 	    }
 	}
     }
 
+  //calling pan/tilt unit
   panTiltUnit *ptu = new panTiltUnit();
 
   ///////////////////////////////////// 
   //         tracking loop           //
   ///////////////////////////////////// 
-
-  double currentDstErrorValue,currentFaceErrorValue;
-  double dstSimilarity,faceSimilarity;
-  int ohandx = 0, ohandy = 0, ofacex = 0, ofacey = 0;
-  int mx = 0, my = 0;
-  bool outOfRegion = false;
-  CvPoint imageCenterLoc,objectMiddleLoc;
-  imageCenterLoc = cvPoint(imageSize.width/2,imageSize.height/2);
-  
 
   while(createdTemplateImg)
     {
@@ -165,29 +175,30 @@ int main( void )
 
       if( human -> track() == 0 )
 	{
+	  //save previous values
 	  dstPrevCenterLoc = dstCenterLoc;
 	  facePrevCenterLoc = faceCenterLoc;
 
+	  //calculate matching results for each destination(hand and face)
 	  tmch -> calcMatchResult( human -> getResult(), dstTemplateImg, imageSize, &dstCenterLoc, &dstSize );
 	  currentDstErrorValue = tmch -> getErrorValue();
 	  dstSimilarity = tmch -> getSimilarity();
 	  cout<<"Similarity[%] of dst \t= "<<faceSimilarity<<"[%]"<<endl;
-	  //if(currentDstErrorValue>A)
-	  //cerr<<"Dst EVal \t= "<<currentDstErrorValue<<endl;
-
+	 
 	  tmch -> calcMatchResult( human -> getResult(), faceTemplateImg, imageSize, &faceCenterLoc, &radius );
 	  currentFaceErrorValue = tmch -> getErrorValue();
 	  faceSimilarity = tmch -> getSimilarity();
 	  cout<<"Similarity[%] of face\t= "<<dstSimilarity<<"[%]"<<endl;
-	  //if(currentFaceErrorValue>B)
-	  //cerr<<"Face EVal \t= "<<currentFaceErrorValue<<endl;
-
+	 
+	  //calculate difference between current and previous for hand and face center location
 	  diffDstCenterLocX = abs( dstCenterLoc.x - dstPrevCenterLoc.x );
 	  diffDstCenterLocY = abs( dstCenterLoc.y - dstPrevCenterLoc.y );
 
 	  diffFaceCenterLocX = abs( faceCenterLoc.x - facePrevCenterLoc.x );
 	  diffFaceCenterLocY = abs( faceCenterLoc.y - facePrevCenterLoc.y );
 
+
+	  //error handlling by 'difference'
 	  if( updatedTamplateImg )
 	    {
 	      if( diffDstCenterLocX > 100 || diffDstCenterLocY > 100 )
@@ -202,17 +213,17 @@ int main( void )
 		}
 	    }
 	 
-
-	  // set -1 as an invalid value if the similarity is smaller than threshold
+	  //error handlling by similarity of template matching
 	  if( dstSimilarity < DST_THRESHOLD && updatedTamplateImg )
 	    {
-	      //dstCenterLoc = cvPoint( -1, -1 );
 	      outOfRegion = true;
+	      frames = 0;//resetting frame-count
+	      
 	    }
 	  if( faceSimilarity < FACE_THRESHOLD && updatedTamplateImg )
 	    {
-	      //faceCenterLoc = cvPoint( -1, -1 );
 	      outOfRegion = true;
+	      frames = 0;
 	    }
 
 	  /*
@@ -252,19 +263,24 @@ int main( void )
 
 	  if( outOfRegion )
 	    {
+	      //if the hand or face is out of region,set pan/tilt 0 in order not to move
+	      cout<<"#### Objects are expected to be out of region."<<endl;
 	      pan = 0;
 	      tilt = 0;
 	    }
 	  else
 	    {
-	      objectMiddleLoc = cvPoint( ( dstCenterLoc.x + faceCenterLoc.x ) / 2, ( dstCenterLoc.y + faceCenterLoc.y ) / 2 );
-	      pan = tool -> getMoveDist( imageCenterLoc.x, objectMiddleLoc.x );
-	      tilt = tool -> getMoveDist( imageCenterLoc.y, objectMiddleLoc.y );
+	      //if both objects are in the region,calculate middle location between hand and face and set pan/tilt value
+	      midLocOfFaceAndDst = cvPoint( ( dstCenterLoc.x + faceCenterLoc.x ) / 2, ( dstCenterLoc.y + faceCenterLoc.y ) / 2 );
+	      pan = tool -> getMoveDist( imageCenterLoc.x, midLocOfFaceAndDst.x );
+	      tilt = tool -> getMoveDist( imageCenterLoc.y, midLocOfFaceAndDst.y );
 	    }
 
-	  cvLine( interfaceImg, imageCenterLoc, objectMiddleLoc,CV_RGB(255,255,255),1,8,0);
+	  //draw a line from region's center location to middle location between hand and face
+	  cvLine( interfaceImg, imageCenterLoc, midLocOfFaceAndDst, CV_RGB(255,255,255), 1, 8, 0 );
 	 	  
-	  ptu -> move( pan, tilt );
+	  //move pan/tilt unit
+	  ptu -> move( -pan, -tilt );
 
 	  //unknown phenomenon handling
 	  if( !outOfRegion && frames % 4 == 0 )
@@ -275,15 +291,16 @@ int main( void )
 	      faceCenterLoc.y -= 2;
 	    }
 
-	  //draw two circles to destinarion and face
+	  //draw two circles(for hand and face)
 	  cvCircle( interfaceImg, dstCenterLoc, dstSize, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
 	  cvCircle( interfaceImg, faceCenterLoc, radius, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
 	  
-	  //update template image
+	  //update template image and set flag
 	  tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &dstCenterLoc );
 	  tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
 	  updatedTamplateImg = true;
 
+	  //show images
 	  cvShowImage( "Match Result", interfaceImg );
 	  cvShowImage( "Destination Template Image", dstTemplateImg );
 	  cvShowImage( "Face Template Image", faceTemplateImg );
@@ -291,6 +308,7 @@ int main( void )
 	  cvShowImage( "Dst Diff Map Image", tmch -> getDiffMapImg( human -> getResult(), dstTemplateImg, dstDiffMapImg ) );
 	  cvShowImage( "Face Diff Map Image", tmch -> getDiffMapImg( human -> getResult(), faceTemplateImg, faceDiffMapImg ) );
 
+	  //key handlling
 	  key = cvWaitKey(10);
 	  if( key == 'q' )
 	    break;
@@ -300,7 +318,7 @@ int main( void )
 	}
     }
   
-  //release memory
+  //release memory and terminate app
   cvDestroyWindow( "SET YOUR HAND" );
   cvDestroyWindow( "Destination Template Image" );
   cvDestroyWindow( "Face Template Image" );
