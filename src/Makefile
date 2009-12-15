@@ -13,9 +13,7 @@ Biclops_INCD = ../../../Biclops/Biclops/Software/libBiclops/include/
 PMD_INCD = ../../../Biclops/motion/libPMD/include/
 Utils_INCD = ../../../Biclops/motion/libUtils/include/
 
-all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)faceTrack 
-test : $(BIND)testProgram
-hand : $(BIND)handTrack
+all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)faceTrack $(BIND)handTrack $(BIND)biclopsTest $(BIND)biclopsOff
 
 clean:
 	- @ rm -rf $(OBJS)
@@ -41,9 +39,13 @@ $(BIND)faceTrack: faceTrack.cpp $(OBJS)
 $(BIND)handTrack: handTrack.cpp $(OBJS)
 	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ handTrack.cpp $(OBJS)
 
-# testProgram
-$(BIND)testProgram: testProgram.cpp $(OBJS)
-	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ testProgram.cpp $(OBJS)
+# biclopsTest
+$(BIND)biclopsTest: biclopsTest.cpp $(OBJS)
+	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ biclopsTest.cpp $(OBJS)
+
+# biclopsOff
+$(BIND)biclopsOff: biclopsOff.cpp $(OBJS)
+	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ biclopsOff.cpp $(OBJS)
 
 ##################
 # object files

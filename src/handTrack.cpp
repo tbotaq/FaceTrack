@@ -39,6 +39,7 @@ int main( void )
   faceDetector *fd = new faceDetector( imageSize );
   regionTracker *human = new regionTracker( ci );
   templateMatching *tmch = new templateMatching();
+ 
   tools *tool = new tools();
   
   int key;
@@ -65,6 +66,8 @@ int main( void )
   tempPtCenter = cvPoint( imageSize.width / 2 + 25, imageSize.height / 2 - 25 );
   tempPt1 = cvPoint( tempPtCenter.x - tempWidth / 2, tempPtCenter.y - tempHeight / 2 );
   tempPt2 = cvPoint( tempPtCenter.x + tempWidth / 2, tempPtCenter.y + tempHeight / 2 );
+
+  //set and  UI windows 
 
   CvPoint windowOrigin = {10, 10};
   int align_offset = 270, vartical_offset = 350;
@@ -128,9 +131,13 @@ int main( void )
 
 	      if( key == 'y' )
 		createdTemplateImg = true;
+	      // cvReleaseImage( &dstTemplateImg );
+	      // cvReleaseImage( &faceTemplateImg );
 	    }
 	}
     }
+
+  panTiltUnit *ptu = new panTiltUnit();
 
   ///////////////////////////////////// 
   //         tracking loop           //
@@ -140,11 +147,15 @@ int main( void )
   double dstSimilarity,faceSimilarity;
   int ohandx = 0, ohandy = 0, ofacex = 0, ofacey = 0;
   int mx = 0, my = 0;
-  bool outOfRegion;
+  bool outOfRegion = false;
+  CvPoint imageCenterLoc,objectMiddleLoc;
+  imageCenterLoc = cvPoint(imageSize.width/2,imageSize.height/2);
+  
 
   while(createdTemplateImg)
     {
       outOfRegion = false;
+
       //acquire current frame
       ci->acquire();
       interfaceImg = ci -> getIntensityImg();
@@ -179,89 +190,116 @@ int main( void )
 
 	  if( updatedTamplateImg )
 	    {
-	      if( diffDstCenterLocX > 10 || diffDstCenterLocY > 10 )
+	      if( diffDstCenterLocX > 100 || diffDstCenterLocY > 100 )
 		{
 		  cout<<"### Detected Abnormal Value in Destination Tracking."<<endl;
 		  dstCenterLoc = dstPrevCenterLoc;
 		}
-	      if( diffFaceCenterLocX > 10 || diffFaceCenterLocY > 10 )
+	      if( diffFaceCenterLocX > 100 || diffFaceCenterLocY > 100 )
 		{
 		  cout<<"### Detected Abnormal Value in Face Tracking."<<endl;
 		  faceCenterLoc = facePrevCenterLoc;
 		}
 	    }
+	 
 
 	  // set -1 as an invalid value if the similarity is smaller than threshold
-	  if( dstSimilarity < DST_THRESHOLD )
+	  if( dstSimilarity < DST_THRESHOLD && updatedTamplateImg )
 	    {
-	      dstCenterLoc = cvPoint( -1, -1 );
+	      //dstCenterLoc = cvPoint( -1, -1 );
 	      outOfRegion = true;
 	    }
-	  if( faceSimilarity < FACE_THRESHOLD )
+	  if( faceSimilarity < FACE_THRESHOLD && updatedTamplateImg )
 	    {
-	      faceCenterLoc = cvPoint( -1, -1 );
+	      //faceCenterLoc = cvPoint( -1, -1 );
 	      outOfRegion = true;
 	    }
+
+	  /*
 	  // move pan/tilt unit
-	  if(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x != -1 )) 
-	    { 
-	      ofacex = faceCenterLoc.x, ofacey = faceCenterLoc.y, ohandx = dstCenterLoc.x, ohandy = dstCenterLoc.y;
-	    }
+	  //if(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x != -1 )) 
+	  { 
+	  facePrevCenterLoc = cvPoint( faceCenterLoc.x, faceCenterLoc.y);
+	  dstPrevCenterLoc = cvPoint( dstCenterLoc.x, dstCenterLoc.y);
+	  }
 	  else if(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x == -1 ))
-	    {
-	      mx = ohandx;
-	      my = ohandy;
-	      fprintf( stderr, "move to %d, %d\n", mx, my );
-	    }
+	  {
+	  mx = dstPrevCenterLoc.x;
+	  my = dstPrevCenterLoc.y;
+	  fprintf( stderr, "move to %d, %d\n", mx, my );
+	  }
 	  else if(( faceCenterLoc.x == -1 )&&( dstCenterLoc.x != -1 ))
-	    {
-	      mx = ofacex;
-	      my = ofacey;
-	      fprintf( stderr, "move to %d, %d\n", mx, my );
-	    }
+	  {
+	  mx = dstPrevCenterLoc.x;
+	  my = dstPrevCenterLoc.y;
+	  fprintf( stderr, "move to %d, %d\n", mx, my );
+	  }
 	  else if (( faceCenterLoc.x == -1 )&&( dstCenterLoc.x == -1 ))
-	    {
-	      fprintf( stderr, "lost two points\n" );
-	    }
+	  {
+	  mx=0;
+	  my=0;
+	  fprintf( stderr, "lost two points\n" );
+	  }
 	  else if (!(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x != -1 )) && !(( ofacex != -1 )&&( ohandx != -1 )))
+	  {
+	  mx=0;
+	  my=0;
+	  fprintf( stderr, "lost points completely\n" );
+	  }
+	  }
+
+	  */
+
+	  if( outOfRegion )
 	    {
-	      fprintf( stderr, "lost points completely\n" );
+	      pan = 0;
+	      tilt = 0;
 	    }
-	}
+	  else
+	    {
+	      objectMiddleLoc = cvPoint( ( dstCenterLoc.x + faceCenterLoc.x ) / 2, ( dstCenterLoc.y + faceCenterLoc.y ) / 2 );
+	      pan = tool -> getMoveDist( imageCenterLoc.x, objectMiddleLoc.x );
+	      tilt = tool -> getMoveDist( imageCenterLoc.y, objectMiddleLoc.y );
+	    }
 
-      //unknown phenomenon handling
-      if( !outOfRegion && frames % 4 == 0 )
-	{
-	  dstCenterLoc.x -= 2;
-	  dstCenterLoc.y -= 2;
-	  faceCenterLoc.x -= 2;
-	  faceCenterLoc.y -= 2;
-	}
+	  cvLine( interfaceImg, imageCenterLoc, objectMiddleLoc,CV_RGB(255,255,255),1,8,0);
+	 	  
+	  ptu -> move( pan, tilt );
 
-      tmch->resizeBinarizedImg(dstTemplateImg);
+	  //unknown phenomenon handling
+	  if( !outOfRegion && frames % 4 == 0 )
+	    {
+	      dstCenterLoc.x -= 2;
+	      dstCenterLoc.y -= 2;
+	      faceCenterLoc.x -= 2;
+	      faceCenterLoc.y -= 2;
+	    }
 
-      //draw two circles to destinarion and face
-      cvCircle( interfaceImg, dstCenterLoc, dstSize, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
-      cvCircle( interfaceImg, faceCenterLoc, radius, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
+	  //draw two circles to destinarion and face
+	  cvCircle( interfaceImg, dstCenterLoc, dstSize, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
+	  cvCircle( interfaceImg, faceCenterLoc, radius, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
 	  
-      //update template image
-      tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &dstCenterLoc );
-      tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
-      updatedTamplateImg = true;
+	  //update template image
+	  tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &dstCenterLoc );
+	  tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
+	  updatedTamplateImg = true;
 
-      cvShowImage( "Match Result", interfaceImg );
-      cvShowImage( "Destination Template Image", dstTemplateImg );
-      cvShowImage( "Face Template Image", faceTemplateImg );
-      cvShowImage( "Binary Image", human -> getResult() );
-      cvShowImage( "Dst Diff Map Image", tmch -> getDiffMapImg( human -> getResult(), dstTemplateImg, dstDiffMapImg ) );
-      cvShowImage( "Face Diff Map Image", tmch -> getDiffMapImg( human -> getResult(), faceTemplateImg, faceDiffMapImg ) );
+	  cvShowImage( "Match Result", interfaceImg );
+	  cvShowImage( "Destination Template Image", dstTemplateImg );
+	  cvShowImage( "Face Template Image", faceTemplateImg );
+	  cvShowImage( "Binary Image", human -> getResult() );
+	  cvShowImage( "Dst Diff Map Image", tmch -> getDiffMapImg( human -> getResult(), dstTemplateImg, dstDiffMapImg ) );
+	  cvShowImage( "Face Diff Map Image", tmch -> getDiffMapImg( human -> getResult(), faceTemplateImg, faceDiffMapImg ) );
 
-      key = cvWaitKey(10);
-      if( key == 'q' )
-	break;
-      frames++;
+	  key = cvWaitKey(10);
+	  if( key == 'q' )
+	    break;
+
+	  //couut the number of frames 
+	  frames++;
+	}
     }
-
+  
   //release memory
   cvDestroyWindow( "SET YOUR HAND" );
   cvDestroyWindow( "Destination Template Image" );
@@ -278,6 +316,7 @@ int main( void )
   delete fd;
   delete human;
   delete tmch;
+  delete ptu;
   delete tool;
 
   return 0;

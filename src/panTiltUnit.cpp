@@ -88,3 +88,11 @@ int panTiltUnit::move(double pan, double tilt)
   return 0;
 }
 
+int panTiltUnit::disableAmp()
+{
+  panAxis -> DisableAmp();
+  tiltAxis -> DisableAmp();
+  coutDbg << "DisableAmp >FINISHED\n";
+  return 0;
+}
+

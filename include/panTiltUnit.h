@@ -27,6 +27,7 @@ class panTiltUnit
   ~panTiltUnit();
   int homing();
   int move( double pan, double tilt );
+  int disableAmp();
 };
 
 #endif
