@@ -1,11 +1,6 @@
-//Takuya Otsubo
 #include<templateMatching.h>
-#define THRESHOLD 50//threshold value for binarization
-#define THRESHOLD_MAX_VALUE 255//max value for binarization
-#define LINE_THICKNESS 1
-#define LINE_TYPE 8
-#define SHIFT 0
 
+//---------------------------------------------
 templateMatching::templateMatching()
 {
   differenceMapImg = NULL;
@@ -15,19 +10,40 @@ templateMatching::templateMatching()
   errorValue = 0;
 }
 
+//---------------------------------------------
 templateMatching::~templateMatching()
 {
   cvReleaseImage( &differenceMapImg );
   cvReleaseImage( &diffMapImg );
 }
 
-
-
-void templateMatching::createTemplateImg( IplImage *sourceImg, IplImage *templateImg, CvPoint *templateCenterLoc )
+//---------------------------------------------
+bool templateMatching::initialize(cameraImages *ci)
 {
-  cvGetRectSubPix( sourceImg, templateImg, cvPointTo32f( *templateCenterLoc ) );
+  //create template images
+  //return true in any occation
+
+  cout<<"Press 't' key to create template image."<<endl;
+
+  while( !createdTemplateImg )
+
+    //acquire current frame
+    ci -> acquire();
+
+
+
+
 }
 
+
+
+//---------------------------------------------
+void templateMatching::createTemplateImg( IplImage *sourceImg, IplImage *templateImg, CvPoint *templateCenterLoc )
+{
+    cvGetRectSubPix( sourceImg, templateImg, cvPointTo32f( *templateCenterLoc ) );
+}
+
+//---------------------------------------------
 void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateImg, CvSize srcSize, CvPoint *center, int *radius )
 {
   differenceMapImg  = cvCreateImage( cvSize( srcSize.width - templateImg -> width + 1, srcSize.height - templateImg -> height + 1 ),IPL_DEPTH_32F,1 );
@@ -37,18 +53,20 @@ void templateMatching::calcMatchResult( IplImage *sourceImg, IplImage *templateI
   
   //find the minimum-resembled point of differenceMapImage and write it to minLocation    
   cvMinMaxLoc( differenceMapImg, &errorValue, NULL, &minLocation, NULL, NULL );
-    
+  
   //calculate the center location and radius of detected face
   center->x = minLocation.x + templateImg -> width / 2;
   center->y = minLocation.y + templateImg -> height / 2;
   *radius = max(templateImg->width/2,templateImg->height/2);
-}
+  }
 
+//---------------------------------------------
 IplImage *templateMatching::getDiffMapImg()
 {
   return differenceMapImg;
 }
 
+//---------------------------------------------
 IplImage *templateMatching::getDiffMapImg( IplImage *sourceImg, IplImage *templateImg, IplImage *diffMapImg )
 {
   diffMapImg  = cvCreateImage( cvSize( sourceImg -> width - templateImg -> width + 1, sourceImg -> height - templateImg -> height + 1 ), IPL_DEPTH_32F, 1 );
@@ -56,11 +74,13 @@ IplImage *templateMatching::getDiffMapImg( IplImage *sourceImg, IplImage *templa
   return diffMapImg;
 }
 
+//---------------------------------------------
 double templateMatching::getErrorValue()
 {
   return errorValue;
 }
 
+//---------------------------------------------
 int templateMatching::getAvgDepth( IplImage *humanImage, IplImage *depthImage )
 {
   int sum = 0;
@@ -91,6 +111,7 @@ int templateMatching::getAvgDepth( IplImage *humanImage, IplImage *depthImage )
     return -1;
 }
 
+//---------------------------------------------
 int templateMatching::resizeBinarizedImg( IplImage *binarizedImg )
 {
   CvScalar currentValue = cvScalar( 0 ), prevCurrentValue = cvScalar( 0 );
@@ -122,6 +143,7 @@ int templateMatching::resizeBinarizedImg( IplImage *binarizedImg )
   return 0;
 }
 
+//---------------------------------------------
 double templateMatching::getSimilarity()
 {
   return ( (1 - errorValue ) * 100 );

@@ -66,6 +66,7 @@ int main( void )
   //locations of face and destination(hand)
   CvPoint dstCenterLoc = {0,0},faceCenterLoc = {0,0};
   CvPoint dstPrevCenterLoc = {0,0},facePrevCenterLoc = {0,0};
+  CvPoint appropriateDstCenterLoc = {-1,-1}, appropriateFaceCenterLoc = {-1,-1};
   CvPoint midLocOfFaceAndDst = {0,0};
 
   //for key handlling
@@ -183,12 +184,12 @@ int main( void )
 	  tmch -> calcMatchResult( human -> getResult(), dstTemplateImg, imageSize, &dstCenterLoc, &dstSize );
 	  currentDstErrorValue = tmch -> getErrorValue();
 	  dstSimilarity = tmch -> getSimilarity();
-	  cout<<"Similarity[%] of dst \t= "<<faceSimilarity<<"[%]"<<endl;
+	  cout<<"Similarity[%] of dst \t= "<<dstSimilarity<<"[%]"<<endl;
 	 
 	  tmch -> calcMatchResult( human -> getResult(), faceTemplateImg, imageSize, &faceCenterLoc, &radius );
 	  currentFaceErrorValue = tmch -> getErrorValue();
 	  faceSimilarity = tmch -> getSimilarity();
-	  cout<<"Similarity[%] of face\t= "<<dstSimilarity<<"[%]"<<endl;
+	  cout<<"Similarity[%] of face\t= "<<faceSimilarity<<"[%]"<<endl;
 	 
 	  //calculate difference between current and previous for hand and face center location
 	  diffDstCenterLocX = abs( dstCenterLoc.x - dstPrevCenterLoc.x );
@@ -224,8 +225,8 @@ int main( void )
 		if( human -> track() == 0 )
 		  {
 		    //create template images
-		    tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &dstCenterLoc );
-		    tmch -> calcMatchResult( human -> getResult(), dstTemplateImg, imageSize, &dstCenterLoc, &dstSize );
+		    tmch -> createTemplateImg( human -> getResult(), dstTemplateImg, &appropriateDstCenterLoc );
+		    tmch -> calcMatchResult( human -> getResult(), dstTemplateImg, imageSize, &appropriateDstCenterLoc, &dstSize );
 		    cout<< tmch -> getSimilarity() <<endl;
 		    cvShowImage( "Binary Image", human -> getResult() );
 		    key = cvWaitKey(10);
@@ -245,8 +246,8 @@ int main( void )
 		if( human -> track() == 0 )
 		  {
 		    //create template images
-		    tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
-		    tmch -> calcMatchResult( human -> getResult(), faceTemplateImg, imageSize, &faceCenterLoc, &radius );
+		    tmch -> createTemplateImg( human -> getResult(), faceTemplateImg, &appropriateFaceCenterLoc );
+		    tmch -> calcMatchResult( human -> getResult(), faceTemplateImg, imageSize, &appropriateFaceCenterLoc, &radius );
 		    cout<< tmch -> getSimilarity() <<endl;
 		    cvShowImage( "Binary Image", human -> getResult() );
 		    key = cvWaitKey(10);
@@ -255,41 +256,6 @@ int main( void )
 		  }
 	      }while( tmch -> getSimilarity() < 90 );
 	    }
-
-	  /*
-	  // move pan/tilt unit
-	  //if(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x != -1 )) 
-	  { 
-	  facePrevCenterLoc = cvPoint( faceCenterLoc.x, faceCenterLoc.y);
-	  dstPrevCenterLoc = cvPoint( dstCenterLoc.x, dstCenterLoc.y);
-	  }
-	  else if(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x == -1 ))
-	  {
-	  mx = dstPrevCenterLoc.x;
-	  my = dstPrevCenterLoc.y;
-	  fprintf( stderr, "move to %d, %d\n", mx, my );
-	  }
-	  else if(( faceCenterLoc.x == -1 )&&( dstCenterLoc.x != -1 ))
-	  {
-	  mx = dstPrevCenterLoc.x;
-	  my = dstPrevCenterLoc.y;
-	  fprintf( stderr, "move to %d, %d\n", mx, my );
-	  }
-	  else if (( faceCenterLoc.x == -1 )&&( dstCenterLoc.x == -1 ))
-	  {
-	  mx=0;
-	  my=0;
-	  fprintf( stderr, "lost two points\n" );
-	  }
-	  else if (!(( faceCenterLoc.x != -1 )&&( dstCenterLoc.x != -1 )) && !(( ofacex != -1 )&&( ohandx != -1 )))
-	  {
-	  mx=0;
-	  my=0;
-	  fprintf( stderr, "lost points completely\n" );
-	  }
-	  }
-
-	  */
 
 	  if( outOfRegion )
 	    {
@@ -345,6 +311,14 @@ int main( void )
 
 	  //couut the number of frames 
 	  frames++;
+
+
+	  //save appropriate values for each center locaion(face and dst)
+	  if( dstSimilarity > 90 )
+	    appropriateDstCenterLoc = dstCenterLoc;
+	  if( faceSimilarity > 90 )
+	    appropriateFaceCenterLoc = faceCenterLoc;
+  	
 	}
     }
   
