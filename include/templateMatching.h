@@ -35,7 +35,7 @@ class templateMatching
   CvSize imageSize;
 
   //images
-  IplImage *interfaceImg,*handTemplateImg,*faceTemplateImg,*handDiffMapImg,*faceDiffMapImg;
+  IplImage *interfaceImg,*handTemplateImg,*faceTemplateImg,*handDiffMapImg,*faceDiffMapImg,*faceSourceImg;
 
   //locations of face and hand
   CvPoint handCenterLoc,faceCenterLoc;

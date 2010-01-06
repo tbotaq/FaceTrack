@@ -1,6 +1,6 @@
 #include<templateMatching.h>
-#define HAND_WIDTH 80
-#define HAND_HEIGHT 75
+#define HAND_WIDTH 65
+#define HAND_HEIGHT 55
 #define DST_THRESHOLD 70
 #define FACE_THRESHOLD 40
 
@@ -8,7 +8,7 @@
 templateMatching::templateMatching(cameraImages *ci)
 {
   imageSize = ci->getImageSize();
-
+  interfaceImg = cvCreateImage( imageSize, IPL_DEPTH_8U, 1);
   imageCenterLoc = cvPoint( imageSize.width / 2, imageSize.height / 2 );
   handWidth = HAND_WIDTH;
   handHeight = HAND_HEIGHT;
@@ -22,6 +22,7 @@ templateMatching::templateMatching(cameraImages *ci)
   key = 0;
   frames = 0;
   errorValue = 0;
+  radius = 0;
 
   errorIsDetectedByDiff = false;
   errorIsDetectedBySimi = false;
@@ -31,6 +32,7 @@ templateMatching::templateMatching(cameraImages *ci)
 //---------------------------------------------
 templateMatching::~templateMatching()
 {
+  cvReleaseImage( &interfaceImg );
   cvReleaseImage( &handTemplateImg );
   cvReleaseImage( &faceTemplateImg );
   cvReleaseImage( &differenceMapImg );
@@ -38,7 +40,7 @@ templateMatching::~templateMatching()
 }
 
 //---------------------------------------------
-bool templateMatching::init(cameraImages *ci, faceDetector *fd, regionTracker *human )
+bool templateMatching::init(cameraImages *ci,faceDetector *fd, regionTracker *human )
 {
 
   //create template image to use in the first
@@ -53,15 +55,12 @@ bool templateMatching::init(cameraImages *ci, faceDetector *fd, regionTracker *h
     {
       //acquire current frame
       ci -> acquire();
-      interfaceImg = ci -> getIntensityImg();
+      //face -> acquire();
+      cvCopy( ci-> getIntensityImg(), interfaceImg, NULL);
+      //faceSourceImg = face -> getIntensityImg();
 
       //detect human's face using ada-boost
       fd -> faceDetect( interfaceImg, &faceCenterLoc, &radius );
-
-      //draw a rectangle representing the region to be template image
-      cvRectangle( interfaceImg, tempPt1, tempPt2, CV_RGB( 255, 255, 255 ), 2, 8, 0 );
-      cvCircle( interfaceImg, faceCenterLoc, radius+10, CV_RGB( 255, 255, 255 ), 2, 8, 0 );
-      cvShowImage("SET YOUR HAND", interfaceImg );
 
       key = cvWaitKey( 10 );
 
@@ -75,8 +74,8 @@ bool templateMatching::init(cameraImages *ci, faceDetector *fd, regionTracker *h
 	      faceTemplateImg = cvCreateImage( cvSize( radius*2+10, radius*2+10 ), IPL_DEPTH_8U, 1 );
 	  
 	      //create template images
-	      this -> createTemplateImg( human -> getResult(), handTemplateImg, &tempPtCenter );
-	      this -> createTemplateImg( human -> getResult(), faceTemplateImg, &faceCenterLoc );
+	      this -> createTemplateImg( human -> getResult(), handTemplateImg, &tempPtCenter );	  
+	      this -> createTemplateImg( ci -> getIntensityImg() , faceTemplateImg, &faceCenterLoc );
 
 	      cvShowImage( "Destination Template Image", handTemplateImg );
 	      cvShowImage( "Face Template Image", faceTemplateImg );
@@ -89,6 +88,11 @@ bool templateMatching::init(cameraImages *ci, faceDetector *fd, regionTracker *h
 		hasBeenInitialized = true;
 	    }
 	}
+
+      //draw a rectangle representing the region to be template image
+      cvRectangle( interfaceImg, tempPt1, tempPt2, CV_RGB( 255, 255, 255 ), 2, 8, 0 );
+      cvCircle( interfaceImg, faceCenterLoc, radius+10, CV_RGB( 255, 255, 255 ), 2, 8, 0 );
+      cvShowImage("Interface Image", interfaceImg );
     }
   return true;
 }
