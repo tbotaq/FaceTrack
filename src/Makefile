@@ -13,7 +13,7 @@ Biclops_INCD = ../../../Biclops/Biclops/Software/libBiclops/include/
 PMD_INCD = ../../../Biclops/motion/libPMD/include/
 Utils_INCD = ../../../Biclops/motion/libUtils/include/
 
-all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)faceTrack $(BIND)handTrack $(BIND)biclopsTest $(BIND)biclopsOff
+all : $(BIND)pointEstimator $(BIND)calibDataCollector $(BIND)handTrack $(BIND)biclopsTest $(BIND)biclopsOff $(BIND)thesisHelper
 
 clean:
 	- @ rm -rf $(OBJS)
@@ -46,6 +46,10 @@ $(BIND)biclopsTest: biclopsTest.cpp $(OBJS)
 # biclopsOff
 $(BIND)biclopsOff: biclopsOff.cpp $(OBJS)
 	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ biclopsOff.cpp $(OBJS)
+
+# thesisHelper
+$(BIND)thesisHelper: thesisHelper.cpp $(OBJS)
+	$(CC)  $(OPTION) -I$(INCD) $(LIB) -I$(Biclops_INCD) -I$(PMD_INCD) -o $@ thesisHelper.cpp $(OBJS)
 
 ##################
 # object files

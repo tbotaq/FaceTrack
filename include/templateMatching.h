@@ -9,21 +9,63 @@
 #include "definesSR.h"
 #include "pointing.h"
 #include "mathfuncs.h"
-
+#include "tools.h"
 using namespace std;
 using namespace point;
 
 class templateMatching
 {
  private:
+
+ public:
+
+
+  //flags  
+  bool errorIsDetectedByDiff;
+  bool errorIsDetectedBySimi;
+  bool hasBeenInitialized;
+  bool updatedTamplateImg;
+  bool outOfRegion;
+
+  //size of destination and face(radius)
+  int handSize,radius;
+
+  //int key;
+  int frames;
+  CvSize imageSize;
+
+  //images
+  IplImage *interfaceImg,*handTemplateImg,*faceTemplateImg,*handDiffMapImg,*faceDiffMapImg;
+
+  //locations of face and hand
+  CvPoint handCenterLoc,faceCenterLoc;
+  CvPoint handPrevCenterLoc,facePrevCenterLoc;
+  CvPoint appropriateHandCenterLoc,appropriateFaceCenterLoc;
+  CvPoint midLocOfFaceAndHand;
+
+  //for key handlling
+  int key;
+
+  //differences
+  int diffHandCenterLocX,diffHandCenterLocY,diffFaceCenterLocX ,diffFaceCenterLocY;
+
+  //used in creating template image.
+  CvPoint imageCenterLoc;
+  CvPoint tempPt1,tempPt2,tempPtCenter;
+  int handWidth,handHeight;
+
+  //error value and similality in template matching
+  double currentHandErrorValue,currentFaceErrorValue;
+  double handSimilarity,faceSimilarity;
+
   CvPoint minLocation;
   CvScalar scalar;
-  int key;
+  
   double errorValue;
   IplImage *templateImg;
   IplImage *differenceMapImg,*diffMapImg;
- public:
-  templateMatching();
+
+  templateMatching(cameraImages *ci);
   ~templateMatching();
   void setTempImg(IplImage *sourceImg,IplImage *templaeImg,CvPoint center);
   void createTemplateImg(IplImage *sourceImg,IplImage *templateImg,CvPoint *templateCenterLoc);
@@ -34,5 +76,12 @@ class templateMatching
   IplImage *getDiffMapImg();
   IplImage *getDiffMapImg(IplImage *sourceImg,IplImage *templateImg,IplImage *diffMapImg);
   int resizeBinarizedImg(IplImage *binarizedImg);
+  void calcMoveDist(double *pan,double *tilt,tools *tool);
+  void savePrevLoc();
+  void slideCentLoc(int slideVal,int perThisFrame);
+  void calcLocDifference();
+  void checkErrorByDiff(int diff_threshold);
+  void checkErrorBySimi(int simi_threshold);
+  bool init(cameraImages *ci,faceDetector *fd, regionTracker *human);
 };
 #endif
