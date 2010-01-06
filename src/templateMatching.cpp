@@ -306,16 +306,16 @@ void templateMatching::calcLocDifference()
 }
 
 //-----------------------------------------------
-void templateMatching::slideCentLoc(int slideVal,int perThisFrame)
+void templateMatching::slideCentLoc(int handSlideVal,int faceSlideVal,int perThisFrame)
 {
   //force handle with ???
   //unknown phenomenon handling
   if( !outOfRegion && frames % perThisFrame == 0 )
     {
-      handCenterLoc.x += slideVal;
-      handCenterLoc.y += slideVal;
-      faceCenterLoc.x += slideVal;
-      faceCenterLoc.y += slideVal;
+      handCenterLoc.x += handSlideVal;
+      handCenterLoc.y += handSlideVal;
+      faceCenterLoc.x += faceSlideVal;
+      faceCenterLoc.y += faceSlideVal;
     }
 }
 

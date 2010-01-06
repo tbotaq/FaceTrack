@@ -78,7 +78,7 @@ class templateMatching
   int resizeBinarizedImg(IplImage *binarizedImg);
   void calcMoveDist(double *pan,double *tilt,tools *tool);
   void savePrevLoc();
-  void slideCentLoc(int slideVal,int perThisFrame);
+  void slideCentLoc(int handSlideVal,int faceSlideVal,int perThisFrame);
   void calcLocDifference();
   void checkErrorByDiff(int diff_threshold);
   void checkErrorBySimi(int simi_threshold);

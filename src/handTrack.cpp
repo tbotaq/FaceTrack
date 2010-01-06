@@ -39,12 +39,7 @@ int main( void )
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //-------------------------------------------------variables declaration-------------------------------------------------//
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-  //numbers of frames
-  int frames = 0;
-
   int key;
- 
   double pan=0,tilt=0;
 
   //define and set GUI windows 
@@ -104,14 +99,11 @@ int main( void )
 	  cout<<"handCentLoc  ="<<tmch -> handCenterLoc.x<<","<<tmch -> handCenterLoc.y<<endl;
 	  cout<<"faceCenterLoc="<<tmch -> faceCenterLoc.x<<","<<tmch -> faceCenterLoc.y<<endl;
 	  
-	  tmch -> checkErrorByDiff(100);
+	  tmch -> checkErrorByDiff(40);
 	  tmch -> checkErrorBySimi(50);
 	  	  
 	  if( tmch -> errorIsDetectedBySimi || tmch -> errorIsDetectedByDiff )
-	    {
-	      tmch -> init(ci,fd,human);
-	      //tmch -> savePrevLoc();
-	    }
+	    tmch -> init(ci,fd,human);
 	  else
 	    {
 	      //define how pan/tilt unit behaves
@@ -128,6 +120,9 @@ int main( void )
 	      cvCircle( tmch -> interfaceImg, tmch -> faceCenterLoc, tmch -> radius, CV_RGB( 255, 255, 255 ), 1, 8, 0 );
 	      //draw a line from region's center location to middle location between hand and face
 	      cvLine( tmch -> interfaceImg, tmch -> imageCenterLoc, tmch -> midLocOfFaceAndHand, CV_RGB(255,255,255), 1, 8, 0 );
+
+	      //slide center location -4 pixels per four frames
+	      tmch -> slideCentLoc( 0,-3, 4 );
 
 	      //update template image and set flag
 	      tmch -> createTemplateImg( human -> getResult(), tmch -> handTemplateImg, &(tmch -> handCenterLoc ));
@@ -149,11 +144,8 @@ int main( void )
 	    break;
 
 	  //couut the number of frames 
-	  frames++;
-	  
-	  //slide center location -4 pixels per four frames
-	  tmch -> slideCentLoc( -4, 4 );
-
+	  tmch -> frames++;
+	
 	  //save previous center locations
 	  tmch -> savePrevLoc();
 	  cout<<"PH="<<tmch -> handPrevCenterLoc.x<<","<<tmch->handPrevCenterLoc.y<<endl;
