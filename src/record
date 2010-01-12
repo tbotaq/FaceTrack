@@ -1,0 +1,1 @@
+byzanz-record --duration=30 --x=10 --y=30 --width=660 --height=533 ../data/systemWorks.gif

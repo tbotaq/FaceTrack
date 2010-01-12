@@ -44,24 +44,24 @@ int main( void )
 
   //define and set GUI windows 
   CvPoint windowOrigin = {10, 10};
-  int align_offset = 270, vartical_offset = 350;
+  int align_offset = 285, vartical_offset = 330;
 
   cvNamedWindow( "Interface Image", 0);
-  cvNamedWindow( "Binary Image", 0 );
-  cvNamedWindow( "Destination Template Image", 0 );
+  //cvNamedWindow( "Binary Image", 0 );
+  cvNamedWindow( "Hand Template Image", 0 );
   cvNamedWindow( "Face Template Image", 0 );
-  cvNamedWindow( "Hand Diff Map Image", 0);
-  cvNamedWindow( "Face Diff Map Image", 0);
+  //cvNamedWindow( "Hand Diff Map Image", 0);
+  //cvNamedWindow( "Face Diff Map Image", 0);
   cvNamedWindow( "Match Result", 0);
 
   cvMoveWindow( "Interface Image", windowOrigin.x, windowOrigin.y);
-  cvMoveWindow( "Binary Image", windowOrigin.x + vartical_offset, windowOrigin.y);
-  cvMoveWindow( "Destination Template Image", windowOrigin.x, windowOrigin.y + align_offset);
+  // cvMoveWindow( "Binary Image", windowOrigin.x + vartical_offset, windowOrigin.y);
+  cvMoveWindow( "Hand Template Image", windowOrigin.x, windowOrigin.y + align_offset);
   cvMoveWindow( "Face Template Image", windowOrigin.x + vartical_offset, windowOrigin.y + align_offset);
-  cvMoveWindow( "Hand Diff Map Image", windowOrigin.x, windowOrigin.y + align_offset * 2);
-  cvMoveWindow( "Face Diff Map Image", windowOrigin.x + vartical_offset, windowOrigin.y + align_offset * 2);
-  cvMoveWindow( "Match Result", windowOrigin.x + vartical_offset * 2, windowOrigin.y);
-
+  //cvMoveWindow( "Hand Diff Map Image", windowOrigin.x, windowOrigin.y + align_offset * 2);
+  //cvMoveWindow( "Face Diff Map Image", windowOrigin.x + vartical_offset, windowOrigin.y + align_offset * 2);
+  //cvMoveWindow( "Match Result", windowOrigin.x + vartical_offset * 2, windowOrigin.y);
+  cvMoveWindow( "Match Result", windowOrigin.x + vartical_offset, windowOrigin.y);
   //initialize (create first template image)
   tmch -> init(ci,fd,human);
 
@@ -132,11 +132,11 @@ int main( void )
 
 	  //show images
 	  cvShowImage( "Match Result", tmch -> interfaceImg );
-	  cvShowImage( "Destination Template Image", tmch -> handTemplateImg );
+	  cvShowImage( "Hand Template Image", tmch -> handTemplateImg );
 	  cvShowImage( "Face Template Image", tmch -> faceTemplateImg );
-	  cvShowImage( "Binary Image", human -> getResult() );
-	  cvShowImage( "Hand Diff Map Image", tmch -> getDiffMapImg( human -> getResult(), tmch -> handTemplateImg, tmch -> handDiffMapImg ) );
-	  cvShowImage( "Face Diff Map Image", tmch -> getDiffMapImg( ci -> getIntensityImg(), tmch -> faceTemplateImg, tmch -> faceDiffMapImg ) );
+	  //cvShowImage( "Binary Image", human -> getResult() );
+	  //cvShowImage( "Hand Diff Map Image", tmch -> getDiffMapImg( human -> getResult(), tmch -> handTemplateImg, tmch -> handDiffMapImg ) );
+	  //cvShowImage( "Face Diff Map Image", tmch -> getDiffMapImg( ci -> getIntensityImg(), tmch -> faceTemplateImg, tmch -> faceDiffMapImg ) );
 
 	  //key handlling
 	  key = cvWaitKey(10);
@@ -162,12 +162,12 @@ int main( void )
   
   //release memory and terminate app
   cvDestroyWindow( "Interface Image" );
-  cvDestroyWindow( "Destination Template Image" );
+  cvDestroyWindow( "Hand Template Image" );
   cvDestroyWindow( "Face Template Image" );
   cvDestroyWindow( "Match Result" );
   cvDestroyWindow( "Binary Image" );
-  cvDestroyWindow( "Hand Diff Map Image" );
-  cvDestroyWindow( "Face Diff Map Image" );
+  //cvDestroyWindow( "Hand Diff Map Image" );
+  //cvDestroyWindow( "Face Diff Map Image" );
 
   delete ci;
   delete fd;

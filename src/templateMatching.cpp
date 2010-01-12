@@ -86,6 +86,8 @@ bool templateMatching::init(cameraImages *ci,faceDetector *fd, regionTracker *hu
 
 	      if( key == 'y' )
 		hasBeenInitialized = true;
+	      if( key == 'q' )
+		return false;
 	    }
 	}
 
